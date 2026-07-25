@@ -1,0 +1,90 @@
+.
+├── app
+│   ├── about
+│   ├── auth
+│   │   └── page.tsx
+│   ├── blog
+│   │   ├── [slug]
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   ├── business
+│   │   ├── package
+│   │   │   └── page.tsx
+│   │   ├── page.tsx
+│   │   ├── payment
+│   │   │   └── page.tsx
+│   │   ├── submit
+│   │   │   └── page.tsx
+│   │   └── thank-you
+│   │       └── page.tsx
+│   ├── contact
+│   │   └── page.tsx
+│   ├── error.tsx
+│   ├── explore
+│   │   └── page.tsx
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── listings
+│   │   └── listings.$id.tsx
+│   ├── local-info
+│   │   └── page.tsx
+│   ├── magazine
+│   │   ├── [slug]
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   ├── not-found.tsx
+│   ├── page.tsx
+│   ├── passport
+│   │   └── page.tsx
+│   └── places
+│       ├── [slug]
+│       │   └── page.tsx
+│       └── page.tsx
+├── components
+│   ├── home
+│   │   ├── BlogPreview.tsx
+│   │   ├── Categories.tsx
+│   │   ├── FeaturedListings.tsx
+│   │   ├── Hero.tsx
+│   │   ├── MagazineStrip.tsx
+│   │   ├── PassportCTA.tsx
+│   │   ├── SiteLayout.tsx
+│   │   └── TopPlaces.tsx
+│   ├── passport
+│   │   └── AddToPassportModal.tsx
+│   ├── site
+│   │   ├── Footer.tsx
+│   │   └── Navbar.tsx
+│   └── ui
+│       ├── alert-dialog.tsx
+│       ├── alert.tsx
+│       ├── badge.tsx
+│       ├── button.tsx
+│       ├── calendar.tsx
+│       ├── checkbox.tsx
+│       ├── dialog.tsx
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── popover.tsx
+│       ├── select.tsx
+│       ├── separator.tsx
+│       ├── sheet.tsx
+│       ├── skeleton.tsx
+│       ├── slider.tsx
+│       ├── sonner.tsx
+│       ├── switch.tsx
+│       ├── textarea.tsx
+│       ├── toggle.tsx
+│       └── tooltip.tsx
+├── data
+│   ├── blogs.ts
+│   ├── content.ts
+│   ├── magazines.ts
+│   └── places.ts
+├── hooks
+│   └── use-mobile.tsx
+├── lib
+│   └── utils.ts
+└── old_structure.txt
+
+28 directories, 60 files
