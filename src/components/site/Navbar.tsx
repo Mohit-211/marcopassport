@@ -10,14 +10,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const NAV = [
+  { href: "/magazine", label: "Magazine" },
+  { href: "/local-info", label: "Local Info" },
+  { href: "/blog", label: "Blog" },
   { href: "/", label: "Home" },
   { href: "/explore", label: "Explore" },
-  { href: "/places", label: "Places" },
-  { href: "/magazine", label: "Magazine" },
-  { href: "/blog", label: "Blog" },
-  { href: "/passport", label: "Passport" },
-  { href: "/local-info", label: "Local Info" },
-  { href: "/contact", label: "Contact" },
+  { href: "/passport", label: "Your Custom Passport" },
+  { href: "/places", label: "Business Directory" },
+  // { href: "/contact", label: "Contact" },
 ];
 
 export function Navbar() {
@@ -45,15 +45,19 @@ export function Navbar() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
         scrolled
-          ? "border-b border-border bg-background/90 shadow-soft backdrop-blur-xl"
+          ? "border-b border-[#0A3C5A] bg-[#002946]/95 shadow-soft backdrop-blur-xl"
           : "bg-transparent"
+
+        // scrolled
+        //   ? "border-b border-border bg-background/90 shadow-soft backdrop-blur-xl"
+        //   : "bg-transparent"
       )}
     >
       <div className="container mx-auto flex h-20 items-center justify-between px-5 lg:px-8">
         {/* Logo */}
         <Link href="/" className="group shrink-0">
           <Image
-            src="/assets/logo-h.jpeg"
+            src="/logo.png"
             alt="Marco Passport"
             width={180}
             height={64}
@@ -77,8 +81,12 @@ export function Navbar() {
                 className={cn(
                   "relative rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   active
-                    ? "text-primary"
-                    : "text-foreground/80 hover:text-primary"
+                    ? "text-[#F8F1E5]"
+                    : "text-[#F8F1E5]/85 hover:text-[#F8F1E5]"
+
+                  // active
+                  //   ? "text-primary"
+                  //   : "text-foreground/80 hover:text-primary"
                 )}
               >
                 {item.label}
@@ -94,7 +102,7 @@ export function Navbar() {
         {/* Desktop CTA */}
         <div className="hidden lg:block">
           <Link href="/business">
-            <Button variant="gold">Add Your Business</Button>
+            <Button variant="gold">Advertise With Us</Button>
           </Link>
         </div>
 
@@ -139,7 +147,7 @@ export function Navbar() {
 
           <Link href="/business" className="mt-3">
             <Button variant="gold" className="w-full">
-              Add Your Business
+              Advertise With Us
             </Button>
           </Link>
         </nav>

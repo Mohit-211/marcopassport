@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-
+import { LocalStats } from "@/components/local-info/LocalStats";
 import {
   ContentSections,
   sections,
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LocalInfoPage() {
+export default async function LocalInfoPage() {
   return (
     <>
       {/* Hero */}
@@ -32,20 +32,16 @@ export default function LocalInfoPage() {
           sizes="100vw"
           className="object-cover"
         />
-
         <div className="absolute inset-0 bg-gradient-to-b from-[#002E50]/40 via-[#002E50]/20 to-[#002E50]/80" />
-
         <div className="relative z-10 container mx-auto flex h-full flex-col justify-end px-5 pb-16 lg:px-8 lg:pb-24">
           <div className="max-w-2xl text-white">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs uppercase tracking-[0.18em] backdrop-blur-md">
               <span className="h-1.5 w-1.5 rounded-full bg-[#EBBD00]" />
               Local Info
             </div>
-
             <h1 className="font-display text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
               Discover <span className="text-[#EBBD00]">Marco Island</span>
             </h1>
-
             <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
               A practical, friendly guide to the island. Learn when to visit,
               how to get around, and the little things that make every trip feel
@@ -55,32 +51,13 @@ export default function LocalInfoPage() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="border-b border-border bg-background">
-        <div className="container mx-auto grid grid-cols-2 gap-6 px-5 py-6 lg:grid-cols-4 lg:px-8">
-          {[
-            { k: "Avg. Winter", v: "75°F" },
-            { k: "Best Months", v: "Dec – Apr" },
-            { k: "Nearest Airport", v: "RSW · 50 min" },
-            { k: "Beach Length", v: "4 Miles" },
-          ].map((stat) => (
-            <div key={stat.k}>
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                {stat.k}
-              </p>
-
-              <p className="mt-1 font-display text-xl font-semibold text-[#002E50] md:text-2xl">
-                {stat.v}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <LocalStats />
 
       {/* Section Navigation */}
-      <section className="sticky top-[72px] z-30 border-b border-border bg-background/85 backdrop-blur-md">
-        <div className="container mx-auto overflow-x-auto px-5 py-3 lg:px-8">
-          <div className="flex min-w-max items-center gap-1">
+      {/* Section Navigation */}
+      <section className="sticky top-[72px] z-30 border-y border-border bg-background/90 shadow-sm backdrop-blur-md">
+        <div className="container mx-auto px-5 lg:px-8">
+          <div className="flex items-center justify-center gap-1 overflow-x-auto py-3">
             {sections.map((section) => (
               <a
                 key={section.id}
@@ -95,9 +72,7 @@ export default function LocalInfoPage() {
       </section>
 
       <ContentSections />
-
       <QuickTips />
-
       <ExploreMore />
     </>
   );

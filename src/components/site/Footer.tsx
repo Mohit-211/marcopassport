@@ -32,7 +32,7 @@ export function Footer() {
         <div>
           <Link href="/">
             <Image
-              src="/assets/logo.png"
+              src="/logo.png"
               alt="Marco Passport"
               width={220}
               height={120}

@@ -38,7 +38,53 @@ export default function BlogExperience() {
 
   return (
     <>
+      {/* Hero */}
+      <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
+        {/* Background */}
+        <div className="absolute inset-0 -z-10">
+          <img
+            src="/assets/blog-hero.jpg" // or /assets/hero-marco-island.jpg
+            alt=""
+            aria-hidden
+            className="h-full w-full object-cover blur-3xl scale-125 opacity-40"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,41,70,0.82),rgba(0,41,70,0.97))]" />
+        </div>
+
+        <div className="container mx-auto px-5 lg:px-8 pt-32 pb-20 md:pt-40 md:pb-28 max-w-4xl text-center">
+          <p className="text-xs uppercase tracking-[0.25em] text-gold font-semibold">
+            The Journal
+          </p>
+
+          <h1 className="mt-4 font-display text-5xl md:text-7xl font-semibold text-balance">
+            From Our Blog
+          </h1>
+
+          <p className="mt-6 text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto leading-relaxed">
+            Stories, tips and guides for exploring Marco Island like an insider,
+            from quiet beaches and stone crab feasts to the kind of sunsets you
+            remember for years.
+          </p>
+
+          {/* Search */}
+          <div className="mt-10 max-w-xl mx-auto relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary-foreground/60" />
+
+            <Input
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setPage(1);
+              }}
+              placeholder="Search stories, tips and guides..."
+              className="h-12 rounded-full border border-white/15 bg-white/10 pl-11 text-primary-foreground placeholder:text-primary-foreground/55 backdrop-blur-md"
+            />
+          </div>
+        </div>
+      </section>
       {/* Header */}
+
+      {/* 
       <section className="relative bg-sand border-b border-border overflow-hidden">
         <div
           aria-hidden
@@ -61,8 +107,11 @@ export default function BlogExperience() {
             — from quiet beaches and stone crab feasts to the kind of sunsets
             you remember for years.
           </p>
+        */}
 
-          {/* Search */}
+      {/* Search */}
+
+      {/* 
           <div className="mt-9 max-w-xl mx-auto relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -77,6 +126,7 @@ export default function BlogExperience() {
           </div>
         </div>
       </section>
+              */}
 
       {/* Category pills */}
       <section className="border-b border-border bg-background sticky top-16 z-10 backdrop-blur supports-[backdrop-filter]:bg-background/80">
