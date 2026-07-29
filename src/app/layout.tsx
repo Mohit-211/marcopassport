@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Fraunces } from "next/font/google";
-
 import "./globals.css";
-
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
@@ -19,17 +17,13 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://themarcopassport.com"),
-
   title: {
     default: "Marco Passport | Discover Marco Island, Florida",
     template: "%s | Marco Passport",
   },
-
   description:
     "Discover the best of Marco Island with curated recommendations for places to stay, restaurants, attractions, shopping, local services, and travel inspiration.",
-
   applicationName: "Marco Passport",
-
   keywords: [
     "Marco Island",
     "Marco Island Florida",
@@ -42,21 +36,17 @@ export const metadata: Metadata = {
     "Things to do in Marco Island",
     "Marco Passport",
   ],
-
   authors: [
     {
       name: "Marco Passport",
     },
   ],
-
   creator: "Marco Passport",
   publisher: "Marco Passport",
   category: "Travel",
-
   alternates: {
     canonical: "/",
   },
-
   robots: {
     index: true,
     follow: true,
@@ -68,7 +58,6 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -86,7 +75,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-
   twitter: {
     card: "summary_large_image",
     title: "Marco Passport | Discover Marco Island, Florida",
@@ -94,9 +82,11 @@ export const metadata: Metadata = {
       "Discover the best of Marco Island with curated recommendations for places to stay, restaurants, attractions, shopping, local services, and travel inspiration.",
     images: ["/assets/og-image.jpg"],
   },
-
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
@@ -111,11 +101,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${fraunces.variable} antialiased`}>
         <Navbar />
-
         <main>{children}</main>
-
         <Footer />
-
         <Toaster richColors position="bottom-right" />
       </body>
     </html>
