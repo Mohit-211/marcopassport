@@ -30,22 +30,18 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-cream text-cream-foreground">
+    <footer className="border-t border-border bg-cream">
       {/* Main Footer */}
-      <div className="container mx-auto grid gap-12 px-5 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1.2fr] lg:gap-10 lg:px-8 lg:py-20">
+      <div className="mx-auto grid max-w-7xl gap-12 px-5 py-14 sm:px-6 md:grid-cols-2 md:gap-14 md:py-16 lg:grid-cols-4 lg:px-8">
         {/* Brand */}
-        <div>
-          <Link
-            href="/"
-            aria-label="The Marco Passport home"
-            className="inline-block"
-          >
+        <div className="lg:pr-6">
+          <Link href="/" className="inline-block">
             <Image
               src="/logo.png"
               alt="The Marco Passport"
-              width={180}
-              height={64}
-              className="h-16 w-auto object-contain"
+              width={280}
+              height={100}
+              className="h-16 w-auto object-contain sm:h-[72px] md:h-20 lg:h-24"
             />
           </Link>
 
@@ -83,9 +79,9 @@ export function Footer() {
         <div>
           <h4 className="mb-5 font-display text-base text-primary">Discover</h4>
 
-          <ul className="space-y-2.5 text-sm">
+          <ul className="space-y-3 text-sm">
             {discoverLinks.map((link) => (
-              <li key={link.href}>
+              <li key={link.label}>
                 <Link
                   href={link.href}
                   className="
@@ -107,7 +103,7 @@ export function Footer() {
             For Businesses
           </h4>
 
-          <ul className="space-y-2.5 text-sm">
+          <ul className="space-y-3 text-sm">
             {businessLinks.map((link) => (
               <li key={link.label}>
                 <Link
@@ -164,6 +160,7 @@ export function Footer() {
             <button
               type="submit"
               className="
+                shrink-0
                 rounded-full
                 bg-primary
                 px-5 py-2.5
@@ -183,12 +180,11 @@ export function Footer() {
       <div className="border-t border-primary/10">
         <div
           className="
-            container mx-auto
-            flex flex-col justify-between gap-3
+            mx-auto flex max-w-7xl
+            flex-col justify-between gap-4
             px-5 py-5
-            text-xs
-            text-cream-foreground/50
-            sm:flex-row
+            text-xs text-cream-foreground/50
+            sm:flex-row sm:items-center sm:px-6
             lg:px-8
           "
         >
