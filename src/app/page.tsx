@@ -11,13 +11,13 @@ import { BlogPreview } from "@/components/home/BlogPreview";
 import { PassportCTA } from "@/components/home/PassportCTA";
 
 export const metadata: Metadata = {
-  title: "Marco Passport — Discover Marco Island, Florida",
+  title: "The Marco Passport — Discover Marco Island, Florida",
   description:
-    "A curated digital passport to Marco Island. Explore the best places to stay, eat, play and shop, and plan your perfect island itinerary.",
+    "Discover Marco Island through its best places to stay, eat, explore, shop, and experience. Plan your island days and find something worth remembering.",
   openGraph: {
-    title: "Marco Passport — Discover Marco Island, Florida",
+    title: "The Marco Passport — Discover Marco Island, Florida",
     description:
-      "A curated digital passport to Marco Island. Explore the best places to stay, eat, play and shop.",
+      "Discover the places, flavors, and experiences that make Marco Island special.",
   },
 };
 

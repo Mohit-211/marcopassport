@@ -38,39 +38,39 @@ export const categories = [
 
 export const featuredListings = [
   {
-    id: "marco-grand-resort",
-    name: "Marco Grand Beachfront Resort",
+    id: "jw-marriott-marco-island",
+    name: "JW Marriott Marco Island Beach Resort",
     category: "Places to Stay",
     image: "/assets/listing-resort.jpg",
-    rating: 4.9,
+    rating: 4.5,
     price: "$$$$",
-    location: "South Collier Blvd",
+    location: "400 S Collier Blvd",
     description:
-      "Twilight-lit infinity pools, white-glove service and a private stretch of Crescent Beach steps away.",
+      "Beachfront pools, an adults-only Sirene wing, and multiple on-site restaurants steps from the sand.",
     featured: true,
   },
   {
-    id: "tide-table",
-    name: "The Tide Table",
+    id: "snook-inn",
+    name: "Snook Inn",
     category: "Places to Eat",
     image: "/assets/listing-restaurant.jpg",
-    rating: 4.8,
-    price: "$$$",
-    location: "Marco Marina",
+    rating: 4.4,
+    price: "$$",
+    location: "1215 Bald Eagle Dr",
     description:
-      "Sunset dining over the marina with line-caught grouper, hand-shucked oysters and Florida-grown cocktails.",
+      "Waterfront tiki dining with live music, a salad bar, and dock access for boaters coming in off the water.",
     featured: true,
   },
   {
-    id: "azure-charters",
-    name: "Azure Sailing Charters",
+    id: "adventure81-marco",
+    name: "Adventure81 Marco Sunset Cruises",
     category: "Fun Activities",
     image: "/assets/listing-yacht.jpg",
-    rating: 5.0,
+    rating: 4.8,
     price: "$$$",
-    location: "Esplanade Marina",
+    location: "Near Marco Island",
     description:
-      "Half-day private sails through the Ten Thousand Islands. Captain, snacks and turquoise water included.",
+      "Small-group sunset cruises through the intercoastal waterway with drinks, snacks, and dolphin sightings included.",
     featured: true,
   },
 ] as const;
@@ -79,19 +79,19 @@ export const topPlaces = [
   {
     name: "Tigertail Beach",
     blurb:
-      "Powder-soft sand and a tranquil lagoon famous for shelling at low tide.",
+      "A powder-sand beach and shallow lagoon famous islandwide for shelling.",
     image: "/assets/place-tigertail.jpg",
   },
   {
     name: "Marco Island Historical Museum",
     blurb:
-      "Step into the story of the Calusa people and the island's frontier era.",
+      "The story of the Calusa people, told through artifacts found on the island itself.",
     image: "/assets/place-museum.jpg",
   },
   {
-    name: "Ten Thousand Islands Cruise",
-    blurb: "Glide through mangrove channels alongside dolphins and ospreys.",
-    image: "/assets/place-cruise.jpg",
+    name: "Ten Thousand Islands Dolphin & Shelling Tour",
+    blurb: "Glide through mangrove channels alongside dolphins and manatees.",
+    image: "/assets/place-boat-tour.jpg",
   },
 ] as const;
 

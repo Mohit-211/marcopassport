@@ -68,7 +68,7 @@ export default function PlacesGrid() {
             The collection
           </p>
           <h2 className="font-display text-4xl md:text-5xl font-semibold mt-2 text-balance">
-            Every place worth your morning
+            Places to Explore and Enjoy
           </h2>
         </div>
         <Link href="/explore" className="hidden md:inline-block">

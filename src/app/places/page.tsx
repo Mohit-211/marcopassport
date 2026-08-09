@@ -8,12 +8,13 @@ import PlacesGrid from "@/components/places/PlacesGrid";
 import EditorialGuide from "@/components/places/EditorialGuide";
 
 export const metadata: Metadata = {
-  title: "Places to Visit — Marco Passport",
+  title: "Places to Visit — The Marco Passport",
   description:
-    "An editorial guide to Marco Island's most beautiful beaches, landmarks, hidden coves and scenic viewpoints — curated by locals.",
+    "Explore Marco Island's most beautiful beaches, landmarks, hidden coves, and scenic spots, from familiar favorites to places worth discovering.",
   openGraph: {
-    title: "Places to Visit — Marco Passport",
-    description: "Curated, locally-loved spots that define Marco Island.",
+    title: "Places to Visit — The Marco Passport",
+    description:
+      "Discover the beaches, landmarks, hidden coves, and scenic spots that make Marco Island special.",
     images: ["/assets/places-hero.jpg"],
   },
 };

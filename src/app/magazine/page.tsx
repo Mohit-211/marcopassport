@@ -9,13 +9,13 @@ import MagazineGrid from "@/components/magazine/MagazineGrid";
 import ArchiveSection from "@/components/magazine/ArchiveSection";
 
 export const metadata: Metadata = {
-  title: "Marco Magazine — Marco Passport",
+  title: "Marco Magazine — The Marco Passport",
   description:
-    "A curated collection of digital editions — long-form journalism, photo essays and field guides from across Marco Island, Florida.",
+    "Stories, photo essays, and field guides exploring the places, people, food, and character of Marco Island, Florida.",
   openGraph: {
-    title: "Marco Magazine — Marco Passport",
+    title: "Marco Magazine — The Marco Passport",
     description:
-      "A curated collection of digital editions from Marco Island, Florida.",
+      "Stories, photo essays, and field guides from around Marco Island, Florida.",
     images: ["/assets/places-hero.jpg"],
   },
 };

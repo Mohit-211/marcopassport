@@ -4,35 +4,48 @@ import { places } from "@/data/places";
 
 export default function PlacesHero() {
   return (
-    <section className="relative isolate overflow-hidden">
-      <div className="absolute inset-0 -z-10">
+    <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
+      {/* Background */}
+      <div className="absolute inset-0 -z-20">
         <Image
           src="/assets/places-hero.jpg"
           alt="Aerial sunset view of Marco Island white sand beach with turquoise Gulf water"
           fill
           priority
+          className="object-cover object-center"
           sizes="100vw"
-          className="object-cover"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.22_0.06_240/0.6),oklch(0.22_0.06_240/0.35)_40%,oklch(0.22_0.06_240/0.9))]" />
       </div>
-      <div className="container mx-auto px-5 lg:px-8 pt-32 pb-28 md:pt-44 md:pb-40 text-primary-foreground">
+      {/* Image treatment */}
+      <div className="absolute inset-0 -z-10 bg-primary/15" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/85 via-primary/40 to-transparent" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/70 via-transparent to-primary/10" />
+
+      {/* Content */}
+      <div className="mx-auto flex h-full max-w-7xl items-center px-6 sm:px-8 lg:px-10">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur border border-primary-foreground/20 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-gold">
-            <Compass className="h-3.5 w-3.5" /> A locally-curated guide
+          {/* Eyebrow */}
+          <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">
+            <span className="h-px w-8 bg-gold/70" />
+            <Compass className="h-3.5 w-3.5" />
+            Places to Visit
           </div>
-          <h1 className="mt-6 font-display text-5xl md:text-7xl font-semibold leading-[1.05] text-balance">
-            The island, <span className="text-gold italic">slowly</span>.
+          {/* Heading */}
+
+          <h1 className="whitespace-nowrap font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em]">
+            Discover <span className="italic text-gold">Marco Island</span>
           </h1>
-          <p className="mt-6 text-lg md:text-xl text-primary-foreground/85 max-w-2xl">
-            Eight square miles of white sand, mangrove channels and Gulf-front
-            secrets. These are the places worth crossing the bridge for — and
-            the ones locals quietly return to.
+
+          {/* Description */}
+          <p className="mt-5 max-w-lg text-sm leading-6 text-primary-foreground/80 sm:mt-6 sm:text-base sm:leading-7">
+            Explore the beaches, landmarks, natural spaces, scenic spots, and
+            local favorites that make Marco Island worth discovering.
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.18em] text-primary-foreground/70">
-            <span>{places.length} hand-picked places</span>
+          {/* Meta line */}
+          <div className="mt-7 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.18em] text-primary-foreground/70 sm:mt-8">
+            <span>{places.length} places to explore</span>
             <span className="h-1 w-1 rounded-full bg-gold" />
-            <span>Beaches · Marinas · Wildlife · Sunsets</span>
+            <span>Beaches · Nature · Landmarks · Views</span>
           </div>
         </div>
       </div>

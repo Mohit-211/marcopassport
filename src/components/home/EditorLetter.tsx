@@ -29,20 +29,20 @@ export function EditorLetter() {
               <span className="font-display float-left mr-3 mt-1 text-6xl leading-[0.8] text-gold">
                 A
               </span>
-              s the Editor-in-Chief of Marco Passport, it is my absolute
+              s the Editor-in-Chief of the Marco Passport, it is my absolute
               pleasure to welcome you to our spectacular home. Whether you are a
               first-time visitor stepping onto our powder-white sands or a
               returning traveler drawn back by the rhythm of the Gulf, this
               issue is designed to be your ultimate island companion.
             </p>
             <p>
-              Marco Island is a truly unique destination. It is a place where
-              world-class luxury seamlessly blends with untamed natural beauty.
-              In this edition, we have curated the very best experiences our
-              island has to offer. We guide you to the premier spots to uncover
-              rare treasures along our shores, and map out the island&apos;s
-              culinary landscape, featuring over 50 top-class restaurants that
-              showcase everything from casual dockside dining to fine cuisine.
+              Marco Island is a place where luxury and nature live side by side.
+              From pristine shores and quiet corners of the island to
+              exceptional dining and memorable experiences, there is plenty to
+              discover. In this edition, we take you around the island to find
+              its most remarkable places, uncover hidden gems along the coast,
+              and explore a dining scene of more than 50 restaurants, ranging
+              from laid-back dockside spots to refined cuisine.
             </p>
             <p>
               We also take you beyond the main beaches. You will find details on
@@ -64,7 +64,7 @@ export function EditorLetter() {
                 The Editor
               </p>
               <p className="mt-1 text-xs tracking-[0.15em] text-muted-foreground uppercase">
-                Marco Passport Magazine
+                The Marco Passport Magazine
               </p>
             </div>
 
@@ -114,7 +114,7 @@ export function EditorLetter() {
                   startOffset="50%"
                   textAnchor="middle"
                 >
-                  MARCO PASSPORT
+                  The Marco Passport
                 </textPath>
               </text>
               <text

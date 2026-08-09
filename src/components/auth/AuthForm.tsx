@@ -266,7 +266,7 @@ export function AuthForm() {
         {/* Bottom link */}
         <p className="mt-6 text-center text-sm text-muted-foreground">
           {mode === "login"
-            ? "New to Marco Passport?"
+            ? "New to The Marco Passport?"
             : "Already have an account?"}{" "}
           <button
             type="button"

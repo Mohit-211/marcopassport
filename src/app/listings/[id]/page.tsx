@@ -24,10 +24,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!listing) return {};
 
   return {
-    title: `${listing.name} — Marco Passport`,
+    title: `${listing.name} — The Marco Passport`,
     description: listing.description,
     openGraph: {
-      title: `${listing.name} — Marco Passport`,
+      title: `${listing.name} — The Marco Passport`,
       description: listing.description,
       images: [listing.image],
     },

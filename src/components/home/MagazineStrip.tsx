@@ -15,7 +15,7 @@ export function MagazineStrip() {
             </p>
 
             <h2 className="mt-2 max-w-xl font-display text-4xl font-semibold text-balance md:text-5xl">
-              Marco Passport, the Magazine
+              The Marco Passport, the Magazine
             </h2>
 
             <p className="mt-4 max-w-lg text-primary-foreground/75">

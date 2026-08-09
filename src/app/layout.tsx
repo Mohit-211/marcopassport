@@ -18,12 +18,12 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   metadataBase: new URL("https://themarcopassport.com"),
   title: {
-    default: "Marco Passport | Discover Marco Island, Florida",
-    template: "%s | Marco Passport",
+    default: "The Marco Passport | Discover Marco Island, Florida",
+    template: "%s | The Marco Passport",
   },
   description:
-    "Discover the best of Marco Island with curated recommendations for places to stay, restaurants, attractions, shopping, local services, and travel inspiration.",
-  applicationName: "Marco Passport",
+    "Discover the best of Marco Island with top recommendations for places to stay, restaurants, attractions, shopping, local services, and travel inspiration.",
+  applicationName: "The Marco Passport",
   keywords: [
     "Marco Island",
     "Marco Island Florida",
@@ -34,15 +34,15 @@ export const metadata: Metadata = {
     "Marco Island attractions",
     "Marco Island activities",
     "Things to do in Marco Island",
-    "Marco Passport",
+    "The Marco Passport",
   ],
   authors: [
     {
-      name: "Marco Passport",
+      name: "The Marco Passport",
     },
   ],
-  creator: "Marco Passport",
-  publisher: "Marco Passport",
+  creator: "The Marco Passport",
+  publisher: "The Marco Passport",
   category: "Travel",
   alternates: {
     canonical: "/",
@@ -62,24 +62,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://themarcopassport.com",
-    siteName: "Marco Passport",
-    title: "Marco Passport | Discover Marco Island, Florida",
+    siteName: "The Marco Passport",
+    title: "The Marco Passport | Discover Marco Island, Florida",
     description:
-      "Discover the best of Marco Island with curated recommendations for places to stay, restaurants, attractions, shopping, local services, and travel inspiration.",
+      "Discover the best of Marco Island with top recommendations for places to stay, restaurants, attractions, shopping, local services, and travel inspiration.",
     images: [
       {
         url: "/assets/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Marco Passport",
+        alt: "The Marco Passport",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Marco Passport | Discover Marco Island, Florida",
+    title: "The Marco Passport | Discover Marco Island, Florida",
     description:
-      "Discover the best of Marco Island with curated recommendations for places to stay, restaurants, attractions, shopping, local services, and travel inspiration.",
+      "Discover the best of Marco Island with top recommendations for places to stay, restaurants, attractions, shopping, local services, and travel inspiration.",
     images: ["/assets/og-image.jpg"],
   },
   icons: {

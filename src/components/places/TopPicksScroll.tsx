@@ -18,8 +18,8 @@ export default function TopPicksScroll() {
             </h2>
           </div>
           <p className="text-primary-foreground/70 max-w-md text-sm">
-            The icons. Every trip should make room for at least one — locals
-            will know if you skipped them.
+            Looking for somewhere to start? These are a few places we think
+            deserve a spot on your Marco Island itinerary.
           </p>
         </div>
       </div>

@@ -14,7 +14,7 @@ const highlightsByCategory: Record<string, string[]> = {
     "Private beach access with cabanas",
     "Three on-site restaurants & sunset bar",
     "Full-service spa and oceanfront pools",
-    "Concierge-curated island excursions",
+    "Memorable island excursions",
     "Pet-friendly suites available",
     "Complimentary kayaks & paddleboards",
   ],

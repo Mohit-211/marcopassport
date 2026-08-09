@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { ExplorePage } from "@/components/explore/ExplorePage";
 
 export const metadata: Metadata = {
-  title: "Explore the Directory — Marco Passport",
+  title: "Explore the Directory — The Marco Passport",
   description:
-    "Browse, filter and discover every hand-vetted business on Marco Island — resorts, restaurants, activities, shopping and local services.",
+    "Discover places to stay, eat, shop, explore, and find local services across Marco Island, all in one place.",
   openGraph: {
-    title: "Explore the Directory — Marco Passport",
+    title: "Explore the Directory — The Marco Passport",
     description:
-      "A curated marketplace of Marco Island's best — filter by category, price and neighborhood.",
+      "Find places to stay, eat, shop, explore, and enjoy across Marco Island.",
   },
 };
 

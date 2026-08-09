@@ -52,7 +52,7 @@ export function PassportCTA() {
         <div className="relative grid items-center gap-10 md:grid-cols-2">
           <div>
             <p className="text-gold text-xs font-semibold uppercase tracking-[0.2em]">
-              Your Marco Passport
+              Your The Marco Passport
             </p>
 
             <h2 className="mt-3 font-display text-4xl font-semibold text-balance md:text-5xl">

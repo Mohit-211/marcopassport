@@ -28,18 +28,18 @@ export function AboutUs() {
               About Us
             </span>
             <h2 className="font-display mt-3 text-3xl leading-tight text-primary md:text-4xl">
-              Welcome to Marco Passport
+              Welcome to the Marco Passport
             </h2>
             <div className="mt-6 space-y-5 text-muted-foreground leading-relaxed">
               <p>
-                Welcome to Marco Passport, your premier local guide to unlocking
-                the very best of Marco Island. As longtime residents who proudly
-                call this slice of paradise home, we created this magazine to
-                share the exclusive, insider knowledge you won&apos;t find on
-                generic travel websites. Our mission is to bridge the gap
-                between typical vacation itineraries and the authentic island
-                lifestyle, helping you curate a seamless and unforgettable
-                vacation.
+                Welcome to the Marco Passport, your premier local guide to
+                unlocking the very best of Marco Island. As longtime residents
+                who proudly call this slice of paradise home, we created this
+                magazine to share the exclusive, insider knowledge you
+                won&apos;t find on generic travel websites. Our mission is to
+                bridge the gap between typical vacation itineraries and the
+                authentic island lifestyle, helping you curate a seamless and
+                unforgettable vacation.
               </p>
               <p>
                 We serve as your ultimate resource for navigating our
@@ -49,7 +49,7 @@ export function AboutUs() {
                 water shuttle, or choosing between our island&apos;s 50+
                 top-class restaurants, we provide expert recommendations. From
                 local eco-tours and hidden natural wonders to world-class dining
-                and pristine beaches, let Marco Passport be your trusted
+                and pristine beaches, let The Marco Passport be your trusted
                 companion in paradise.
               </p>
             </div>

@@ -1,0 +1,147 @@
+.
+├── .DS_Store
+├── app
+│   ├── .DS_Store
+│   ├── auth
+│   │   └── page.tsx
+│   ├── blog
+│   │   ├── [slug]
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   ├── business
+│   │   ├── .DS_Store
+│   │   ├── page.tsx
+│   │   ├── submit
+│   │   │   ├── SubmitForm.tsx
+│   │   │   └── page.tsx
+│   │   └── thank-you
+│   │       └── page.tsx
+│   ├── contact
+│   │   └── page.tsx
+│   ├── error.tsx
+│   ├── explore
+│   │   └── page.tsx
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── listings
+│   │   └── [id]
+│   │       └── page.tsx
+│   ├── local-info
+│   │   └── page.tsx
+│   ├── magazine
+│   │   ├── [slug]
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   ├── not-found.tsx
+│   ├── page.tsx
+│   ├── passport
+│   │   └── page.tsx
+│   └── places
+│       ├── [id]
+│       │   └── page.tsx
+│       └── page.tsx
+├── components
+│   ├── .DS_Store
+│   ├── auth
+│   │   ├── AuthFields.tsx
+│   │   ├── AuthForm.tsx
+│   │   ├── AuthTabs.tsx
+│   │   └── GoogleIcon.tsx
+│   ├── blog
+│   │   ├── BlogArticleExperience.tsx
+│   │   ├── BlogExperience.tsx
+│   │   ├── BlogGrid.tsx
+│   │   ├── BlogNewsletter.tsx
+│   │   ├── BlogToc.tsx
+│   │   ├── ShareControls.tsx
+│   │   └── [slug]
+│   │       └── error.tsx
+│   ├── contact
+│   │   ├── ContactForm.tsx
+│   │   └── ContactInfo.tsx
+│   ├── explore
+│   │   ├── ExploreHelpers.tsx
+│   │   ├── ExplorePage.tsx
+│   │   ├── FilterPanel.tsx
+│   │   └── ListingCard.tsx
+│   ├── home
+│   │   ├── AboutUs.tsx
+│   │   ├── BlogPreview.tsx
+│   │   ├── Categories.tsx
+│   │   ├── EditorLetter.tsx
+│   │   ├── FeaturedListings.tsx
+│   │   ├── Hero.tsx
+│   │   ├── MagazineStrip.tsx
+│   │   ├── PassportCTA.tsx
+│   │   └── TopPlaces.tsx
+│   ├── listings
+│   │   ├── ListingActionsPanel.tsx
+│   │   ├── ListingGallery.tsx
+│   │   ├── ListingInfoContent.tsx
+│   │   └── SimilarAndRelated.tsx
+│   ├── local-info
+│   │   ├── ContentSections.tsx
+│   │   ├── ExploreMore.tsx
+│   │   ├── LocalStats.tsx
+│   │   └── QuickTips.tsx
+│   ├── magazine
+│   │   ├── ArchiveSection.tsx
+│   │   ├── CoverArt.tsx
+│   │   ├── CoverMockup.tsx
+│   │   ├── FeaturedEdition.tsx
+│   │   ├── Flipbook.tsx
+│   │   ├── MagazineExperience.tsx
+│   │   ├── MagazineGrid.tsx
+│   │   └── MagazineHero.tsx
+│   ├── passport
+│   │   ├── AddToPassportModal.tsx
+│   │   ├── PassportEmptyState.tsx
+│   │   ├── PassportItemCard.tsx
+│   │   └── PassportPage.tsx
+│   ├── places
+│   │   ├── EditorialGuide.tsx
+│   │   ├── NearbyAndRelated.tsx
+│   │   ├── PlaceExperience.tsx
+│   │   ├── PlaceStoryContent.tsx
+│   │   ├── PlacesGrid.tsx
+│   │   ├── PlacesHero.tsx
+│   │   └── TopPicksScroll.tsx
+│   ├── site
+│   │   ├── Footer.tsx
+│   │   └── Navbar.tsx
+│   └── ui
+│       ├── alert-dialog.tsx
+│       ├── alert.tsx
+│       ├── badge.tsx
+│       ├── button.tsx
+│       ├── calendar.tsx
+│       ├── checkbox.tsx
+│       ├── dialog.tsx
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── popover.tsx
+│       ├── select.tsx
+│       ├── separator.tsx
+│       ├── sheet.tsx
+│       ├── skeleton.tsx
+│       ├── slider.tsx
+│       ├── sonner.tsx
+│       ├── switch.tsx
+│       ├── textarea.tsx
+│       ├── toggle.tsx
+│       └── tooltip.tsx
+├── data
+│   ├── blogs.ts
+│   ├── content.ts
+│   ├── magazines.ts
+│   └── places.ts
+├── folder_structure.txt
+├── hooks
+│   └── use-mobile.tsx
+└── lib
+    ├── date.ts
+    ├── island-facts.ts
+    ├── utils.ts
+    └── weather.ts
+
+35 directories, 110 files

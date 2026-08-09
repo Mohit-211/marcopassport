@@ -16,10 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!place) return {};
 
   return {
-    title: `${place.name} — Marco Passport`,
+    title: `${place.name} — The Marco Passport`,
     description: place.tagline,
     openGraph: {
-      title: `${place.name} — Marco Passport`,
+      title: `${place.name} — The Marco Passport`,
       description: place.tagline,
       images: [place.image],
     },

@@ -43,43 +43,49 @@ export function PassportPage() {
 
   return (
     <>
-      {/* Header */}
-      <section className="bg-[#002E50] text-primary-foreground">
-        <div className="container mx-auto px-5 lg:px-8 py-14 md:py-20">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur border border-primary-foreground/20 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-[#EBBD00]">
-                <Sparkles className="h-3.5 w-3.5" /> Your itinerary
-              </div>
-              <h1 className="mt-5 font-display text-4xl md:text-6xl font-semibold tracking-tight">
-                My Passport
-              </h1>
-              <p className="mt-3 text-primary-foreground/80 text-base sm:text-lg max-w-xl">
-                Plan and manage your visits across Marco Island. Add places,
-                pick dates and build the trip you've been imagining.
-              </p>
-              <p className="mt-4 text-sm text-primary-foreground/60">
-                Signed in as{" "}
-                <span className="text-[#EBBD00] font-medium">
-                  {CURRENT_USER_EMAIL}
-                </span>
-              </p>
+      {/* Hero */}
+      <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
+        {/* Content */}
+        <div className="mx-auto flex h-full max-w-7xl flex-col justify-center gap-8 px-6 sm:px-8 lg:px-10 md:flex-row md:items-center md:justify-between">
+          <div className="max-w-xl">
+            {/* Eyebrow */}
+            <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">
+              <span className="h-px w-8 bg-gold/70" />
+              <Sparkles className="h-3.5 w-3.5" /> Your itinerary
             </div>
-            <div className="flex items-center gap-3">
-              <Link href="/explore">
-                <Button variant="gold" size="lg" className="group">
-                  <Plus className="h-4 w-4" /> Add More Places
-                </Button>
-              </Link>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={handleLogout}
-                className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 hover:text-primary-foreground"
-              >
-                <LogOut className="h-4 w-4" /> Sign Out
+
+            {/* Heading */}
+            <h1 className="whitespace-nowrap font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em]">
+              My <span className="italic text-gold">Passport</span>
+            </h1>
+
+            {/* Description */}
+            <p className="mt-5 max-w-lg text-sm leading-6 text-primary-foreground/80 sm:mt-6 sm:text-base sm:leading-7">
+              Plan and manage your visits across Marco Island. Add places, pick
+              dates and build the trip you've been imagining.
+            </p>
+            <p className="mt-4 text-sm text-primary-foreground/60">
+              Signed in as{" "}
+              <span className="font-medium text-gold">
+                {CURRENT_USER_EMAIL}
+              </span>
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link href="/explore">
+              <Button variant="gold" size="lg" className="group">
+                <Plus className="h-4 w-4" /> Add More Places
               </Button>
-            </div>
+            </Link>
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={handleLogout}
+              className="border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground"
+            >
+              <LogOut className="h-4 w-4" /> Sign Out
+            </Button>
           </div>
         </div>
       </section>

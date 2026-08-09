@@ -17,7 +17,6 @@ const NAV = [
   { href: "/explore", label: "Explore" },
   { href: "/passport", label: "Your Custom Passport" },
   { href: "/places", label: "Business Directory" },
-  // { href: "/contact", label: "Contact" },
 ];
 
 export function Navbar() {
@@ -27,13 +26,17 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 16);
+    };
 
-    onScroll();
+    handleScroll();
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -43,31 +46,31 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled
-          ? "border-b border-[#0A3C5A] bg-[#002946]/95 shadow-soft backdrop-blur-xl"
-          : "bg-transparent"
-
-        // scrolled
-        //   ? "border-b border-border bg-background/90 shadow-soft backdrop-blur-xl"
-        //   : "bg-transparent"
+        "fixed inset-x-0 top-0 z-50 border-b border-primary/8",
+        "bg-cream/50 backdrop-blur-xl",
+        "transition-all duration-300",
+        scrolled ? "shadow-soft" : "shadow-none"
       )}
     >
       <div className="container mx-auto flex h-20 items-center justify-between px-5 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="group shrink-0">
+        <Link
+          href="/"
+          aria-label="The Marco Passport home"
+          className="group shrink-0"
+        >
           <Image
             src="/logo.png"
-            alt="Marco Passport"
+            alt="The Marco Passport"
             width={180}
             height={64}
             priority
-            className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
+            className="h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03] lg:h-16"
           />
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-0.5 lg:flex">
           {NAV.map((item) => {
             const active =
               item.href === "/"
@@ -79,20 +82,15 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  active
-                    ? "text-[#F8F1E5]"
-                    : "text-[#F8F1E5]/85 hover:text-[#F8F1E5]"
-
-                  // active
-                  //   ? "text-primary"
-                  //   : "text-foreground/80 hover:text-primary"
+                  "relative rounded-lg px-3 py-2 text-[13px] font-medium tracking-[-0.01em]",
+                  "transition-colors duration-200",
+                  active ? "text-primary" : "text-primary/75 hover:text-primary"
                 )}
               >
                 {item.label}
 
                 {active && (
-                  <span className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-gold" />
+                  <span className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-primary" />
                 )}
               </Link>
             );
@@ -102,16 +100,35 @@ export function Navbar() {
         {/* Desktop CTA */}
         <div className="hidden lg:block">
           <Link href="/business">
-            <Button variant="gold">Advertise With Us</Button>
+            <Button
+              className={cn(
+                "h-10 rounded-full px-5 text-sm font-semibold",
+                "bg-primary text-primary-foreground",
+                "shadow-sm transition-all duration-200",
+                "hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md"
+              )}
+            >
+              Advertise With Us
+            </Button>
           </Link>
         </div>
 
         {/* Mobile Toggle */}
         <button
           type="button"
-          aria-label="Toggle menu"
-          onClick={() => setOpen((v) => !v)}
-          className="grid h-11 w-11 place-items-center rounded-xl border border-border bg-background/90 lg:hidden"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          onClick={() => setOpen((value) => !value)}
+          className="
+            grid h-11 w-11 place-items-center rounded-xl
+            border border-primary/10
+            bg-primary/5
+            text-primary
+            shadow-sm
+            transition-all duration-200
+            hover:bg-primary/10
+            lg:hidden
+          "
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
@@ -120,8 +137,8 @@ export function Navbar() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "overflow-hidden border-t border-border bg-background transition-all duration-300 lg:hidden",
-          open ? "max-h-[600px]" : "max-h-0 border-transparent"
+          "overflow-hidden border-t border-primary/10 bg-cream/50 transition-all duration-300 lg:hidden",
+          open ? "max-h-[650px]" : "max-h-0"
         )}
       >
         <nav className="container mx-auto flex flex-col gap-1 px-5 py-4">
@@ -136,8 +153,11 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "rounded-lg px-4 py-3 text-base font-medium transition-colors",
-                  active ? "bg-accent text-primary" : "hover:bg-accent"
+                  "rounded-xl px-4 py-3 text-[15px] font-medium",
+                  "transition-colors duration-200",
+                  active
+                    ? "bg-primary text-primary-foreground"
+                    : "text-primary/80 hover:bg-primary/10 hover:text-primary"
                 )}
               >
                 {item.label}
@@ -146,7 +166,15 @@ export function Navbar() {
           })}
 
           <Link href="/business" className="mt-3">
-            <Button variant="gold" className="w-full">
+            <Button
+              className="
+                h-11 w-full rounded-full
+                bg-primary
+                text-sm font-semibold
+                text-primary-foreground
+                hover:bg-primary/90
+              "
+            >
               Advertise With Us
             </Button>
           </Link>

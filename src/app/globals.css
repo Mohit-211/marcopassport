@@ -39,7 +39,11 @@
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
 
+  --color-cream: var(--cream);
+  --color-cream-foreground: var(--cream-foreground);
+
   --color-sand: var(--sand);
+  --color-sand-foreground: var(--sand-foreground);
 
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
@@ -50,84 +54,185 @@
 
   --shadow-soft: 0 4px 14px -4px
     color-mix(in oklab, var(--primary) 14%, transparent);
+
   --shadow-elegant: 0 24px 60px -24px
-    color-mix(in oklab, var(--primary) 35%, transparent);
+    color-mix(in oklab, var(--primary) 30%, transparent);
+
   --shadow-gold: 0 10px 30px -10px
-    color-mix(in oklab, var(--gold) 45%, transparent);
+    color-mix(in oklab, var(--gold) 35%, transparent);
 }
 
 :root {
   --radius: 0.875rem;
 
-  --background: oklch(0.985 0.006 85);
-  --foreground: oklch(0.18 0.04 245);
+  /* --------------------------------
+     Core Brand
+     -------------------------------- */
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.04 245);
-
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.04 245);
-
-  --primary: oklch(0.27 0.07 245);
+  /* #002946 */
+  --primary: oklch(0.23 0.055 245);
   --primary-foreground: oklch(0.98 0.01 85);
-  --primary-soft: oklch(0.34 0.07 245);
 
-  --secondary: oklch(0.95 0.012 240);
-  --secondary-foreground: oklch(0.27 0.07 245);
+  /* Lighter companion to primary */
+  --primary-soft: oklch(0.32 0.055 245);
 
-  --muted: oklch(0.955 0.01 85);
-  --muted-foreground: oklch(0.45 0.03 245);
+  /* --------------------------------
+     Main Surfaces
+     -------------------------------- */
 
-  --accent: oklch(0.945 0.015 240);
-  --accent-foreground: oklch(0.27 0.07 245);
+  /* Warm off-white */
+  --background: oklch(0.985 0.006 85);
+  --foreground: oklch(0.2 0.035 245);
 
-  --gold: oklch(0.82 0.16 88);
-  --gold-foreground: oklch(0.22 0.05 245);
+  /* #F8F1E5 */
+  --cream: oklch(0.955 0.018 82);
+  --cream-foreground: oklch(0.23 0.055 245);
 
-  --sand: oklch(0.96 0.018 80);
+  /* --------------------------------
+     Cards / Popovers
+     -------------------------------- */
 
-  --destructive: oklch(0.6 0.22 25);
+  --card: oklch(0.995 0.004 85);
+  --card-foreground: oklch(0.2 0.035 245);
+
+  --popover: oklch(0.995 0.004 85);
+  --popover-foreground: oklch(0.2 0.035 245);
+
+  /* --------------------------------
+     Secondary
+     -------------------------------- */
+
+  --secondary: oklch(0.94 0.012 240);
+  --secondary-foreground: oklch(0.23 0.055 245);
+
+  /* --------------------------------
+     Muted
+     -------------------------------- */
+
+  --muted: oklch(0.95 0.012 82);
+  --muted-foreground: oklch(0.46 0.025 245);
+
+  /* --------------------------------
+     Accent
+     -------------------------------- */
+
+  /* Very soft coastal blue */
+  --accent: oklch(0.93 0.018 238);
+  --accent-foreground: oklch(0.23 0.055 245);
+
+  /* --------------------------------
+     Champagne / Soft Gold
+     -------------------------------- */
+
+  /*
+    Deliberately desaturated.
+    This replaces the previous bright yellow-gold.
+  */
+  --gold: oklch(0.88 0.055 85);
+  --gold-foreground: oklch(0.23 0.055 245);
+
+  /* --------------------------------
+     Sand
+     -------------------------------- */
+
+  --sand: oklch(0.94 0.022 78);
+  --sand-foreground: oklch(0.23 0.055 245);
+
+  /* --------------------------------
+     Feedback
+     -------------------------------- */
+
+  --destructive: oklch(0.58 0.19 25);
   --destructive-foreground: oklch(0.98 0.01 85);
 
-  --border: oklch(0.9 0.015 240);
-  --input: oklch(0.92 0.012 240);
-  --ring: oklch(0.82 0.16 88);
+  /* --------------------------------
+     Borders / Inputs
+     -------------------------------- */
+
+  --border: oklch(0.88 0.015 240);
+  --input: oklch(0.9 0.012 240);
+  --ring: oklch(0.65 0.045 245);
 }
 
 .dark {
-  --background: oklch(0.18 0.04 245);
-  --foreground: oklch(0.98 0.01 85);
+  /* --------------------------------
+     Core Brand
+     -------------------------------- */
 
-  --card: oklch(0.22 0.05 245);
-  --card-foreground: oklch(0.98 0.01 85);
+  --primary: oklch(0.86 0.035 82);
+  --primary-foreground: oklch(0.2 0.035 245);
 
-  --popover: oklch(0.22 0.05 245);
-  --popover-foreground: oklch(0.98 0.01 85);
+  --primary-soft: oklch(0.72 0.025 82);
 
-  --primary: oklch(0.82 0.16 88);
-  --primary-foreground: oklch(0.22 0.05 245);
-  --primary-soft: oklch(0.75 0.14 88);
+  /* --------------------------------
+     Main Surfaces
+     -------------------------------- */
 
-  --secondary: oklch(0.28 0.06 245);
-  --secondary-foreground: oklch(0.98 0.01 85);
+  --background: oklch(0.18 0.035 245);
+  --foreground: oklch(0.96 0.012 85);
 
-  --muted: oklch(0.28 0.06 245);
-  --muted-foreground: oklch(0.75 0.02 240);
+  --cream: oklch(0.26 0.025 82);
+  --cream-foreground: oklch(0.96 0.012 85);
 
-  --accent: oklch(0.34 0.07 245);
-  --accent-foreground: oklch(0.98 0.01 85);
+  /* --------------------------------
+     Cards / Popovers
+     -------------------------------- */
 
-  --gold: oklch(0.82 0.16 88);
-  --gold-foreground: oklch(0.22 0.05 245);
+  --card: oklch(0.22 0.04 245);
+  --card-foreground: oklch(0.96 0.012 85);
 
-  --sand: oklch(0.24 0.05 245);
+  --popover: oklch(0.22 0.04 245);
+  --popover-foreground: oklch(0.96 0.012 85);
 
-  --destructive: oklch(0.7 0.19 25);
+  /* --------------------------------
+     Secondary
+     -------------------------------- */
+
+  --secondary: oklch(0.28 0.045 245);
+  --secondary-foreground: oklch(0.96 0.012 85);
+
+  /* --------------------------------
+     Muted
+     -------------------------------- */
+
+  --muted: oklch(0.27 0.04 245);
+  --muted-foreground: oklch(0.74 0.018 240);
+
+  /* --------------------------------
+     Accent
+     -------------------------------- */
+
+  --accent: oklch(0.31 0.045 245);
+  --accent-foreground: oklch(0.96 0.012 85);
+
+  /* --------------------------------
+     Champagne / Soft Gold
+     -------------------------------- */
+
+  --gold: oklch(0.82 0.045 84);
+  --gold-foreground: oklch(0.2 0.035 245);
+
+  /* --------------------------------
+     Sand
+     -------------------------------- */
+
+  --sand: oklch(0.28 0.035 78);
+  --sand-foreground: oklch(0.96 0.012 85);
+
+  /* --------------------------------
+     Feedback
+     -------------------------------- */
+
+  --destructive: oklch(0.68 0.17 25);
   --destructive-foreground: oklch(0.98 0.01 85);
+
+  /* --------------------------------
+     Borders / Inputs
+     -------------------------------- */
 
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.82 0.16 88);
+  --ring: oklch(0.72 0.03 82);
 }
 
 @layer base {

@@ -12,7 +12,7 @@ const cards = [
   {
     href: "/explore",
     title: "Explore listings",
-    text: "Stays, restaurants, and services curated by locals.",
+    text: "Find places to stay, dine, shop, and experience the best of Marco Island.",
     image: "/assets/place-marina.jpg",
   },
   {

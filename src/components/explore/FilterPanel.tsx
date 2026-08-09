@@ -8,8 +8,8 @@ import { categories } from "@/data/content";
 import { cn } from "@/lib/utils";
 
 export const PRICE_OPTIONS = ["$", "$$", "$$$", "$$$$"] as const;
+
 export const NEIGHBORHOODS = [
-  "Crescent Beach",
   "Marco Marina",
   "Old Marco",
   "Tigertail",
@@ -24,131 +24,169 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div>
-      <h3 className="text-[11px] uppercase tracking-[0.18em] font-bold text-muted-foreground mb-3">
-        {title}
-      </h3>
+    <section className="border-b border-border py-5 first:pt-0 last:border-b-0">
+      <h3 className="mb-4 text-sm font-semibold text-foreground">{title}</h3>
       {children}
-    </div>
+    </section>
   );
 }
 
-export function FilterPanel(props: {
+type FilterPanelProps = {
   selectedCats: string[];
-  onToggleCat: (c: string) => void;
+  toggleCategoryAction: (category: string) => void;
+
   selectedPrices: string[];
-  onTogglePrice: (p: string) => void;
+  togglePriceAction: (price: string) => void;
+
   selectedHoods: string[];
-  onToggleHood: (h: string) => void;
+  toggleNeighborhoodAction: (hood: string) => void;
+
   minRating: number;
-  onMinRating: (v: number) => void;
+  setMinRatingAction: (rating: number) => void;
+
   featuredOnly: boolean;
-  onFeaturedOnly: (v: boolean) => void;
+  setFeaturedOnlyAction: (value: boolean) => void;
+
   activeCount: number;
-  onClear: () => void;
-}) {
+  clearFiltersAction: () => void;
+};
+
+export function FilterPanel({
+  selectedCats,
+  toggleCategoryAction,
+  selectedPrices,
+  togglePriceAction,
+  selectedHoods,
+  toggleNeighborhoodAction,
+  minRating,
+  setMinRatingAction,
+  featuredOnly,
+  setFeaturedOnlyAction,
+  activeCount,
+  clearFiltersAction,
+}: FilterPanelProps) {
   return (
-    <div className="space-y-7">
-      <div className="flex items-center justify-between">
-        <h2 className="font-display text-lg font-semibold">Filters</h2>
-        {props.activeCount > 0 && (
+    <div className="rounded-2xl border border-border bg-card p-5">
+      {/* Header */}
+      <div className="mb-2 flex items-center justify-between">
+        <h2 className="font-display text-xl font-semibold">Filters</h2>
+
+        {activeCount > 0 && (
           <button
-            onClick={props.onClear}
-            className="text-xs uppercase tracking-wider font-semibold text-muted-foreground hover:text-primary transition"
+            type="button"
+            onClick={clearFiltersAction}
+            className="text-xs font-medium text-primary transition-colors hover:text-primary/70"
           >
             Clear
           </button>
         )}
       </div>
 
+      {/* Featured */}
       <Section title="Featured">
         <div className="flex items-center justify-between">
-          <Label htmlFor="featured-only" className="text-sm cursor-pointer">
+          <Label htmlFor="featured-only" className="cursor-pointer text-sm">
             Featured listings only
           </Label>
+
           <Switch
             id="featured-only"
-            checked={props.featuredOnly}
-            onCheckedChange={props.onFeaturedOnly}
+            checked={featuredOnly}
+            onCheckedChange={setFeaturedOnlyAction}
           />
         </div>
       </Section>
 
+      {/* Category */}
       <Section title="Category">
         <div className="space-y-2.5">
-          {categories.map((c) => (
+          {categories.map((category) => (
             <label
-              key={c.slug}
-              className="flex items-center gap-3 cursor-pointer group"
+              key={category.slug}
+              className="group flex cursor-pointer items-center gap-3"
             >
               <Checkbox
-                checked={props.selectedCats.includes(c.name)}
-                onCheckedChange={() => props.onToggleCat(c.name)}
+                checked={selectedCats.includes(category.name)}
+                onCheckedChange={() => toggleCategoryAction(category.name)}
               />
-              <span className="text-sm flex-1 group-hover:text-primary transition">
-                {c.name}
+
+              <span className="flex-1 text-sm transition-colors group-hover:text-primary">
+                {category.name}
               </span>
-              <span className="text-xs text-muted-foreground">{c.count}</span>
+
+              <span className="text-xs text-muted-foreground">
+                {category.count}
+              </span>
             </label>
           ))}
         </div>
       </Section>
 
+      {/* Price */}
       <Section title="Price">
         <div className="flex flex-wrap gap-2">
-          {PRICE_OPTIONS.map((p) => {
-            const active = props.selectedPrices.includes(p);
+          {PRICE_OPTIONS.map((price) => {
+            const active = selectedPrices.includes(price);
+
             return (
               <button
-                key={p}
+                key={price}
                 type="button"
-                onClick={() => props.onTogglePrice(p)}
+                onClick={() => togglePriceAction(price)}
                 className={cn(
-                  "px-4 py-1.5 rounded-full text-sm font-semibold border transition",
+                  "rounded-full border px-4 py-1.5 text-sm font-semibold transition-colors",
                   active
-                    ? "bg-gold text-gold-foreground border-gold"
-                    : "bg-background text-foreground border-border hover:border-gold"
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-background text-foreground hover:border-primary hover:text-primary"
                 )}
               >
-                {p}
+                {price}
               </button>
             );
           })}
         </div>
       </Section>
 
+      {/* Neighborhood */}
       <Section title="Neighborhood">
         <div className="space-y-2.5">
-          {NEIGHBORHOODS.map((h) => (
+          {NEIGHBORHOODS.map((hood) => (
             <label
-              key={h}
-              className="flex items-center gap-3 cursor-pointer group"
+              key={hood}
+              className="group flex cursor-pointer items-center gap-3"
             >
               <Checkbox
-                checked={props.selectedHoods.includes(h)}
-                onCheckedChange={() => props.onToggleHood(h)}
+                checked={selectedHoods.includes(hood)}
+                onCheckedChange={() => toggleNeighborhoodAction(hood)}
               />
-              <span className="text-sm flex-1 group-hover:text-primary transition">
-                {h}
+
+              <span className="flex-1 text-sm transition-colors group-hover:text-primary">
+                {hood}
               </span>
             </label>
           ))}
         </div>
       </Section>
 
+      {/* Rating */}
       <Section
-        title={`Minimum rating${props.minRating ? ` · ${props.minRating.toFixed(1)}+` : ""}`}
+        title={
+          minRating
+            ? `Minimum rating · ${minRating.toFixed(1)}+`
+            : "Minimum rating"
+        }
       >
         <Slider
-          value={props.minRating}
-          onValueChange={(v) =>
-            props.onMinRating(Array.isArray(v) ? (v[0] ?? 0) : v)
+          value={minRating}
+          onValueChange={(value) =>
+            setMinRatingAction(Array.isArray(value) ? (value[0] ?? 0) : value)
           }
           min={0}
           max={5}
           step={0.5}
         />
-        <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+
+        <div className="mt-2 flex justify-between text-xs text-muted-foreground">
           <span>Any</span>
           <span>5.0</span>
         </div>

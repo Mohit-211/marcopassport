@@ -13,11 +13,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getBlogBySlug(slug);
 
   if (!post) {
-    return { title: "Story — Marco Passport" };
+    return { title: "Story — The Marco Passport" };
   }
 
   return {
-    title: `${post.title} — Marco Passport`,
+    title: `${post.title} — The Marco Passport`,
     description: post.excerpt,
     openGraph: {
       title: post.title,

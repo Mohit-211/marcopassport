@@ -1,8 +1,14 @@
 "use client";
-
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ArrowRight,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  Newspaper,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BLOG_CARDS, BLOG_CATEGORIES, type BlogCategory } from "@/data/blogs";
@@ -39,94 +45,63 @@ export default function BlogExperience() {
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
+      <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
         {/* Background */}
-        <div className="absolute inset-0 -z-10">
-          <img
-            src="/assets/blog-hero.jpg" // or /assets/hero-marco-island.jpg
+        <div className="absolute inset-0 -z-20">
+          <Image
+            src="/assets/listing-yacht.jpg"
             alt=""
             aria-hidden
-            className="h-full w-full object-cover blur-3xl scale-125 opacity-40"
+            fill
+            priority
+            className="object-cover object-center blur-3xl scale-125"
+            sizes="100vw"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,41,70,0.82),rgba(0,41,70,0.97))]" />
         </div>
+        {/* Image treatment */}
+        <div className="absolute inset-0 -z-10 bg-primary/15" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/85 via-primary/40 to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/70 via-transparent to-primary/10" />
 
-        <div className="container mx-auto px-5 lg:px-8 pt-32 pb-20 md:pt-40 md:pb-28 max-w-4xl text-center">
-          <p className="text-xs uppercase tracking-[0.25em] text-gold font-semibold">
-            The Journal
-          </p>
+        {/* Content */}
+        <div className="mx-auto flex h-full max-w-7xl items-center px-6 sm:px-8 lg:px-10">
+          <div className="max-w-2xl">
+            {/* Eyebrow */}
+            <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">
+              <span className="h-px w-8 bg-gold/70" />
+              <Newspaper className="h-3.5 w-3.5" />
+              The Journal
+            </div>
 
-          <h1 className="mt-4 font-display text-5xl md:text-7xl font-semibold text-balance">
-            From Our Blog
-          </h1>
+            {/* Heading */}
 
-          <p className="mt-6 text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto leading-relaxed">
-            Stories, tips and guides for exploring Marco Island like an insider,
-            from quiet beaches and stone crab feasts to the kind of sunsets you
-            remember for years.
-          </p>
+            <h1 className="whitespace-nowrap font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em]">
+              From <span className="italic text-gold">Our Blog</span>
+            </h1>
 
-          {/* Search */}
-          <div className="mt-10 max-w-xl mx-auto relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary-foreground/60" />
+            {/* Description */}
+            <p className="mt-5 max-w-lg text-sm leading-6 text-primary-foreground/80 sm:mt-6 sm:text-base sm:leading-7">
+              Stories, tips and guides for exploring Marco Island like an
+              insider, from quiet beaches and stone crab feasts to the kind of
+              sunsets you remember for years.
+            </p>
 
-            <Input
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setPage(1);
-              }}
-              placeholder="Search stories, tips and guides..."
-              className="h-12 rounded-full border border-white/15 bg-white/10 pl-11 text-primary-foreground placeholder:text-primary-foreground/55 backdrop-blur-md"
-            />
+            {/* Search */}
+            <div className="relative mt-6 max-w-md sm:mt-7">
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary-foreground/60" />
+              <Input
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setPage(1);
+                }}
+                placeholder="Search stories, tips and guides..."
+                className="h-12 rounded-full border border-white/15 bg-white/10 pl-11 text-primary-foreground placeholder:text-primary-foreground/55 backdrop-blur-md"
+              />
+            </div>
           </div>
         </div>
       </section>
-      {/* Header */}
-
-      {/* 
-      <section className="relative bg-sand border-b border-border overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 20%, var(--primary) 1px, transparent 1px), radial-gradient(circle at 80% 60%, var(--primary) 1px, transparent 1px)",
-            backgroundSize: "36px 36px, 28px 28px",
-          }}
-        />
-        <div className="relative container mx-auto px-5 lg:px-8 py-16 md:py-24 max-w-4xl text-center">
-          <p className="text-xs uppercase tracking-[0.25em] text-gold font-semibold">
-            The Journal
-          </p>
-          <h1 className="font-display text-5xl md:text-6xl font-semibold mt-4 text-primary text-balance">
-            From Our Blog
-          </h1>
-          <p className="text-muted-foreground mt-5 text-lg max-w-2xl mx-auto leading-relaxed">
-            Stories, tips and guides for exploring Marco Island like an insider
-            — from quiet beaches and stone crab feasts to the kind of sunsets
-            you remember for years.
-          </p>
-        */}
-
-      {/* Search */}
-
-      {/* 
-          <div className="mt-9 max-w-xl mx-auto relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setPage(1);
-              }}
-              placeholder="Search stories, tips and guides…"
-              className="pl-11 h-12 rounded-full bg-background border-border shadow-soft"
-            />
-          </div>
-        </div>
-      </section>
-              */}
 
       {/* Category pills */}
       <section className="border-b border-border bg-background sticky top-16 z-10 backdrop-blur supports-[backdrop-filter]:bg-background/80">

@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import {
   Search,
   SlidersHorizontal,
   ChevronLeft,
   ChevronRight,
+  MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -119,88 +121,106 @@ export function ExplorePage() {
   const filterPanel = (
     <FilterPanel
       selectedCats={selectedCats}
-      onToggleCat={(c) => {
+      toggleCategoryAction={(c: string) => {
         setPage(1);
         setSelectedCats((p) =>
           p.includes(c) ? p.filter((x) => x !== c) : [...p, c]
         );
       }}
       selectedPrices={selectedPrices}
-      onTogglePrice={(p) => {
+      togglePriceAction={(p: string) => {
         setPage(1);
         setSelectedPrices((prev) =>
           prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]
         );
       }}
       selectedHoods={selectedHoods}
-      onToggleHood={(h) => {
+      toggleNeighborhoodAction={(h: string) => {
         setPage(1);
         setSelectedHoods((prev) =>
           prev.includes(h) ? prev.filter((x) => x !== h) : [...prev, h]
         );
       }}
       minRating={minRating}
-      onMinRating={(v) => {
+      setMinRatingAction={(v: number) => {
         setPage(1);
         setMinRating(v);
       }}
       featuredOnly={featuredOnly}
-      onFeaturedOnly={(v) => {
+      setFeaturedOnlyAction={(v: boolean) => {
         setPage(1);
         setFeaturedOnly(v);
       }}
       activeCount={activeFilterCount}
-      onClear={clearAll}
+      clearFiltersAction={clearAll}
     />
   );
 
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <img
+      <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
+        {/* Background */}
+        <div className="absolute inset-0 -z-20">
+          <Image
             src="/assets/explore-hero.jpg"
             alt="Marco Island marina at golden hour with yachts and palm trees"
-            width={1920}
-            height={768}
-            className="h-full w-full object-cover"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.22_0.06_240/0.85),oklch(0.22_0.06_240/0.65)_60%,oklch(0.22_0.06_240/0.9))]" />
         </div>
-        <div className="container mx-auto px-5 lg:px-8 pt-28 pb-16 md:pt-32 md:pb-20 text-primary-foreground">
-          <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
-            Directory
-          </p>
-          <h1 className="font-display text-4xl md:text-6xl font-semibold mt-3 text-balance max-w-3xl">
-            Explore Marco Island
-          </h1>
-          <p className="mt-4 max-w-2xl text-base md:text-lg text-primary-foreground/80">
-            Every listing is hand-vetted. Filter by category, price and
-            neighborhood — and bookmark what you love.
-          </p>
+        {/* Image treatment */}
+        <div className="absolute inset-0 -z-10 bg-primary/15" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/85 via-primary/40 to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/70 via-transparent to-primary/10" />
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setPage(1);
-            }}
-            className="mt-8 flex flex-col sm:flex-row gap-2 bg-background/95 backdrop-blur p-2 rounded-2xl shadow-elegant max-w-2xl"
-          >
-            <div className="flex items-center flex-1 gap-2 px-3">
-              <Search className="h-5 w-5 text-muted-foreground" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                type="text"
-                placeholder="Search businesses, categories or keywords…"
-                className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted-foreground py-3"
-              />
+        {/* Content */}
+        <div className="mx-auto flex h-full max-w-7xl items-center px-6 sm:px-8 lg:px-10">
+          <div className="max-w-3xl">
+            {/* Eyebrow */}
+            <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">
+              <span className="h-px w-8 bg-gold/70" />
+              <MapPin className="h-3.5 w-3.5" />
+              Directory
             </div>
-            <Button type="submit" variant="gold" size="lg">
-              Search
-            </Button>
-          </form>
+
+            {/* Heading */}
+
+            <h1 className="whitespace-nowrap font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em]">
+              Explore <span className="italic text-gold">Marco Island</span>
+            </h1>
+
+            {/* Description */}
+            <p className="mt-5 max-w-lg text-sm leading-6 text-primary-foreground/80 sm:mt-6 sm:text-base sm:leading-7">
+              Every listing is hand-vetted. Filter by category, price and
+              neighborhood — and bookmark what you love.
+            </p>
+
+            {/* Search */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setPage(1);
+              }}
+              className="mt-6 flex max-w-2xl flex-col gap-2 rounded-2xl bg-background/95 p-2 shadow-elegant backdrop-blur sm:mt-7 sm:flex-row"
+            >
+              <div className="flex flex-1 items-center gap-2 px-3">
+                <Search className="h-5 w-5 text-muted-foreground" />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  type="text"
+                  placeholder="Search businesses, categories or keywords…"
+                  className="flex-1 bg-transparent py-3 text-foreground outline-none placeholder:text-muted-foreground"
+                />
+              </div>
+              <Button type="submit" variant="gold" size="lg">
+                Search
+              </Button>
+            </form>
+          </div>
         </div>
       </section>
 
@@ -278,7 +298,7 @@ export function ExplorePage() {
                   <ActiveChip
                     key={c}
                     label={c}
-                    onRemove={() =>
+                    action={() =>
                       setSelectedCats((p) => p.filter((x) => x !== c))
                     }
                   />
@@ -287,7 +307,7 @@ export function ExplorePage() {
                   <ActiveChip
                     key={p}
                     label={p}
-                    onRemove={() =>
+                    action={() =>
                       setSelectedPrices((prev) => prev.filter((x) => x !== p))
                     }
                   />
@@ -296,7 +316,7 @@ export function ExplorePage() {
                   <ActiveChip
                     key={h}
                     label={h}
-                    onRemove={() =>
+                    action={() =>
                       setSelectedHoods((prev) => prev.filter((x) => x !== h))
                     }
                   />
@@ -304,13 +324,13 @@ export function ExplorePage() {
                 {minRating > 0 && (
                   <ActiveChip
                     label={`${minRating}+ stars`}
-                    onRemove={() => setMinRating(0)}
+                    action={() => setMinRating(0)}
                   />
                 )}
                 {featuredOnly && (
                   <ActiveChip
                     label="Featured only"
-                    onRemove={() => setFeaturedOnly(false)}
+                    action={() => setFeaturedOnly(false)}
                   />
                 )}
                 <button
@@ -323,7 +343,7 @@ export function ExplorePage() {
             )}
 
             {pageItems.length === 0 ? (
-              <EmptyState onClear={clearAll} />
+              <EmptyState clearAction={clearAll} />
             ) : (
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {pageItems.map((l) => (

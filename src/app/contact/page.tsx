@@ -3,9 +3,9 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactInfo } from "@/components/contact/ContactInfo";
 
 export const metadata: Metadata = {
-  title: "Contact — Marco Passport",
+  title: "Contact — The Marco Passport",
   description:
-    "Get in touch with the Marco Passport team — for press, partnerships and visitor questions.",
+    "Get in touch with the The Marco Passport team — for press, partnerships and visitor questions.",
 };
 
 export default function ContactPage() {

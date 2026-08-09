@@ -1,19 +1,30 @@
 "use client";
 
 import { Search, X } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 
 export function ActiveChip({
   label,
-  onRemove,
+  action,
 }: {
   label: string;
-  onRemove: () => void;
+  action: () => void;
 }) {
   return (
     <button
-      onClick={onRemove}
-      className="inline-flex items-center gap-1.5 pl-3 pr-2 py-1 rounded-full bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition"
+      type="button"
+      onClick={action}
+      className="
+        inline-flex items-center gap-1.5
+        rounded-full
+        bg-primary
+        py-1 pl-3 pr-2
+        text-xs font-medium
+        text-primary-foreground
+        transition
+        hover:bg-primary/90
+      "
     >
       {label}
       <X className="h-3 w-3" />
@@ -21,20 +32,39 @@ export function ActiveChip({
   );
 }
 
-export function EmptyState({ onClear }: { onClear: () => void }) {
+export function EmptyState({ clearAction }: { clearAction: () => void }) {
   return (
-    <div className="rounded-3xl border border-dashed border-border p-16 text-center bg-sand/40">
-      <div className="mx-auto h-14 w-14 grid place-items-center rounded-full bg-gold/15 text-gold mb-4">
+    <div
+      className="
+        rounded-3xl
+        border border-dashed border-border
+        bg-sand/40
+        p-16
+        text-center
+      "
+    >
+      <div
+        className="
+          mx-auto mb-4
+          grid h-14 w-14 place-items-center
+          rounded-full
+          bg-gold/15
+          text-gold
+        "
+      >
         <Search className="h-6 w-6" />
       </div>
+
       <h3 className="font-display text-2xl font-semibold">
         No listings match those filters
       </h3>
-      <p className="text-muted-foreground mt-2 max-w-md mx-auto text-sm">
-        Try clearing a filter or expanding your search — there's still plenty
+
+      <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+        Try clearing a filter or expanding your search. There is still plenty
         more to discover.
       </p>
-      <Button variant="gold" className="mt-6" onClick={onClear}>
+
+      <Button variant="gold" className="mt-6" onClick={clearAction}>
         Clear all filters
       </Button>
     </div>
