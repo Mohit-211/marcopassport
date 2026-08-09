@@ -20,7 +20,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import type { Magazine, magazines } from "@/data/magazines";
 import { cn } from "@/lib/utils";
-import CoverArt from "@/components/magazine/CoverArt";
 import Flipbook, {
   ReaderPage,
   buildSpreads,
@@ -46,17 +45,6 @@ function IconBtn({
   );
 }
 
-function Meta({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="text-[10px] uppercase tracking-[0.22em] text-primary-foreground/60">
-        {label}
-      </p>
-      <p className="font-display text-xl font-semibold mt-1">{value}</p>
-    </div>
-  );
-}
-
 export default function MagazineExperience({
   magazine,
   others,
@@ -73,6 +61,15 @@ export default function MagazineExperience({
 
   const next = () => setPage((p) => Math.min(p + 1, total - 1));
   const prev = () => setPage((p) => Math.max(p - 1, 0));
+
+  const openAt = (i: number) => {
+    setPage(i);
+    setReader(true);
+  };
+
+  const goToPage = (i: number) => {
+    setPage(i);
+  };
 
   useEffect(() => {
     if (!reader) return;
@@ -120,51 +117,50 @@ export default function MagazineExperience({
     <>
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
-        <div className="absolute inset-0 -z-10 opacity-30">
-          <img
-            src={magazine.cover}
-            alt=""
-            aria-hidden
-            className="h-full w-full object-cover blur-3xl scale-125"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.22_0.06_240/0.8),oklch(0.22_0.06_240/0.97))]" />
-        </div>
-        <div className="container mx-auto px-5 lg:px-8 pt-32 pb-20 md:pt-40 md:pb-28">
+        <div className="container mx-auto px-5 lg:px-8 pt-24 pb-10 sm:pt-28 sm:pb-12 md:pt-32 md:pb-16">
+          {/* Back link */}
           <Link
             href="/magazine"
             className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary-foreground/80 hover:text-gold transition-colors"
           >
             <ChevronLeft className="h-3.5 w-3.5" /> All editions
           </Link>
-          <div className="mt-8 grid md:grid-cols-[minmax(0,360px)_1fr] gap-12 lg:gap-20 items-center">
-            <CoverArt magazine={magazine} />
-            <div>
+
+          {/* Cover + info */}
+          <div className="mt-6 grid items-center gap-6 sm:mt-8 sm:grid-cols-[150px_1fr] sm:gap-10 md:grid-cols-[190px_1fr] md:gap-14 lg:grid-cols-[220px_1fr] lg:gap-16">
+            {/* Cover — plain photo, no overlaid text */}
+            <div className="mx-auto w-24 sm:mx-0 sm:w-full">
+              <div className="aspect-[2/3] overflow-hidden rounded-md shadow-elegant ring-1 ring-primary-foreground/10">
+                <img
+                  src={magazine.cover}
+                  alt={`${magazine.title} cover`}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            </div>
+
+            {/* Info */}
+            <div className="text-center sm:text-left">
               <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
                 {magazine.issue} · {magazine.season}
               </p>
-              <h1 className="mt-3 font-display text-5xl md:text-7xl font-semibold leading-[1.02] text-balance">
+              <h1 className="mt-3 font-display text-3xl font-semibold leading-[1.05] text-balance sm:text-5xl md:text-6xl">
                 {magazine.title}
               </h1>
-              <p className="mt-5 text-lg md:text-xl text-primary-foreground/85 max-w-2xl italic">
+              <p className="mt-3 text-sm italic text-primary-foreground/85 sm:mt-4 sm:text-base md:text-lg">
                 {magazine.tagline}
               </p>
-              <p className="mt-5 text-base text-primary-foreground/75 max-w-2xl leading-relaxed">
+              <p className="mt-4 hidden max-w-xl text-sm leading-relaxed text-primary-foreground/70 sm:block">
                 {magazine.description}
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Button
-                  variant="gold"
-                  size="lg"
-                  onClick={() => {
-                    setPage(0);
-                    setReader(true);
-                  }}
-                >
+
+              {/* Actions */}
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:mt-6 sm:justify-start">
+                <Button variant="gold" onClick={() => openAt(0)}>
                   <BookOpen className="h-4 w-4" /> Start reading
                 </Button>
                 <Button
                   variant="outline"
-                  size="lg"
                   onClick={handleSave}
                   className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 hover:text-primary-foreground"
                 >
@@ -175,22 +171,18 @@ export default function MagazineExperience({
                   )}
                   {saved ? "Saved" : "Save"}
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="lg"
-                  onClick={handleShare}
-                  className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
-                >
-                  <Share2 className="h-4 w-4" /> Share
-                </Button>
+                <IconBtn label="Share" onClick={handleShare}>
+                  <Share2 className="h-4 w-4" />
+                </IconBtn>
               </div>
-              <div className="mt-10 grid grid-cols-3 gap-6 max-w-md border-t border-primary-foreground/15 pt-6">
-                <Meta label="Pages" value={String(magazine.pages)} />
-                <Meta
-                  label="Stories"
-                  value={String(magazine.sections.length)}
-                />
-                <Meta label="Published" value={magazine.date} />
+
+              {/* Meta */}
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] uppercase tracking-[0.16em] text-primary-foreground/60 sm:mt-6 sm:justify-start">
+                <span>{magazine.pages} pages</span>
+                <span className="h-1 w-1 rounded-full bg-gold" />
+                <span>{magazine.sections.length} stories</span>
+                <span className="h-1 w-1 rounded-full bg-gold" />
+                <span>Published {magazine.date}</span>
               </div>
             </div>
           </div>
@@ -198,27 +190,29 @@ export default function MagazineExperience({
       </section>
 
       {/* Reader + What's Inside */}
-      <section className="bg-sand py-20 md:py-28">
+      <section className="bg-sand py-14 sm:py-20 md:py-28">
         <div className="container mx-auto px-5 lg:px-8">
           <div className="grid lg:grid-cols-[1fr_320px] gap-10 lg:gap-16 items-start">
-            {/* Flipbook */}
+            {/* Reader */}
             <div>
-              <div className="flex items-end justify-between gap-4 mb-6">
+              <div className="flex items-end justify-between gap-4 mb-5 sm:mb-6">
                 <div>
                   <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
                     The edition
                   </p>
-                  <h2 className="font-display text-3xl md:text-4xl font-semibold mt-2 text-balance">
+                  <h2 className="font-display text-2xl font-semibold mt-2 text-balance sm:text-3xl md:text-4xl">
                     Flip through it
                   </h2>
                 </div>
                 <button
                   onClick={() => setReader(true)}
-                  className="hidden sm:inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] font-semibold text-primary hover:text-gold transition-colors"
+                  className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] font-semibold text-primary hover:text-gold transition-colors"
                 >
                   Fullscreen <Maximize2 className="h-3.5 w-3.5" />
                 </button>
               </div>
+
+              {/* One portrait page at a time — same reader on every screen size */}
               <Flipbook
                 pages={pages}
                 page={page}
@@ -227,30 +221,31 @@ export default function MagazineExperience({
                 onNext={next}
                 magazine={magazine}
               />
-              <div className="mt-5 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              <div className="mx-auto mt-5 flex max-w-[380px] sm:max-w-[420px] md:max-w-[440px] items-center justify-between text-xs uppercase tracking-[0.18em] text-muted-foreground">
                 <span>{currentPage?.label}</span>
                 <span>
                   {page + 1} / {total}
                 </span>
               </div>
             </div>
+
             {/* What's Inside */}
             <aside className="lg:sticky lg:top-24 space-y-4">
-              <div className="rounded-3xl border border-border bg-card p-6 shadow-soft">
+              <div className="rounded-3xl border border-border bg-card p-5 shadow-soft sm:p-6">
                 <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
                   What's inside
                 </p>
-                <h3 className="font-display text-2xl font-semibold mt-2">
+                <h3 className="font-display text-xl font-semibold mt-2 sm:text-2xl">
                   Highlights
                 </h3>
-                <ol className="mt-5 space-y-4">
+                <ol className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
                   {magazine.sections.map((s, i) => {
                     const targetPage = i + 1;
                     const active = page === targetPage;
                     return (
                       <li key={i}>
                         <button
-                          onClick={() => setPage(targetPage)}
+                          onClick={() => goToPage(targetPage)}
                           className={cn(
                             "group w-full text-left flex gap-3 rounded-2xl p-3 -mx-3 transition-colors",
                             active ? "bg-gold/15" : "hover:bg-sand"
@@ -280,7 +275,7 @@ export default function MagazineExperience({
                   })}
                 </ol>
               </div>
-              <div className="rounded-3xl bg-primary text-primary-foreground p-6">
+              <div className="rounded-3xl bg-primary text-primary-foreground p-5 sm:p-6">
                 <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
                   Share this issue
                 </p>
@@ -302,13 +297,13 @@ export default function MagazineExperience({
       </section>
 
       {/* More editions */}
-      <section className="container mx-auto px-5 lg:px-8 py-20 md:py-28">
-        <div className="flex items-end justify-between gap-4 mb-12">
+      <section className="container mx-auto px-5 lg:px-8 py-14 sm:py-20 md:py-28">
+        <div className="flex items-end justify-between gap-4 mb-8 sm:mb-12">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
               Continue reading
             </p>
-            <h2 className="font-display text-4xl md:text-5xl font-semibold mt-2 text-balance">
+            <h2 className="font-display text-3xl font-semibold mt-2 text-balance sm:text-4xl md:text-5xl">
               Explore other editions
             </h2>
           </div>
@@ -316,12 +311,12 @@ export default function MagazineExperience({
             <Button variant="outline">All editions</Button>
           </Link>
         </div>
-        <div className="flex gap-8 overflow-x-auto pb-6 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-5 px-5 lg:mx-0 lg:px-0">
+        <div className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-5 px-5 sm:gap-8 lg:mx-0 lg:px-0">
           {others.map((m) => (
             <Link
               key={m.slug}
               href={`/magazine/${m.slug}`}
-              className="group block shrink-0 snap-start w-[240px] md:w-[280px]"
+              className="group block shrink-0 snap-start w-[210px] md:w-[280px]"
             >
               <div className="relative aspect-[2/3] overflow-hidden rounded-md shadow-elegant ring-1 ring-foreground/10 transition-transform duration-500 group-hover:-translate-y-2">
                 <img
@@ -377,22 +372,24 @@ export default function MagazineExperience({
                 </p>
               </div>
               <div className="flex items-center gap-1">
-                <IconBtn
-                  label="Zoom out"
-                  onClick={() => setZoom((z) => Math.max(0.6, z - 0.1))}
-                >
-                  <ZoomOut className="h-4 w-4" />
-                </IconBtn>
-                <span className="text-xs tabular-nums w-12 text-center text-primary-foreground/70">
-                  {Math.round(zoom * 100)}%
-                </span>
-                <IconBtn
-                  label="Zoom in"
-                  onClick={() => setZoom((z) => Math.min(2, z + 0.1))}
-                >
-                  <ZoomIn className="h-4 w-4" />
-                </IconBtn>
-                <div className="w-px h-5 bg-primary-foreground/15 mx-2" />
+                <div className="hidden sm:flex items-center gap-1">
+                  <IconBtn
+                    label="Zoom out"
+                    onClick={() => setZoom((z) => Math.max(0.6, z - 0.1))}
+                  >
+                    <ZoomOut className="h-4 w-4" />
+                  </IconBtn>
+                  <span className="text-xs tabular-nums w-12 text-center text-primary-foreground/70">
+                    {Math.round(zoom * 100)}%
+                  </span>
+                  <IconBtn
+                    label="Zoom in"
+                    onClick={() => setZoom((z) => Math.min(2, z + 0.1))}
+                  >
+                    <ZoomIn className="h-4 w-4" />
+                  </IconBtn>
+                  <div className="w-px h-5 bg-primary-foreground/15 mx-2" />
+                </div>
                 <IconBtn label="Share" onClick={handleShare}>
                   <Share2 className="h-4 w-4" />
                 </IconBtn>
@@ -401,11 +398,11 @@ export default function MagazineExperience({
                 </IconBtn>
               </div>
             </div>
-            {/* Page */}
-            <div className="flex-1 min-h-0 overflow-auto bg-[radial-gradient(ellipse_at_center,oklch(0.32_0.06_240)_0%,oklch(0.18_0.05_240)_100%)] grid place-items-center p-4 md:p-10">
+            {/* Page — one portrait page, centered, same on every screen size */}
+            <div className="flex-1 min-h-0 overflow-y-auto bg-[radial-gradient(ellipse_at_center,oklch(0.32_0.06_240)_0%,oklch(0.18_0.05_240)_100%)] p-4 grid place-items-center md:p-10">
               <div
                 style={{ transform: `scale(${zoom})` }}
-                className="transition-transform duration-300"
+                className="w-full max-w-[340px] sm:max-w-[380px] md:max-w-[420px] transition-transform duration-300"
               >
                 <ReaderPage page={currentPage!} magazine={magazine} />
               </div>

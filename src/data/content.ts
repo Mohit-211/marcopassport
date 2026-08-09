@@ -91,7 +91,7 @@ export const topPlaces = [
   {
     name: "Ten Thousand Islands Dolphin & Shelling Tour",
     blurb: "Glide through mangrove channels alongside dolphins and manatees.",
-    image: "/assets/place-boat-tour.jpg",
+    image: "/assets/place-cruise.jpg",
   },
 ] as const;
 

@@ -4,7 +4,7 @@ const placeOtterMound = "/assets/place-otter-mound.jpg";
 const placeMarina = "/assets/place-marina.jpg";
 const placeSouthBeach = "/assets/place-south-beach.jpg";
 const placeRookeryBay = "/assets/place-rookery-bay.jpg";
-const placeBoatTour = "/assets/place-boat-tour.jpg";
+const placeBoatTour = "/assets/place-cruise.jpg";
 
 export type PlaceExpectation = {
   icon: "sun" | "wave" | "family" | "camera" | "leaf" | "compass" | "sparkle";
