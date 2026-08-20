@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { Blog } from "@/types/blog";
 
 type SimilarAndRelatedProps = {
   similar: {
+    slug: string;
     id: string;
     name: string;
     category: string;
@@ -10,15 +12,22 @@ type SimilarAndRelatedProps = {
     image: string;
     featured?: boolean;
   }[];
-  relatedBlog: {
-    slug: string;
-    title: string;
-    excerpt: string;
-    image: string;
-    date: string;
-    read: string;
-  }[];
+  relatedBlog: Blog[];
 };
+
+function blogImageUrl(image?: string) {
+  if (!image) return "/assets/blog-1.jpg";
+  return `${process.env.NEXT_PUBLIC_IMAGE_URL ?? ""}${image}`;
+}
+
+function blogDate(dateString?: string) {
+  if (!dateString) return "";
+  return new Date(dateString).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
 
 export default function SimilarAndRelated({
   similar,
@@ -46,7 +55,7 @@ export default function SimilarAndRelated({
             {similar.map((l) => (
               <Link
                 key={l.id}
-                href={`/listings/${l.id}`}
+                href={`/listings/${l.slug}`}
                 className="group bg-card rounded-3xl overflow-hidden border border-border shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-500 block"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
@@ -96,23 +105,27 @@ export default function SimilarAndRelated({
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {relatedBlog.map((p) => (
-            <Link key={p.slug} href="/blog" className="group block">
+            <Link
+              key={`${p.slug}-${p.id}`}
+              href={`/blog/${p.slug}/${p.id}`}
+              className="group block"
+            >
               <div className="aspect-[4/3] overflow-hidden rounded-2xl">
                 <img
-                  src={p.image}
+                  src={blogImageUrl(p.featured_image)}
                   alt={p.title}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
               <p className="text-xs uppercase tracking-wider text-muted-foreground mt-4">
-                {p.date} · {p.read}
+                {blogDate(p.updated_at)}
               </p>
               <h3 className="font-display text-xl font-semibold mt-1 group-hover:text-primary transition">
                 {p.title}
               </h3>
               <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
-                {p.excerpt}
+                {p.description}
               </p>
             </Link>
           ))}

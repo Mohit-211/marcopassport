@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -22,13 +22,19 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { AddtoPassportApi } from "@/api/users/passport.api";
+import { GetBusinessDetailsBySlugApi } from "@/api/users/business.api";
 
 type ListingActionsPanelProps = {
   listing: {
+    is_in_passport: any;
+    slug: string;
+    id: string;
     price: string;
     category: string;
     location: string;
     rating: number;
+    website_url?: string;
   };
   categoryMeta?: { name: string };
 };
@@ -36,18 +42,54 @@ type ListingActionsPanelProps = {
 export default function ListingActionsPanel({
   listing,
   categoryMeta,
-}: ListingActionsPanelProps) {
-  const [saved, setSaved] = useState(false);
-  const [date, setDate] = useState<Date | undefined>();
 
-  // TODO: wire up to real passport store once backend/store is available
-  const handleSave = () => {
-    setSaved(true);
-    toast.success("Added to your Passport", {
-      description: date
-        ? `Saved for ${format(date, "PPP")}`
-        : "Saved for later",
-    });
+}: ListingActionsPanelProps) {
+  const [saved, setSaved] = useState(Boolean(listing?.is_in_passport));
+  const [date, setDate] = useState<Date | undefined>();
+  const [saving, setSaving] = useState(false);
+
+  // The listing page is server-rendered, so the initial fetch runs without
+  // the user's token (it lives in localStorage) and is_in_passport always
+  // comes back false. Re-check it here now that we're on the client.
+  useEffect(() => {
+    const token = localStorage.getItem("MarcoPassport");
+    if (!token || !listing?.slug) return;
+
+    let cancelled = false;
+    GetBusinessDetailsBySlugApi(listing.slug)
+      .then((res) => {
+        if (!cancelled && res?.data?.data?.is_in_passport) {
+          setSaved(true);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, [listing?.slug]);
+
+  const handleSave = async () => {
+    if (!date) {
+      toast.error("Please pick a date for your visit");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await AddtoPassportApi({
+        place_id: Number(listing.id),
+        visit_date: format(date, "yyyy-MM-dd"),
+      });
+      setSaved(true);
+      toast.success("Added to your Passport", {
+        description: `Saved for ${format(date, "PPP")}`,
+      });
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -95,14 +137,33 @@ export default function ListingActionsPanel({
               </PopoverContent>
             </Popover>
 
-            <Button variant="gold" size="lg" className="w-full mt-3">
-              <Globe className="h-4 w-4" /> Visit website
-            </Button>
+            {listing.website_url ? (
+              <a
+                href={listing.website_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Button variant="gold" size="lg" className="w-full mt-3">
+                  <Globe className="h-4 w-4" /> Visit website
+                </Button>
+              </a>
+            ) : (
+              <Button
+                variant="gold"
+                size="lg"
+                className="w-full mt-3"
+                disabled
+              >
+                <Globe className="h-4 w-4" /> Visit website
+              </Button>
+            )}
             <Button
               variant={saved ? "default" : "outline"}
               size="lg"
               className={cn("w-full mt-2 transition", saved && "bg-primary")}
               onClick={handleSave}
+              disabled={saving || saved}
             >
               {saved ? (
                 <>
@@ -110,7 +171,7 @@ export default function ListingActionsPanel({
                 </>
               ) : (
                 <>
-                  <Heart className="h-4 w-4" /> Add to Passport
+                  <Heart className="h-4 w-4" /> {saving ? "Saving..." : "Add to Passport"}
                 </>
               )}
             </Button>
@@ -167,17 +228,26 @@ export default function ListingActionsPanel({
           variant={saved ? "default" : "outline"}
           className="flex-1"
           onClick={handleSave}
+          disabled={saving || saved}
         >
           {saved ? (
             <Check className="h-4 w-4" />
           ) : (
             <Heart className="h-4 w-4" />
           )}
-          {saved ? "Saved" : "Passport"}
+          {saved ? "Saved" : saving ? "Saving..." : "Passport"}
         </Button>
-        <Button variant="gold" className="flex-1">
-          <Globe className="h-4 w-4" /> Visit
-        </Button>
+        {listing.website_url ? (
+          <a href={listing.website_url} target="_blank" rel="noopener noreferrer" className="flex-1">
+            <Button variant="gold" className="w-full">
+              <Globe className="h-4 w-4" /> Visit
+            </Button>
+          </a>
+        ) : (
+          <Button variant="gold" className="flex-1" disabled>
+            <Globe className="h-4 w-4" /> Visit
+          </Button>
+        )}
       </div>
     </>
   );

@@ -9,45 +9,37 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const highlightsByCategory: Record<string, string[]> = {
-  "Places to Stay": [
-    "Private beach access with cabanas",
-    "Three on-site restaurants & sunset bar",
-    "Full-service spa and oceanfront pools",
-    "Memorable island excursions",
-    "Pet-friendly suites available",
-    "Complimentary kayaks & paddleboards",
-  ],
-  "Places to Eat": [
-    "Daily catch from Gulf fishermen",
-    "Award-winning wine cellar",
-    "Waterfront sunset seating",
-    "Vegetarian & gluten-free tasting menus",
-    "Live acoustic music on weekends",
-    "Reservations recommended",
-  ],
-  "Fun Activities": [
-    "USCG-licensed captain & crew",
-    "Snorkel gear, snacks & drinks included",
-    "Dolphin & manatee sightings most trips",
-    "Sunset, half-day & private options",
-    "Family- and beginner-friendly",
-    "Small groups — 6 guests max",
-  ],
-};
-
 type ListingInfoContentProps = {
   listing: {
+    name: string;
     description: string;
     category: string;
     location: string;
+    about?: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+    hours?: string;
+    website_url?: string;
+    highlights?: string;
   };
 };
+
+function parseHighlights(highlights?: string): string[] {
+  if (!highlights) return [];
+  return highlights
+    .split(/\r?\n|,/)
+    .map((h) => h.trim())
+    .filter(Boolean);
+}
 
 export default function ListingInfoContent({
   listing,
 }: ListingInfoContentProps) {
-  const highlights = highlightsByCategory[listing.category] ?? [];
+  const highlights = parseHighlights(listing.highlights);
+  const websiteHost = listing.website_url
+    ? listing.website_url.replace(/^https?:\/\//, "").replace(/\/$/, "")
+    : undefined;
 
   return (
     <div className="space-y-14">
@@ -56,27 +48,15 @@ export default function ListingInfoContent({
           About
         </p>
         <h2 className="font-display text-3xl md:text-4xl font-semibold mt-2">
-          A taste of the island, perfected.
+          {listing.name}
         </h2>
         <div className="mt-6 space-y-5 text-foreground/80 leading-relaxed text-[17px]">
-          <p>
-            {listing.description} Nestled along one of Marco Island's most
-            coveted stretches, this destination has become a quiet benchmark for
-            travelers who care about the details — the slow unfurl of an
-            evening, the salt-tinged breeze, the unhurried service.
-          </p>
-          <p>
-            Every element has been considered: locally-sourced ingredients and
-            craftsmanship, interiors that nod to the Gulf's palette of sand and
-            turquoise, and a team whose warmth turns first-time guests into
-            regulars. Whether you're here for an afternoon or a long weekend,
-            you'll leave with a story.
-          </p>
-          <p>
-            Open year-round, with seasonal menus and experiences that shift with
-            the tides. Reservations and bookings are recommended during high
-            season (December–April).
-          </p>
+          {(listing.about ?? listing.description)
+            .split(/\r?\n+/)
+            .filter(Boolean)
+            .map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
         </div>
       </div>
 
@@ -112,32 +92,45 @@ export default function ListingInfoContent({
           </h3>
           <ul className="mt-6 space-y-4 text-sm">
             <InfoRow icon={MapPin} label="Address">
-              {listing.location}, Marco Island, FL 34145
+              {listing.address || listing.location || "Marco Island, FL"}
             </InfoRow>
-            <InfoRow icon={Phone} label="Phone">
-              <a
-                href="tel:+12395550199"
-                className="hover:text-primary transition"
-              >
-                (239) 555-0199
-              </a>
-            </InfoRow>
-            <InfoRow icon={Mail} label="Email">
-              <a
-                href="mailto:hello@marcopassport.com"
-                className="hover:text-primary transition"
-              >
-                reservations@marco.com
-              </a>
-            </InfoRow>
-            <InfoRow icon={Clock} label="Hours">
-              Mon–Sun · 8:00 AM – 10:00 PM
-            </InfoRow>
-            <InfoRow icon={Globe} label="Website">
-              <a href="#" className="hover:text-primary transition">
-                marcopassport.com/visit
-              </a>
-            </InfoRow>
+            {listing.phone && (
+              <InfoRow icon={Phone} label="Phone">
+                <a
+                  href={`tel:${listing.phone}`}
+                  className="hover:text-primary transition"
+                >
+                  {listing.phone}
+                </a>
+              </InfoRow>
+            )}
+            {listing.email && (
+              <InfoRow icon={Mail} label="Email">
+                <a
+                  href={`mailto:${listing.email}`}
+                  className="hover:text-primary transition"
+                >
+                  {listing.email}
+                </a>
+              </InfoRow>
+            )}
+            {listing.hours && (
+              <InfoRow icon={Clock} label="Hours">
+                {listing.hours}
+              </InfoRow>
+            )}
+            {listing.website_url && (
+              <InfoRow icon={Globe} label="Website">
+                <a
+                  href={listing.website_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primary transition"
+                >
+                  {websiteHost}
+                </a>
+              </InfoRow>
+            )}
           </ul>
         </div>
 

@@ -1,11 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { categories } from "@/data/content";
 import { cn } from "@/lib/utils";
+import { GetBusinessCategoryApi } from "@/api/users/business.api";
 
 export const PRICE_OPTIONS = ["$", "$$", "$$$", "$$$$"] as const;
 
@@ -15,6 +16,23 @@ export const NEIGHBORHOODS = [
   "Tigertail",
   "Esplanade",
 ] as const;
+
+type ApiCategory = {
+  id?: string | number;
+  name?: string;
+  title?: string;
+  category_name?: string;
+  slug?: string;
+  count?: number;
+  business_count?: number;
+  total?: number;
+};
+
+type Category = {
+  slug: string;
+  name: string;
+  count: number;
+};
 
 function Section({
   title,
@@ -65,6 +83,51 @@ export function FilterPanel({
   activeCount,
   clearFiltersAction,
 }: FilterPanelProps) {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [categoryError, setCategoryError] = useState("");
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoadingCategories(true);
+        setCategoryError("");
+        const res = await GetBusinessCategoryApi();
+        const responseData = res?.data?.data ?? res?.data ?? [];
+        if (!Array.isArray(responseData)) {
+          console.error(
+            "Business category API did not return an array:",
+            responseData
+          );
+          setCategories([]);
+          setCategoryError("Unable to load categories.");
+          return;
+        }
+        const mapped = responseData
+          .map((category: ApiCategory): Category | null => {
+            const name =
+              category.name || category.title || category.category_name || "";
+            if (!name) return null;
+            return {
+              slug: category.slug || name.toLowerCase().replace(/\s+/g, "-"),
+              name,
+              count:
+                category.count ?? category.business_count ?? category.total ?? 0,
+            };
+          })
+          .filter((c): c is Category => c !== null);
+        setCategories(mapped);
+      } catch (error) {
+        console.error("Failed to fetch business categories:", error);
+        setCategories([]);
+        setCategoryError("Failed to load categories.");
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   return (
     <div className="rounded-2xl border border-border bg-card p-5">
       {/* Header */}
@@ -100,25 +163,37 @@ export function FilterPanel({
       {/* Category */}
       <Section title="Category">
         <div className="space-y-2.5">
-          {categories.map((category) => (
-            <label
-              key={category.slug}
-              className="group flex cursor-pointer items-center gap-3"
-            >
-              <Checkbox
-                checked={selectedCats.includes(category.name)}
-                onCheckedChange={() => toggleCategoryAction(category.name)}
-              />
+          {loadingCategories && (
+            <p className="text-xs text-muted-foreground">
+              Loading categories...
+            </p>
+          )}
 
-              <span className="flex-1 text-sm transition-colors group-hover:text-primary">
-                {category.name}
-              </span>
+          {!loadingCategories && categoryError && (
+            <p className="text-xs text-red-500">{categoryError}</p>
+          )}
 
-              <span className="text-xs text-muted-foreground">
-                {category.count}
-              </span>
-            </label>
-          ))}
+          {!loadingCategories &&
+            !categoryError &&
+            categories.map((category) => (
+              <label
+                key={category.slug}
+                className="group flex cursor-pointer items-center gap-3"
+              >
+                <Checkbox
+                  checked={selectedCats.includes(category.slug)}
+                  onCheckedChange={() => toggleCategoryAction(category.slug)}
+                />
+
+                <span className="flex-1 text-sm transition-colors group-hover:text-primary">
+                  {category.name}
+                </span>
+
+                <span className="text-xs text-muted-foreground">
+                  {category.count}
+                </span>
+              </label>
+            ))}
         </div>
       </Section>
 

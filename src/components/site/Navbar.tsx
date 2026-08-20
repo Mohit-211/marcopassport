@@ -14,9 +14,9 @@ const NAV = [
   { href: "/local-info", label: "Local Info" },
   { href: "/blog", label: "Blog" },
   { href: "/", label: "Home" },
-  { href: "/explore", label: "Explore" },
+  { href: "/places", label: "Explore" },
   { href: "/passport", label: "Your Custom Passport" },
-  { href: "/places", label: "Business Directory" },
+  { href: "/explore", label: "Business Directory" },
 ];
 
 export function Navbar() {

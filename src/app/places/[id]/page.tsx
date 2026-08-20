@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { places, placesById } from "@/data/places";
-import { blogPosts } from "@/data/content";
 import PlaceExperience from "@/components/places/PlaceExperience";
 
 type Props = {
@@ -48,7 +47,7 @@ export default async function PlaceDetailPage({ params }: Props) {
   }
 
   const nearby = places.filter((p) => p.id !== place.id).slice(0, 4);
-  const related = blogPosts.slice(0, 3);
+  // const related = blogPosts.slice(0, 3);
 
-  return <PlaceExperience place={place} nearby={nearby} related={related} />;
+  return <PlaceExperience place={place} nearby={nearby} />;
 }

@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import BlogGrid from "@/components/blog/BlogGrid";
-import { GetAllBlogsApi, GetBlogCategoryApi } from "@/api/auth/blog.api";
+import { GetAllBlogsApi, GetBlogCategoryApi } from "@/api/users/blog.api";
 import type { Blog } from "@/types/blog";
 type ApiCategory = {
   id: string | number;

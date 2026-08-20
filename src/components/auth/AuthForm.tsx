@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,11 +8,34 @@ import { Button } from "@/components/ui/button";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { AuthFields, type FieldErrors } from "@/components/auth/AuthFields";
 import { GoogleIcon } from "@/components/auth/GoogleIcon";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { PartyPopper } from "lucide-react";
 import { cn } from "@/lib/utils";
-
+import { loginApi, registerApi } from "@/api/auth/auth.api";
+const USER_ROLE_ID = 6;
+const TOKEN_STORAGE_KEY = "MarcoPassport";
+function getErrorMessage(error: unknown, fallback: string) {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error &&
+    typeof (error as { response?: { data?: { message?: string } } }).response
+      ?.data?.message === "string"
+  ) {
+    return (error as { response: { data: { message: string } } }).response
+      .data.message;
+  }
+  return fallback;
+}
 export function AuthForm() {
   const router = useRouter();
-
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +47,7 @@ export function AuthForm() {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [animating, setAnimating] = useState(false);
-
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const validate = useCallback(
     (fields: {
       email?: string;
@@ -57,7 +79,6 @@ export function AuthForm() {
     },
     [mode, password]
   );
-
   const switchMode = (target: "login" | "signup") => {
     if (target === mode) return;
     setAnimating(true);
@@ -68,7 +89,6 @@ export function AuthForm() {
       setAnimating(false);
     }, 180);
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setTouched({
@@ -77,36 +97,52 @@ export function AuthForm() {
       confirmPassword: true,
       name: true,
     });
-
     const allErrors = validate({ email, password, confirmPassword, name });
     setErrors(allErrors);
     if (Object.keys(allErrors).length > 0) return;
-
     setLoading(true);
     try {
-      // Auth wiring goes here later — for now just simulate the request.
-      await new Promise((resolve) => setTimeout(resolve, 800));
       if (mode === "login") {
-        toast.success("Welcome back");
-      } else {
-        toast.success("Account created", {
-          description: "Your Passport is ready.",
+        const res = await loginApi({
+          email,
+          password,
+          role_id: USER_ROLE_ID,
         });
+        const token = res?.data?.data?.tokens?.access
+          ?.token
+        if (token && typeof window !== "undefined") {
+          localStorage.setItem(TOKEN_STORAGE_KEY, token);
+        }
+      } else {
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("confirm_password", confirmPassword);
+        formData.append("role_id", String(USER_ROLE_ID));
+        const res = await registerApi(formData);
+        const token = res?.data?.data?.token ?? res?.data?.token;
+        if (token && typeof window !== "undefined") {
+          localStorage.setItem(TOKEN_STORAGE_KEY, token);
+        }
+        setShowSuccessModal(true);
+        return;
       }
+      toast.success("Welcome back");
       router.push("/passport");
-    } catch {
-      toast.error("Something went wrong. Please try again.");
+    } catch (error) {
+      toast.error(
+        getErrorMessage(error, "Something went wrong. Please try again.")
+      );
     } finally {
       setLoading(false);
     }
   };
-
   const handleGoogle = () => {
     toast.info("Google sign-in coming soon", {
       description: "We're working on adding faster sign-in options.",
     });
   };
-
   const handleForgot = () => {
     if (!email) {
       toast.error("Please enter your email address first");
@@ -116,9 +152,8 @@ export function AuthForm() {
       description: `Check ${email} for a password reset link.`,
     });
   };
-
   return (
-    <main className="relative min-h-screen flex items-center justify-center px-4 py-10 overflow-hidden">
+    <main className="relative min-h-screen flex items-center justify-center px-4 py-10 overflow-hidden mt-10">
       {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -126,7 +161,6 @@ export function AuthForm() {
       />
       <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px]" />
       <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/50" />
-
       <div className="relative w-full max-w-[420px]">
         {/* Brand */}
         <Link
@@ -140,11 +174,9 @@ export function AuthForm() {
             Marco<span className="text-gold">.</span>Passport
           </span>
         </Link>
-
         {/* Card */}
         <div className="rounded-3xl border border-border/80 bg-card/95 backdrop-blur-sm shadow-elegant overflow-hidden">
           <AuthTabs mode={mode} onSwitch={switchMode} />
-
           <div
             className={cn(
               "px-7 pb-7 pt-1 transition-all duration-200",
@@ -161,7 +193,6 @@ export function AuthForm() {
                 ? "Sign in to access your saved places and travel plans."
                 : "Save places, plan visits, and build your Marco Island itinerary."}
             </p>
-
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <AuthFields
                 mode={mode}
@@ -209,7 +240,6 @@ export function AuthForm() {
                 onToggleShowConfirm={() => setShowConfirm((s) => !s)}
                 onForgotPassword={handleForgot}
               />
-
               {/* Submit */}
               <Button
                 type="submit"
@@ -229,18 +259,16 @@ export function AuthForm() {
                   "Create Account"
                 )}
               </Button>
-
               {/* Divider */}
-              <div className="relative flex items-center gap-3 my-2">
+              {/* <div className="relative flex items-center gap-3 my-2">
                 <div className="h-px flex-1 bg-border" />
                 <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
                   or
                 </span>
                 <div className="h-px flex-1 bg-border" />
-              </div>
-
+              </div> */}
               {/* Google */}
-              <Button
+              {/* <Button
                 type="button"
                 variant="outline"
                 size="lg"
@@ -249,9 +277,8 @@ export function AuthForm() {
               >
                 <GoogleIcon className="h-5 w-5" />
                 Continue with Google
-              </Button>
+              </Button> */}
             </form>
-
             {/* Privacy note */}
             <div className="mt-5 flex items-start gap-2 text-xs text-muted-foreground/80">
               <ShieldCheck className="h-4 w-4 text-gold shrink-0 mt-0.5" />
@@ -262,7 +289,6 @@ export function AuthForm() {
             </div>
           </div>
         </div>
-
         {/* Bottom link */}
         <p className="mt-6 text-center text-sm text-muted-foreground">
           {mode === "login"
@@ -276,7 +302,6 @@ export function AuthForm() {
             {mode === "login" ? "Create one" : "Sign in"}
           </button>
         </p>
-
         <Link
           href="/"
           className="mt-4 flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
@@ -285,6 +310,33 @@ export function AuthForm() {
           Back to home
         </Link>
       </div>
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent showCloseButton={false} className="text-center">
+          <DialogHeader className="items-center">
+            <span className="grid h-14 w-14 place-items-center rounded-full bg-gold/15 text-gold">
+              <PartyPopper className="h-6 w-6" />
+            </span>
+            <DialogTitle className="text-xl">Account created</DialogTitle>
+            <DialogDescription>
+              Welcome to The Marco Passport! Your account is ready — start
+              saving places and planning your visits.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center">
+            <Button
+              variant="gold"
+              size="lg"
+              className="w-full sm:w-auto"
+              onClick={() => {
+                setShowSuccessModal(false);
+                router.push("/passport");
+              }}
+            >
+              Continue to Passport
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

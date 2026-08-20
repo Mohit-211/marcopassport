@@ -1,27 +1,51 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { featuredListings, blogPosts, categories } from "@/data/content";
 import { Button } from "@/components/ui/button";
 import ListingGallery from "@/components/listings/ListingGallery";
 import ListingInfoContent from "@/components/listings/ListingInfoContent";
 import ListingActionsPanel from "@/components/listings/ListingActionsPanel";
 import SimilarAndRelated from "@/components/listings/SimilarAndRelated";
-
-type Listing = (typeof featuredListings)[number];
+import { GetBusinessDetailsBySlugApi } from "@/api/users/business.api";
+import { GetAllBlogsApi } from "@/api/users/blog.api";
+import { mapBusinessToListing } from "@/lib/business";
+import type { ApiBusiness } from "@/types/business";
+import type { Blog } from "@/types/blog";
 
 type Props = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 };
 
-function getListing(id: string): Listing | undefined {
-  return featuredListings.find((l) => l.id === id);
+async function getListing(slug: string) {
+  try {
+    const res = await GetBusinessDetailsBySlugApi(slug);
+    const item: ApiBusiness | undefined = res?.data?.data;
+    if (!item) return undefined;
+    return item;
+  } catch (error) {
+    console.error("Failed to fetch business details:", error);
+    return undefined;
+  }
+}
+
+async function getRelatedBlogPosts(limit = 3): Promise<Blog[]> {
+  try {
+    const res = await GetAllBlogsApi();
+    const posts: Blog[] = res?.data?.data ?? [];
+    if (!Array.isArray(posts)) return [];
+    return posts.slice(0, limit);
+  } catch (error) {
+    console.error("Failed to fetch related blog posts:", error);
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
-  const listing = getListing(id);
+  const { slug } = await params;
+  const item = await getListing(slug);
 
-  if (!listing) return {};
+  if (!item) return {};
+
+  const listing = mapBusinessToListing(item);
 
   return {
     title: `${listing.name} — The Marco Passport`,
@@ -38,10 +62,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ListingDetailPage({ params }: Props) {
-  const { id } = await params;
-  const listing = getListing(id);
+  const { slug } = await params;
+  const item = await getListing(slug);
 
-  if (!listing) {
+  if (!item) {
     return (
       <div className="container mx-auto px-5 py-32 text-center">
         <h1 className="font-display text-4xl font-semibold">
@@ -57,11 +81,9 @@ export default async function ListingDetailPage({ params }: Props) {
     );
   }
 
-  const similar = featuredListings
-    .filter((l) => l.id !== listing.id)
-    .slice(0, 3);
-  const relatedBlog = blogPosts.slice(0, 3);
-  const categoryMeta = categories.find((c) => c.name === listing.category);
+  const listing = mapBusinessToListing(item);
+  const similar = (item.similar_places ?? []).map(mapBusinessToListing);
+  const relatedBlog = await getRelatedBlogPosts(3);
 
   return (
     <>
@@ -86,7 +108,10 @@ export default async function ListingDetailPage({ params }: Props) {
       <section className="container mx-auto px-5 lg:px-8 py-14 md:py-20">
         <div className="grid lg:grid-cols-[1fr_380px] gap-12 lg:gap-16">
           <ListingInfoContent listing={listing} />
-          <ListingActionsPanel listing={listing} categoryMeta={categoryMeta} />
+          <ListingActionsPanel
+            listing={listing}
+            categoryMeta={{ name: listing.category }}
+          />
         </div>
       </section>
 

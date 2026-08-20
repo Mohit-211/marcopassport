@@ -23,7 +23,7 @@ export default function PlacesPage() {
   return (
     <>
       <PlacesHero />
-      <TopPicksScroll />
+      {/* <TopPicksScroll /> */}
       <PlacesGrid />
       <EditorialGuide />
 

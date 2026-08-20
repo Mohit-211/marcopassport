@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
   Search,
@@ -25,8 +25,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FilterPanel } from "@/components/explore/FilterPanel";
-import { ListingCard, allListings } from "@/components/explore/ListingCard";
+import { ListingCard, type Listing } from "@/components/explore/ListingCard";
 import { ActiveChip, EmptyState } from "@/components/explore/ExploreHelpers";
+import {
+  GetAllBusinessApi,
+  GetAllBusinessByCategoryApi,
+} from "@/api/users/business.api";
+import { mapBusinessToListing } from "@/lib/business";
+import type { PlacesResponse } from "@/types/business";
 import { cn } from "@/lib/utils";
 
 type SortOption = "featured" | "popular" | "rating" | "recent";
@@ -34,6 +40,9 @@ type SortOption = "featured" | "popular" | "rating" | "recent";
 const PAGE_SIZE = 9;
 
 export function ExplorePage() {
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loadingListings, setLoadingListings] = useState(true);
+  const [listingsError, setListingsError] = useState("");
   const [query, setQuery] = useState("");
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [selectedPrices, setSelectedPrices] = useState<string[]>([]);
@@ -44,8 +53,41 @@ export function ExplorePage() {
   const [page, setPage] = useState(1);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        setLoadingListings(true);
+        setListingsError("");
+        const res =
+          selectedCats.length === 1
+            ? await GetAllBusinessByCategoryApi(selectedCats[0])
+            : await GetAllBusinessApi();
+        const payload: PlacesResponse = res?.data?.data ?? {};
+        const responseData = payload.places ?? [];
+        console.log(responseData,"responseData")
+        if (!Array.isArray(responseData)) {
+          console.error(
+            "Business API did not return an array:",
+            responseData
+          );
+          setListings([]);
+          setListingsError("Unable to load listings.");
+          return;
+        }
+        setListings(responseData.map(mapBusinessToListing));
+      } catch (error) {
+        console.error("Failed to fetch businesses:", error);
+        setListings([]);
+        setListingsError("Failed to load listings.");
+      } finally {
+        setLoadingListings(false);
+      }
+    };
+    fetchListings();
+  }, [selectedCats]);
+
   const filtered = useMemo(() => {
-    let list = allListings.filter((l) => {
+    let list = listings.filter((l) => {
       if (
         query &&
         !`${l.name} ${l.description} ${l.category}`
@@ -53,7 +95,7 @@ export function ExplorePage() {
           .includes(query.toLowerCase())
       )
         return false;
-      if (selectedCats.length && !selectedCats.includes(l.category))
+      if (selectedCats.length && !selectedCats.includes(l.categorySlug))
         return false;
       if (selectedPrices.length && !selectedPrices.includes(l.price))
         return false;
@@ -85,6 +127,7 @@ export function ExplorePage() {
     }
     return list;
   }, [
+    listings,
     query,
     selectedCats,
     selectedPrices,
@@ -155,6 +198,7 @@ export function ExplorePage() {
       clearFiltersAction={clearAll}
     />
   );
+  console.log(pageItems,"pageItem============")
 
   return (
     <>
@@ -342,7 +386,15 @@ export function ExplorePage() {
               </div>
             )}
 
-            {pageItems.length === 0 ? (
+            {loadingListings ? (
+              <p className="py-16 text-center text-sm text-muted-foreground">
+                Loading listings...
+              </p>
+            ) : listingsError ? (
+              <p className="py-16 text-center text-sm text-red-500">
+                {listingsError}
+              </p>
+            ) : pageItems.length === 0 ? (
               <EmptyState clearAction={clearAll} />
             ) : (
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import BlogArticleExperience from "@/components/blog/BlogArticleExperience";
-import { GetBlogDetailsByIdApi } from "@/api/auth/blog.api";
+import { GetBlogDetailsByIdApi } from "@/api/users/blog.api";
 import type { Blog } from "@/types/blog";
 
 type Props = {

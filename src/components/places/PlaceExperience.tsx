@@ -18,7 +18,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import type { Place } from "@/data/places";
-import type { blogPosts } from "@/data/content";
 import { cn } from "@/lib/utils";
 import { AddToPassportModal } from "@/components/passport/AddToPassportModal";
 import PlaceStoryContent from "@/components/places/PlaceStoryContent";
@@ -27,11 +26,10 @@ import NearbyAndRelated from "@/components/places/NearbyAndRelated";
 export default function PlaceExperience({
   place,
   nearby,
-  related,
 }: {
   place: Place;
   nearby: Place[];
-  related: (typeof blogPosts)[number][];
+  // related: (typeof blogPosts)[number][];
 }) {
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [planOpen, setPlanOpen] = useState(false);

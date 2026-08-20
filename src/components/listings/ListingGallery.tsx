@@ -5,30 +5,6 @@ import { Star, MapPin, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
-const galleryByCategory: Record<string, string[]> = {
-  "Places to Stay": [
-    "/assets/listing-resort.jpg",
-    "/assets/cat-stay.jpg",
-    "/assets/place-tigertail.jpg",
-    "/assets/listing-yacht.jpg",
-    "/assets/cat-eat.jpg",
-  ],
-  "Places to Eat": [
-    "/assets/listing-restaurant.jpg",
-    "/assets/cat-eat.jpg",
-    "/assets/listing-resort.jpg",
-    "/assets/place-cruise.jpg",
-    "/assets/cat-activities.jpg",
-  ],
-  "Fun Activities": [
-    "/assets/listing-yacht.jpg",
-    "/assets/cat-activities.jpg",
-    "/assets/place-cruise.jpg",
-    "/assets/place-tigertail.jpg",
-    "/assets/listing-resort.jpg",
-  ],
-};
-
 type ListingGalleryProps = {
   listing: {
     id: string;
@@ -39,17 +15,17 @@ type ListingGalleryProps = {
     price: string;
     rating: number;
     featured?: boolean;
+    reviewCount?: number;
+    galleryImages?: string[];
   };
 };
 
 export default function ListingGallery({ listing }: ListingGalleryProps) {
-  const gallery = galleryByCategory[listing.category] ?? [
-    listing.image,
-    "/assets/cat-stay.jpg",
-    "/assets/cat-eat.jpg",
-    "/assets/cat-activities.jpg",
-    "/assets/place-tigertail.jpg",
-  ];
+  console.log(listing,"listing====")
+  const gallery =
+    listing.galleryImages && listing.galleryImages.length > 0
+      ? listing.galleryImages
+      : [listing.image];
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -97,9 +73,11 @@ export default function ListingGallery({ listing }: ListingGalleryProps) {
                 <span className="inline-flex items-center gap-1.5 text-gold font-semibold">
                   <Star className="h-4 w-4 fill-gold" />{" "}
                   {listing.rating.toFixed(1)}
-                  <span className="text-primary-foreground/70 font-normal">
-                    (218 reviews)
-                  </span>
+                  {typeof listing.reviewCount === "number" && (
+                    <span className="text-primary-foreground/70 font-normal">
+                      ({listing.reviewCount} reviews)
+                    </span>
+                  )}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <MapPin className="h-4 w-4" /> {listing.location}
