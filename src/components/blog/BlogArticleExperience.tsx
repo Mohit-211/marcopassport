@@ -1,6 +1,4 @@
 "use client";
-
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -9,52 +7,37 @@ import {
   Clock,
   Compass,
   Link2,
-  Lightbulb,
   User,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import type { BlogPost, getRelatedBlogs } from "@/data/blogs";
-import BlogToc from "@/components/blog/BlogToc";
 import {
   ShareButton,
   ShareRail,
   TwitterGlyph,
   FacebookGlyph,
 } from "@/components/blog/ShareControls";
+import type { Blog } from "@/types/blog";
+
+const imageUrl = (image?: string) =>
+  image ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${image}` : "/assets/blog-1.jpg";
+
+const formatDate = (date?: string) =>
+  date
+    ? new Date(date).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "";
 
 export default function BlogArticleExperience({
   post,
   related,
 }: {
-  post: BlogPost;
-  related: ReturnType<typeof getRelatedBlogs>;
+  post: Blog;
+  related: Blog[];
 }) {
-  const [activeSection, setActiveSection] = useState<string>(
-    post.sections[0]?.id ?? ""
-  );
-
-  // Scrollspy
-  useEffect(() => {
-    const ids = post.sections.map((s) => s.id);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort(
-            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
-          )[0];
-        if (visible) setActiveSection(visible.target.id);
-      },
-      { rootMargin: "-30% 0px -55% 0px", threshold: 0 }
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, [post.slug, post.sections]);
-
   const handleShare = (type: "twitter" | "facebook" | "copy") => {
     if (typeof window === "undefined") return;
     const url = window.location.href;
@@ -78,7 +61,7 @@ export default function BlogArticleExperience({
       <section className="relative isolate">
         <div className="relative h-[58vh] min-h-[420px] md:h-[68vh] w-full overflow-hidden">
           <img
-            src={post.image}
+            src={imageUrl(post.featured_image)}
             alt={post.title}
             className="absolute inset-0 h-full w-full object-cover"
           />
@@ -98,117 +81,65 @@ export default function BlogArticleExperience({
                 <ArrowLeft className="h-4 w-4" /> All Stories
               </Link>
               <span className="inline-block text-[11px] uppercase tracking-[0.25em] text-gold font-semibold">
-                {post.category}
+                {post.blog_category?.name}
               </span>
               <h1 className="font-display text-4xl md:text-6xl font-semibold mt-4 text-balance leading-tight">
                 {post.title}
               </h1>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-primary-foreground/85">
-                <span className="inline-flex items-center gap-2">
-                  <User className="h-4 w-4" /> {post.author}{" "}
-                  <span className="text-primary-foreground/55">
-                    · {post.authorRole}
+                {post.written_by && (
+                  <span className="inline-flex items-center gap-2">
+                    <User className="h-4 w-4" /> {post.written_by}
                   </span>
-                </span>
+                )}
                 <span className="inline-flex items-center gap-2">
-                  <Calendar className="h-4 w-4" /> {post.date}
+                  <Calendar className="h-4 w-4" /> {formatDate(post.updated_at || post.published_at)}
                 </span>
-                <span className="inline-flex items-center gap-2">
-                  <Clock className="h-4 w-4" /> {post.read}
-                </span>
+                {post.read_time_minutes != null && (
+                  <span className="inline-flex items-center gap-2">
+                    <Clock className="h-4 w-4" /> {post.read_time_minutes} min read
+                  </span>
+                )}
               </div>
             </div>
           </div>
         </div>
       </section>
-
       {/* Body */}
       <section className="container mx-auto px-5 lg:px-8 py-16 md:py-24">
         <div className="grid lg:grid-cols-[1fr_minmax(0,680px)_1fr] gap-10">
-          {/* Left: floating share + TOC */}
+          {/* Left: floating share */}
           <aside className="hidden lg:block">
             <div className="sticky top-28 space-y-10">
               <ShareRail onShare={handleShare} />
-              <BlogToc post={post} activeId={activeSection} />
             </div>
           </aside>
-
           {/* Center: article */}
           <article className="min-w-0">
-            <p className="font-display text-2xl md:text-[26px] leading-relaxed text-primary first-letter:float-left first-letter:text-6xl first-letter:font-semibold first-letter:mr-3 first-letter:mt-1 first-letter:text-gold-foreground first-letter:leading-none">
-              {post.intro}
-            </p>
-
-            {/* Mobile TOC */}
-            <div className="lg:hidden mt-10">
-              <BlogToc post={post} activeId={activeSection} />
-            </div>
-
-            <div className="mt-12 space-y-14">
-              {post.sections.map((s) => (
-                <section key={s.id} id={s.id} className="scroll-mt-28">
-                  <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary text-balance">
-                    {s.heading}
-                  </h2>
-                  <div className="mt-5 space-y-5 text-[17px] leading-[1.85] text-foreground/85">
-                    {s.paragraphs.map((p, i) => (
-                      <p key={i}>{p}</p>
-                    ))}
-                  </div>
-
-                  {s.image && (
-                    <figure className="mt-8">
-                      <div className="overflow-hidden rounded-3xl shadow-elegant">
-                        <img
-                          src={s.image}
-                          alt={s.imageCaption ?? s.heading}
-                          className="w-full h-auto object-cover"
-                        />
-                      </div>
-                      {s.imageCaption && (
-                        <figcaption className="mt-3 text-center text-xs uppercase tracking-widest text-muted-foreground">
-                          {s.imageCaption}
-                        </figcaption>
-                      )}
-                    </figure>
-                  )}
-
-                  {s.pullquote && (
-                    <blockquote className="mt-10 border-l-2 border-gold pl-6 md:pl-8">
-                      <p className="font-display text-2xl md:text-3xl text-primary italic leading-snug text-balance">
-                        “{s.pullquote}”
-                      </p>
-                    </blockquote>
-                  )}
-
-                  {s.tip && (
-                    <div className="mt-8 rounded-2xl border border-gold/40 bg-gold/10 p-5 flex gap-4">
-                      <Lightbulb className="h-5 w-5 text-gold-foreground shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-[11px] font-bold uppercase tracking-widest text-gold-foreground">
-                          Insider tip
-                        </p>
-                        <p className="text-sm text-primary mt-1 leading-relaxed">
-                          {s.tip}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </section>
-              ))}
-            </div>
-
+            {post.description && (
+              <p className="font-display text-2xl md:text-[26px] leading-relaxed text-primary first-letter:float-left first-letter:text-6xl first-letter:font-semibold first-letter:mr-3 first-letter:mt-1 first-letter:text-gold-foreground first-letter:leading-none">
+                {post.description}
+              </p>
+            )}
+            {post.content && (
+              <div
+                className="mt-8 space-y-5 text-[17px] leading-[1.85] text-foreground/85 [&_h2]:font-display [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:font-semibold [&_h2]:text-primary [&_h2]:text-balance [&_h2]:mt-10 [&_img]:rounded-3xl [&_img]:shadow-elegant"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
+            )}
             {/* Author + share */}
             <div className="mt-16 pt-10 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-display text-lg">
-                  {post.author.charAt(0)}
+              {post.written_by && (
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-display text-lg">
+                    {post.written_by.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Written by</p>
+                    <p className="font-semibold text-primary">{post.written_by}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Written by</p>
-                  <p className="font-semibold text-primary">{post.author}</p>
-                </div>
-              </div>
+              )}
               <div className="flex items-center gap-2">
                 <span className="text-xs uppercase tracking-widest text-muted-foreground mr-2">
                   Share
@@ -234,11 +165,9 @@ export default function BlogArticleExperience({
               </div>
             </div>
           </article>
-
           <div className="hidden lg:block" />
         </div>
       </section>
-
       {/* Inline CTA back into the platform */}
       <section className="bg-sand border-y border-border">
         <div className="container mx-auto px-5 lg:px-8 py-14 md:py-16 max-w-4xl">
@@ -272,7 +201,6 @@ export default function BlogArticleExperience({
           </div>
         </div>
       </section>
-
       {/* Related */}
       {related.length > 0 && (
         <section className="container mx-auto px-5 lg:px-8 py-20">
@@ -296,31 +224,29 @@ export default function BlogArticleExperience({
             {related.map((r) => (
               <Link
                 key={r.slug}
-                href={`/blog/${r.slug}`}
+                href={`/blog/${r.slug}/${r.id}`}
                 className="group block rounded-3xl bg-card border border-border shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-300 overflow-hidden"
               >
                 <div className="relative overflow-hidden aspect-[4/3]">
                   <img
-                    src={r.image}
+                    src={imageUrl(r.featured_image)}
                     alt={r.title}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <span className="absolute top-4 left-4 bg-background/90 backdrop-blur text-primary text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
-                    {r.category}
+                    {r.blog_category?.name}
                   </span>
                 </div>
                 <div className="p-6">
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span>{r.date}</span>
-                    <span className="h-1 w-1 rounded-full bg-muted-foreground" />
-                    <span>{r.read}</span>
+                    <span>{formatDate(r.updated_at)}</span>
                   </div>
                   <h3 className="font-display text-xl font-semibold mt-3 text-primary group-hover:text-gold-foreground transition-colors text-balance">
                     {r.title}
                   </h3>
                   <p className="text-muted-foreground mt-2 line-clamp-2 text-sm">
-                    {r.excerpt}
+                    {r.description}
                   </p>
                 </div>
               </Link>
