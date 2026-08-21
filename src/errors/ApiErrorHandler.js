@@ -3,7 +3,6 @@ import errorMessages from "./errorMessages";
 
 export const handleApiError = (error) => {
   if (!error.response) {
-    message.error(errorMessages.NETWORK_ERROR || "Network error. Please check your connection.");
     return Promise.reject(error);
   }
 
