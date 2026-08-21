@@ -24,5 +24,14 @@ export const Business = {
   GET_BUSINESS_DETAILS_BY_SLUG: (slug: string) => `explore/listing/${slug}`,
 }
 export const Passport = {
-  ADD_TO_PASSPORT: "/user/passport"
+  ADD_TO_PASSPORT: "/user/passport",
+  UPDATE_PASSPORT: (id: number | string) => `/user/passport/${id}`,
+}
+export const Rating = {
+  ADD_TO_RATING: (id: number | string) => `explore/listing/${id}/reviews`,
+  GET_ALL_RATING: (id: number | string) => `explore/listing/${id}/reviews`,
+}
+export const Place = {
+  GET_ALL_PLACES: "/explore/places",
+  GET_PLACE_DETAILS: (slug: string) => `/explore/places/${slug}`,
 }

@@ -6,6 +6,9 @@ import PlacesHero from "@/components/places/PlacesHero";
 import TopPicksScroll from "@/components/places/TopPicksScroll";
 import PlacesGrid from "@/components/places/PlacesGrid";
 import EditorialGuide from "@/components/places/EditorialGuide";
+import { GetAllPlacesApi } from "@/api/users/places.api";
+import { mapPlaceToCard, type PlaceCard } from "@/lib/place";
+import type { ApiPlacesListResponse } from "@/types/place";
 
 export const metadata: Metadata = {
   title: "Places to Visit — The Marco Passport",
@@ -19,12 +22,29 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PlacesPage() {
+async function getPlaces(): Promise<{ places: PlaceCard[]; total: number }> {
+  try {
+    const res = await GetAllPlacesApi();
+    const payload: ApiPlacesListResponse = res?.data?.data ?? {};
+    const items = payload.places ?? [];
+    return {
+      places: items.map(mapPlaceToCard),
+      total: payload.total ?? items.length,
+    };
+  } catch (error) {
+    console.error("Failed to fetch places:", error);
+    return { places: [], total: 0 };
+  }
+}
+
+export default async function PlacesPage() {
+  const { places, total } = await getPlaces();
+
   return (
     <>
-      <PlacesHero />
-      {/* <TopPicksScroll /> */}
-      <PlacesGrid />
+      <PlacesHero total={total} />
+      {/* <TopPicksScroll places={places} /> */}
+      <PlacesGrid places={places} />
       <EditorialGuide />
 
       {/* CTA */}

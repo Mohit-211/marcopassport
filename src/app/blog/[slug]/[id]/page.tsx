@@ -49,6 +49,7 @@ export async function generateMetadata({
 export default async function BlogDetailPage({ params }: Props) {
   const { id } = await params;
   const post = await getBlogById(id);
+  console.log(post,"post")
   if (!post) {
     return (
       <div className="container mx-auto px-5 lg:px-8 py-32 text-center">

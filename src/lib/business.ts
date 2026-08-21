@@ -14,7 +14,7 @@ export function mapBusinessToListing(item: ApiBusiness): Listing {
     category: item.categories?.[0]?.name ?? "",
     categorySlug: item.categories?.[0]?.slug ?? "",
     image,
-    rating: item.rating ?? 0,
+    rating: Number(item.rating) || 0,
     price: item.price_level ?? "",
     location: item.neighborhood || item.address || "",
     description: item.short_description || item.tagline || "",

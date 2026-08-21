@@ -1,8 +1,7 @@
 import Image from "next/image";
 import { Compass } from "lucide-react";
-import { places } from "@/data/places";
 
-export default function PlacesHero() {
+export default function PlacesHero({ total }: { total: number }) {
   return (
     <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
       {/* Background */}
@@ -43,7 +42,7 @@ export default function PlacesHero() {
           </p>
           {/* Meta line */}
           <div className="mt-7 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.18em] text-primary-foreground/70 sm:mt-8">
-            <span>{places.length} places to explore</span>
+            <span>{total} places to explore</span>
             <span className="h-1 w-1 rounded-full bg-gold" />
             <span>Beaches · Nature · Landmarks · Views</span>
           </div>

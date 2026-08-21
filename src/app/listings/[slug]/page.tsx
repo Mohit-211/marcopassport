@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import ListingGallery from "@/components/listings/ListingGallery";
 import ListingInfoContent from "@/components/listings/ListingInfoContent";
 import ListingActionsPanel from "@/components/listings/ListingActionsPanel";
+import ReviewsSection from "@/components/listings/ReviewsSection";
 import SimilarAndRelated from "@/components/listings/SimilarAndRelated";
 import { GetBusinessDetailsBySlugApi } from "@/api/users/business.api";
 import { GetAllBlogsApi } from "@/api/users/blog.api";
@@ -107,7 +108,10 @@ export default async function ListingDetailPage({ params }: Props) {
       {/* Main content */}
       <section className="container mx-auto px-5 lg:px-8 py-14 md:py-20">
         <div className="grid lg:grid-cols-[1fr_380px] gap-12 lg:gap-16">
-          <ListingInfoContent listing={listing} />
+          <div className="space-y-14">
+            <ListingInfoContent listing={listing} />
+            <ReviewsSection id={listing.id} />
+          </div>
           <ListingActionsPanel
             listing={listing}
             categoryMeta={{ name: listing.category }}

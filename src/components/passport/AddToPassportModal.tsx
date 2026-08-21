@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { PassportItem } from "@/components/passport/PassportItemCard";
+import { AddtoPassportApi, UpdatePassportApi } from "@/api/users/passport.api";
 
 interface AddToPassportModalProps {
   open: boolean;
@@ -27,6 +28,7 @@ interface AddToPassportModalProps {
     location?: string;
   };
   existing?: PassportItem | null;
+  onSaved?: () => void;
 }
 
 export function AddToPassportModal({
@@ -34,22 +36,44 @@ export function AddToPassportModal({
   onOpenChange,
   source,
   existing,
+  onSaved,
 }: AddToPassportModalProps) {
   const [date, setDate] = useState(existing?.date ?? "");
   const [time, setTime] = useState(existing?.time ?? "");
+  const [saving, setSaving] = useState(false);
 
-  const handleSave = () => {
-    // TODO: wire up to real store once one exists — for now this is a
-    // static UI-only bypass so the flow can be tried end to end.
-    toast.success(
-      existing ? "Passport entry updated" : "Added to your Passport",
-      {
-        description: date
-          ? `${source.name} · ${date}${time ? ` at ${time}` : ""}`
-          : source.name,
+  const handleSave = async () => {
+    if (!date) {
+      toast.error("Please pick a date for your visit");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      if (existing) {
+        await UpdatePassportApi(existing.id, { visit_date: date });
+        toast.success("Passport entry updated", {
+          description: `${source.name} · ${date}${time ? ` at ${time}` : ""}`,
+        });
+      } else {
+        await AddtoPassportApi({
+          place_id: Number(source.refId),
+          visit_date: date,
+        });
+        toast.success("Added to your Passport", {
+          description: `${source.name} · ${date}${time ? ` at ${time}` : ""}`,
+        });
       }
-    );
-    onOpenChange(false);
+      onSaved?.();
+      onOpenChange(false);
+    } catch {
+      toast.error(
+        existing ? "Couldn't update your Passport entry" : "Couldn't add to your Passport",
+        { description: "Please try again." }
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -118,8 +142,8 @@ export function AddToPassportModal({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button variant="gold" onClick={handleSave}>
-            {existing ? "Save changes" : "Add to Passport"}
+          <Button variant="gold" onClick={handleSave} disabled={saving}>
+            {saving ? "Saving..." : existing ? "Save changes" : "Add to Passport"}
           </Button>
         </DialogFooter>
       </DialogContent>

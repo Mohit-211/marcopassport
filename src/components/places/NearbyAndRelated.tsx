@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { Place } from "@/data/places";
+import type { PlaceCard } from "@/lib/place";
 import type { blogPosts } from "@/data/content";
 
 export default function NearbyAndRelated({
   nearby,
   related,
 }: {
-  nearby: Place[];
+  nearby: PlaceCard[];
   related: (typeof blogPosts)[number][];
 }) {
   return (
@@ -33,7 +33,7 @@ export default function NearbyAndRelated({
             {nearby.map((p) => (
               <Link
                 key={p.id}
-                href={`/places/${p.id}`}
+                href={`/places/${p.slug}`}
                 className="group relative block aspect-[3/4] overflow-hidden rounded-3xl shadow-soft hover:shadow-elegant transition-all duration-500"
               >
                 <img

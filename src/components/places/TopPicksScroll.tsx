@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
-import { places } from "@/data/places";
+import type { PlaceCard } from "@/lib/place";
 
-export default function TopPicksScroll() {
-  const topPicks = places.filter((p) => p.featured);
+export default function TopPicksScroll({ places }: { places: PlaceCard[] }) {
+  const topPicks = places.filter((p) => p.isTopPick);
 
   return (
     <section className="bg-primary text-primary-foreground py-16 md:py-20 relative">
@@ -29,7 +29,7 @@ export default function TopPicksScroll() {
           {topPicks.map((p, i) => (
             <Link
               key={p.id}
-              href={`/places/${p.id}`}
+              href={`/places/${p.slug}`}
               className="group relative w-[320px] md:w-[420px] shrink-0 rounded-3xl overflow-hidden shadow-elegant"
             >
               <div className="aspect-[4/5] overflow-hidden">

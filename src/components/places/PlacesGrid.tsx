@@ -2,22 +2,34 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { places, type Place } from "@/data/places";
+import type { PlaceCard as PlaceCardData } from "@/lib/place";
 
-function PlaceCard({ place, index }: { place: Place; index: number }) {
-  const span =
-    place.span === "wide"
+function getSpan(index: number): "wide" | "tall" | "default" {
+  if (index % 6 === 0) return "wide";
+  if (index % 6 === 3) return "tall";
+  return "default";
+}
+
+function PlaceCard({
+  place,
+  index,
+}: {
+  place: PlaceCardData;
+  index: number;
+}) {
+  const spanClass =
+    getSpan(index) === "wide"
       ? "sm:col-span-2 row-span-1"
-      : place.span === "tall"
+      : getSpan(index) === "tall"
         ? "row-span-2"
         : "row-span-1";
 
   return (
     <Link
-      href={`/places/${place.id}`}
+      href={`/places/${place.slug}`}
       className={cn(
         "group relative overflow-hidden rounded-3xl block shadow-soft hover:shadow-elegant transition-all duration-500",
-        span
+        spanClass
       )}
     >
       <img
@@ -59,7 +71,17 @@ function PlaceCard({ place, index }: { place: Place; index: number }) {
   );
 }
 
-export default function PlacesGrid() {
+export default function PlacesGrid({ places }: { places: PlaceCardData[] }) {
+  if (places.length === 0) {
+    return (
+      <section className="container mx-auto px-5 lg:px-8 py-20 md:py-28">
+        <p className="text-center text-muted-foreground">
+          No places to show right now — check back soon.
+        </p>
+      </section>
+    );
+  }
+
   return (
     <section className="container mx-auto px-5 lg:px-8 py-20 md:py-28">
       <div className="flex items-end justify-between gap-4 mb-12">

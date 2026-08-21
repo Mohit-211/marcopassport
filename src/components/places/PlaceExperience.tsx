@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -17,25 +16,47 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import type { Place } from "@/data/places";
+import type { PlaceCard, PlaceDetail } from "@/lib/place";
 import { cn } from "@/lib/utils";
 import { AddToPassportModal } from "@/components/passport/AddToPassportModal";
 import PlaceStoryContent from "@/components/places/PlaceStoryContent";
 import NearbyAndRelated from "@/components/places/NearbyAndRelated";
+import type { blogPosts } from "@/data/content";
+import { GetPlacesDetailsBySlugApi } from "@/api/users/places.api";
 
 export default function PlaceExperience({
   place,
   nearby,
+  related,
 }: {
-  place: Place;
-  nearby: Place[];
-  // related: (typeof blogPosts)[number][];
+  place: PlaceDetail;
+  nearby: PlaceCard[];
+  related: (typeof blogPosts)[number][];
 }) {
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [planOpen, setPlanOpen] = useState(false);
+  const [saved, setSaved] = useState(place.isInPassport);
 
-  // TODO: replace with real passport store's hasItem(place.id) once a backend/store exists
-  const [saved, setSaved] = useState(false);
+  // The detail page is server-rendered, so the initial fetch runs without
+  // the user's token (it lives in localStorage) and is_in_passport always
+  // comes back false. Re-check it here now that we're on the client.
+  useEffect(() => {
+    const token = localStorage.getItem("MarcoPassport");
+    if (!token) return;
+
+    let cancelled = false;
+    GetPlacesDetailsBySlugApi(place.slug)
+      .then((res) => {
+        if (!cancelled && res?.data?.data?.is_in_passport) {
+          setSaved(true);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, [place.slug]);
 
   const handleSave = () => setPlanOpen(true);
 
@@ -44,7 +65,7 @@ export default function PlaceExperience({
       try {
         await navigator.share({
           title: place.name,
-          text: place.tagline,
+          text: place.blurb,
           url: window.location.href,
         });
       } catch {
@@ -68,13 +89,10 @@ export default function PlaceExperience({
       {/* Hero */}
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">
-          <Image
+          <img
             src={place.image}
             alt={place.name}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.22_0.06_240/0.45),oklch(0.22_0.06_240/0.3)_40%,oklch(0.22_0.06_240/0.92))]" />
         </div>
@@ -93,7 +111,7 @@ export default function PlaceExperience({
               {place.name}
             </h1>
             <p className="mt-6 text-lg md:text-xl text-primary-foreground/85 max-w-2xl">
-              {place.tagline}
+              {place.blurb}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button
@@ -220,7 +238,7 @@ export default function PlaceExperience({
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted-foreground">Best time</dt>
                   <dd className="font-medium text-right">
-                    {place.expectations[0]?.label}
+                    {place.bestTimeToVisit ?? "Anytime"}
                   </dd>
                 </div>
                 <div className="flex justify-between gap-4">
@@ -229,7 +247,9 @@ export default function PlaceExperience({
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted-foreground">Cost</dt>
-                  <dd className="font-medium text-right">{place.info.fee}</dd>
+                  <dd className="font-medium text-right">
+                    {place.fees ?? place.priceLevel ?? "Free"}
+                  </dd>
                 </div>
               </dl>
             </div>
@@ -275,6 +295,7 @@ export default function PlaceExperience({
           image: place.gallery?.[0] ?? place.image,
           location: "Marco Island",
         }}
+        onSaved={() => setSaved(true)}
       />
 
       {/* Lightbox */}
