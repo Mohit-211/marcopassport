@@ -1,6 +1,18 @@
 import client from "../client";
 import { Business } from "../endpoints";
 
+export interface CreateBusinessPayload {
+    business_name: string;
+    contact_name: string;
+    email: string;
+    phone: string;
+    website?: string;
+    plan: string;
+    message?: string;
+}
+
+export const CreateBusinesssApi = (payload: CreateBusinessPayload) =>
+    client.post(Business.CREATE_BUSINESS, payload);
 export const GetBusinessCategoryApi = () =>
     client.get(Business.BUSINESS_CATEGORIES);
 

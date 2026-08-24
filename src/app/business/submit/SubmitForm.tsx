@@ -17,8 +17,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { CreateBusinesssApi } from "@/api/users/business.api";
 
-type PlanId = "full-page" | "half-page" | "business-card";
+type PlanId = "full_page" | "half_page" | "business_card";
 
 const plans: {
   id: PlanId;
@@ -26,10 +27,10 @@ const plans: {
   price: string;
   Icon: typeof Check;
 }[] = [
-  { id: "full-page", name: "Full Page", price: "$500", Icon: FileText },
-  { id: "half-page", name: "1/2 Page", price: "$300", Icon: Rows3 },
+  { id: "full_page", name: "Full Page", price: "$500", Icon: FileText },
+  { id: "half_page", name: "1/2 Page", price: "$300", Icon: Rows3 },
   {
-    id: "business-card",
+    id: "business_card",
     name: "Business Card",
     price: "$150",
     Icon: CreditCard,
@@ -48,8 +49,7 @@ export default function SubmitForm() {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // TODO: wire this up to the real submission API once the backend exists
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     if (!businessName || !contactName || !email || !phone) {
@@ -63,13 +63,24 @@ export default function SubmitForm() {
     }
 
     setSubmitting(true);
-
-    // TODO: replace with a real API call
-    setTimeout(() => {
-      setSubmitting(false);
+    try {
+      await CreateBusinesssApi({
+        business_name: businessName,
+        contact_name: contactName,
+        email,
+        phone,
+        website: website || undefined,
+        plan,
+        message: message || undefined,
+      });
       toast.success("Your submission has been received!");
       router.push("/business/thank-you");
-    }, 900);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (

@@ -19,10 +19,10 @@ export const metadata: Metadata = {
 };
 
 const rates = [
-  { id: "full-page", name: "Full Page", price: "$500", Icon: FileText },
-  { id: "half-page", name: "1/2 Page", price: "$300", Icon: Rows3 },
+  { id: "full_page", name: "Full Page", price: "$500", Icon: FileText },
+  { id: "half_page", name: "1/2 Page", price: "$300", Icon: Rows3 },
   {
-    id: "business-card",
+    id: "business_card",
     name: "Business Card",
     price: "$150",
     Icon: CreditCard,
