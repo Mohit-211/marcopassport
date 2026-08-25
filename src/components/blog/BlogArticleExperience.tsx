@@ -112,7 +112,7 @@ export default function BlogArticleExperience({
             <img
               src={imageUrl(post.featured_image)}
               alt={post.title}
-              className="w-full aspect-[4/5] object-cover rounded-xl shadow-elegant"
+              className="w-full aspect-[4/3] object-cover rounded-xl shadow-elegant"
             />
           </div>
         </section>
