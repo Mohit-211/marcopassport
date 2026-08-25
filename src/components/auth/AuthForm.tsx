@@ -19,8 +19,8 @@ import {
 import { PartyPopper } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { loginApi, registerApi } from "@/api/auth/auth.api";
+import { setAuthToken } from "@/lib/auth";
 const USER_ROLE_ID = 6;
-const TOKEN_STORAGE_KEY = "MarcoPassport";
 function getErrorMessage(error: unknown, fallback: string) {
   if (
     typeof error === "object" &&
@@ -110,8 +110,8 @@ export function AuthForm() {
         });
         const token = res?.data?.data?.tokens?.access
           ?.token
-        if (token && typeof window !== "undefined") {
-          localStorage.setItem(TOKEN_STORAGE_KEY, token);
+        if (token) {
+          setAuthToken(token);
         }
       } else {
         const formData = new FormData();
@@ -122,8 +122,8 @@ export function AuthForm() {
         formData.append("role_id", String(USER_ROLE_ID));
         const res = await registerApi(formData);
         const token = res?.data?.data?.token ?? res?.data?.token;
-        if (token && typeof window !== "undefined") {
-          localStorage.setItem(TOKEN_STORAGE_KEY, token);
+        if (token) {
+          setAuthToken(token);
         }
         setShowSuccessModal(true);
         return;
@@ -144,13 +144,8 @@ export function AuthForm() {
     });
   };
   const handleForgot = () => {
-    if (!email) {
-      toast.error("Please enter your email address first");
-      return;
-    }
-    toast.success("Reset link sent", {
-      description: `Check ${email} for a password reset link.`,
-    });
+    const query = email ? `?email=${encodeURIComponent(email)}` : "";
+    router.push(`/auth/forgot-password${query}`);
   };
   return (
     <main className="relative min-h-screen flex items-center justify-center px-4 py-10 overflow-hidden mt-10">

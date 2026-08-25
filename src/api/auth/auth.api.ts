@@ -18,7 +18,6 @@ export const logoutApi = () => client.get(AUTH_ENDPOINTS.LOGOUT);
 export const sendOtpApi = (payload: SendOtpPayload) => client.post(AUTH_ENDPOINTS.SEND_OTP, payload);
 export const verifyOtpApi = (payload: { email: string; otp: string; type: string; }) => client.post(AUTH_ENDPOINTS.VERIFY_OTP, payload);
 
-// Password 
+// Password
 export const forgotPasswordApi = (payload: { email: string; password: string; confirm_password: string; token: string; }) => client.post(AUTH_ENDPOINTS.FORGOT_PASSWORD, payload);
-// export const resetPasswordApi = (payload: any) => client.post(AUTH_ENDPOINTS.RESET_PASSWORD, payload);
-export const changePasswordApi = (payload: any) => client.post(AUTH_ENDPOINTS.RESET_PASSWORD, payload);
+export const changePasswordApi = (payload: { old_password: string; new_password: string; confirm_password: string; }) => client.post(AUTH_ENDPOINTS.CHANGE_PASSWORD, payload);

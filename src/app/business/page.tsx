@@ -55,7 +55,7 @@ export default function BusinessPage() {
             </div>
 
             {/* Heading */}
-            <h1 className="whitespace-nowrap font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em]">
+            <h1 className="font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
               Advertise With{" "}
               <span className="italic text-gold">The Marco Passport</span>
             </h1>

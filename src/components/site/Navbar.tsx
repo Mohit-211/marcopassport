@@ -4,10 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, KeyRound, LogOut, Menu, User, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuLinkItem,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 const NAV = [
   { href: "/magazine", label: "Magazine" },
@@ -21,6 +31,7 @@ const NAV = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const { isAuthenticated, user, ready, logout, loggingOut } = useAuth();
 
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -98,7 +109,67 @@ export function Navbar() {
         </nav>
 
         {/* Desktop CTA */}
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-3 lg:flex">
+          {ready &&
+            (isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-full border border-primary/15 py-1.5 pl-2 pr-2.5 text-[13px] font-medium text-primary/80",
+                    "transition-colors hover:bg-primary/5 hover:text-primary",
+                    "data-popup-open:bg-primary/5 data-popup-open:text-primary"
+                  )}
+                >
+                  <span className="grid h-6 w-6 place-items-center rounded-full bg-primary/10 text-primary">
+                    <User className="h-3.5 w-3.5" />
+                  </span>
+                  <span className="max-w-[140px] truncate">
+                    {user?.name || user?.email || "Your Passport"}
+                  </span>
+                  <ChevronDown className="h-3.5 w-3.5 text-primary/50" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>
+                    <p className="truncate font-medium text-primary">
+                      {user?.name || "Your Passport"}
+                    </p>
+                    {user?.email && (
+                      <p className="truncate text-xs text-muted-foreground">
+                        {user.email}
+                      </p>
+                    )}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLinkItem render={<Link href="/passport" />}>
+                    <User className="h-4 w-4" /> Your Passport
+                  </DropdownMenuLinkItem>
+                  <DropdownMenuLinkItem
+                    render={<Link href="/passport/change-password" />}
+                  >
+                    <KeyRound className="h-4 w-4" /> Change Password
+                  </DropdownMenuLinkItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    variant="destructive"
+                    disabled={loggingOut}
+                    onClick={() => logout()}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    {loggingOut ? "Signing out…" : "Sign Out"}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href="/auth">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-9 rounded-full border-primary/15 px-4 text-[13px] font-medium text-primary hover:bg-primary/5"
+                >
+                  Sign In
+                </Button>
+              </Link>
+            ))}
           <Link href="/business">
             <Button
               className={cn(
@@ -165,7 +236,37 @@ export function Navbar() {
             );
           })}
 
-          <Link href="/business" className="mt-3">
+          {ready &&
+            (isAuthenticated ? (
+              <>
+                <Link
+                  href="/passport/change-password"
+                  className="mt-3 flex items-center gap-2 rounded-xl px-4 py-3 text-[15px] font-medium text-primary/80 transition-colors duration-200 hover:bg-primary/10 hover:text-primary"
+                >
+                  <KeyRound className="h-4 w-4" /> Change Password
+                </Link>
+                <Button
+                  variant="outline"
+                  onClick={() => logout()}
+                  disabled={loggingOut}
+                  className="mt-2 h-11 w-full rounded-full border-primary/15 text-sm font-semibold text-primary hover:bg-primary/5"
+                >
+                  <LogOut className="h-4 w-4" />{" "}
+                  {loggingOut ? "Signing out…" : "Sign Out"}
+                </Button>
+              </>
+            ) : (
+              <Link href="/auth" className="mt-3">
+                <Button
+                  variant="outline"
+                  className="h-11 w-full rounded-full border-primary/15 text-sm font-semibold text-primary hover:bg-primary/5"
+                >
+                  Sign In
+                </Button>
+              </Link>
+            ))}
+
+          <Link href="/business" className="mt-2">
             <Button
               className="
                 h-11 w-full rounded-full

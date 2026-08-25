@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Plus, LogOut, Sparkles } from "lucide-react";
+import { KeyRound, Plus, LogOut, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,24 +24,30 @@ import {
 } from "@/components/passport/PassportItemCard";
 import { PassportEmptyState } from "@/components/passport/PassportEmptyState";
 
-// TODO: replace with real auth/store once wired up. Starting empty so the
+// TODO: replace with real passport data once wired up. Starting empty so the
 // UI reflects the true "no saved places yet" state.
 const INITIAL_ITEMS: PassportItem[] = [];
-const CURRENT_USER_EMAIL = "you@example.com";
 
 export function PassportPage() {
+  const router = useRouter();
+  const { isAuthenticated, ready, user, logout, loggingOut } = useAuth();
   const [items, setItems] = useState<PassportItem[]>(INITIAL_ITEMS);
   const [editing, setEditing] = useState<PassportItem | null>(null);
   const [confirmRemove, setConfirmRemove] = useState<PassportItem | null>(null);
+
+  useEffect(() => {
+    if (ready && !isAuthenticated) {
+      router.replace("/auth");
+    }
+  }, [ready, isAuthenticated, router]);
 
   const removeItem = (id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
 
-  const handleLogout = () => {
-    // TODO: wire up real sign-out once auth exists
-    toast.success("Signed out");
-  };
+  if (!ready || !isAuthenticated) {
+    return null;
+  }
 
   return (
     <>
@@ -55,7 +63,7 @@ export function PassportPage() {
             </div>
 
             {/* Heading */}
-            <h1 className="whitespace-nowrap font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em]">
+            <h1 className="font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
               My <span className="italic text-gold">Passport</span>
             </h1>
 
@@ -67,24 +75,35 @@ export function PassportPage() {
             <p className="mt-4 text-sm text-primary-foreground/60">
               Signed in as{" "}
               <span className="font-medium text-gold">
-                {CURRENT_USER_EMAIL}
+                {user?.name || user?.email}
               </span>
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Link href="/explore">
               <Button variant="gold" size="lg" className="group">
                 <Plus className="h-4 w-4" /> Add More Places
               </Button>
             </Link>
+            <Link href="/passport/change-password">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground"
+              >
+                <KeyRound className="h-4 w-4" /> Change Password
+              </Button>
+            </Link>
             <Button
               variant="outline"
               size="lg"
-              onClick={handleLogout}
+              onClick={() => logout()}
+              disabled={loggingOut}
               className="border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground"
             >
-              <LogOut className="h-4 w-4" /> Sign Out
+              <LogOut className="h-4 w-4" />{" "}
+              {loggingOut ? "Signing out…" : "Sign Out"}
             </Button>
           </div>
         </div>

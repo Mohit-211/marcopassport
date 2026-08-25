@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "../constants/config";
 import { handleApiError } from "../errors/ApiErrorHandler";
+import { getAuthToken } from "../lib/auth";
 const client = axios.create({
   baseURL: config.API_BASE_URL,
   timeout: config.TIMEOUT,
@@ -13,10 +14,7 @@ const client = axios.create({
 
 client.interceptors.request.use(
   (req) => {
-    const token =
-      typeof window !== "undefined"
-        ? localStorage.getItem("MarcoPassport")
-        : null;
+    const token = getAuthToken();
     if (token) {
       req.headers['x-access-token'] = `${token}`;
       req.headers['role_id'] = 6;

@@ -24,6 +24,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { AddtoPassportApi } from "@/api/users/passport.api";
 import { GetBusinessDetailsBySlugApi } from "@/api/users/business.api";
+import { getAuthToken } from "@/lib/auth";
 
 type ListingActionsPanelProps = {
   listing: {
@@ -52,7 +53,7 @@ export default function ListingActionsPanel({
   // the user's token (it lives in localStorage) and is_in_passport always
   // comes back false. Re-check it here now that we're on the client.
   useEffect(() => {
-    const token = localStorage.getItem("MarcoPassport");
+    const token = getAuthToken();
     if (!token || !listing?.slug) return;
 
     let cancelled = false;

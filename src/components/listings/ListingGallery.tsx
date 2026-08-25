@@ -66,7 +66,7 @@ export default function ListingGallery({ listing }: ListingGalleryProps) {
               </Badge>
             </div>
             <div className="absolute bottom-6 left-6 right-6 text-primary-foreground text-left">
-              <h1 className="font-display text-4xl md:text-6xl font-semibold leading-[1.05] text-balance">
+              <h1 className="font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
                 {listing.name}
               </h1>
               <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-primary-foreground/90">

@@ -60,11 +60,11 @@ export default function BlogArticleExperience({
       {/* Hero */}
       <section className="relative isolate">
         <div className="relative h-[58vh] min-h-[420px] md:h-[68vh] w-full overflow-hidden">
-          <img
+          {/* <img
             src={imageUrl(post.featured_image)}
             alt={post.title}
             className="absolute inset-0 h-full w-full object-cover"
-          />
+          /> */}
           <div
             className="absolute inset-0"
             style={{
@@ -76,14 +76,14 @@ export default function BlogArticleExperience({
             <div className="container mx-auto px-5 lg:px-8 pb-14 md:pb-20 max-w-5xl text-primary-foreground">
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 text-sm text-primary-foreground/80 hover:text-gold transition-colors mb-6"
+                className="inline-flex items-center gap-2 text-sm text-primary-foreground/80 hover:text-gold transition-colors mb-8"
               >
                 <ArrowLeft className="h-4 w-4" /> All Stories
               </Link>
-              <span className="inline-block text-[11px] uppercase tracking-[0.25em] text-gold font-semibold">
+              <span className="inline-block text-[11px] uppercase tracking-[0.25em] text-gold font-semibold mx-4 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/10 backdrop-blur-sm">
                 {post.blog_category?.name}
               </span>
-              <h1 className="font-display text-4xl md:text-6xl font-semibold mt-4 text-balance leading-tight">
+              <h1 className="font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] mt-4 text-balance">
                 {post.title}
               </h1>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-primary-foreground/85">
@@ -105,6 +105,18 @@ export default function BlogArticleExperience({
           </div>
         </div>
       </section>
+      {/* Featured image */}
+      {post.featured_image && (
+        <section className="mt-20">
+          <div className="max-w-2xl mx-auto">
+            <img
+              src={imageUrl(post.featured_image)}
+              alt={post.title}
+              className="w-full aspect-[4/5] object-cover rounded-xl shadow-elegant"
+            />
+          </div>
+        </section>
+      )}
       {/* Body */}
       <section className="container mx-auto px-5 lg:px-8 py-16 md:py-24">
         <div className="grid lg:grid-cols-[1fr_minmax(0,680px)_1fr] gap-10">
@@ -192,7 +204,7 @@ export default function BlogArticleExperience({
               <Link href="/places">
                 <Button
                   variant="outline"
-                  className="rounded-full border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 px-6"
+                  className="rounded-full border-primary-foreground/40 text-black hover:bg-primary-foreground/10 px-6"
                 >
                   See Places
                 </Button>

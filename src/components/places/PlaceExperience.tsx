@@ -23,6 +23,7 @@ import PlaceStoryContent from "@/components/places/PlaceStoryContent";
 import NearbyAndRelated from "@/components/places/NearbyAndRelated";
 import type { blogPosts } from "@/data/content";
 import { GetPlacesDetailsBySlugApi } from "@/api/users/places.api";
+import { getAuthToken } from "@/lib/auth";
 
 export default function PlaceExperience({
   place,
@@ -41,7 +42,7 @@ export default function PlaceExperience({
   // the user's token (it lives in localStorage) and is_in_passport always
   // comes back false. Re-check it here now that we're on the client.
   useEffect(() => {
-    const token = localStorage.getItem("MarcoPassport");
+    const token = getAuthToken();
     if (!token) return;
 
     let cancelled = false;
@@ -107,7 +108,7 @@ export default function PlaceExperience({
             <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur border border-primary-foreground/20 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-gold">
               <MapPin className="h-3.5 w-3.5" /> {place.tag} · Marco Island
             </div>
-            <h1 className="mt-6 font-display text-5xl md:text-7xl font-semibold leading-[1.05] text-balance">
+            <h1 className="mt-6 font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
               {place.name}
             </h1>
             <p className="mt-6 text-lg md:text-xl text-primary-foreground/85 max-w-2xl">
@@ -190,37 +191,41 @@ export default function PlaceExperience({
                 Plan your visit
               </p>
               <h3 className="font-display text-2xl font-semibold mt-2">
-                Save this to your Passport
+                {saved ? "Saved to your Passport" : "Save this to your Passport"}
               </h3>
               <p className="text-sm text-muted-foreground mt-2">
-                Pick a date and we'll weave it into your itinerary.
+                {saved
+                  ? "You're all set — manage the visit date from your Passport."
+                  : "Pick a date and we'll weave it into your itinerary."}
               </p>
 
-              <Button
-                variant="outline"
-                className="mt-5 w-full justify-start text-muted-foreground"
-                onClick={() => setPlanOpen(true)}
-              >
-                <CalendarIcon className="h-4 w-4" />
-                {saved ? "Edit your visit date" : "Pick a visit date"}
-              </Button>
+              {!saved && (
+                <Button
+                  variant="outline"
+                  className="mt-5 w-full justify-start text-muted-foreground"
+                  onClick={() => setPlanOpen(true)}
+                >
+                  <CalendarIcon className="h-4 w-4" />
+                  Pick a visit date
+                </Button>
+              )}
 
-              <Button
-                variant={saved ? "outline" : "gold"}
-                size="lg"
-                className="w-full mt-3"
-                onClick={handleSave}
-              >
-                {saved ? (
-                  <>
+              {saved ? (
+                <Link href="/passport" className="mt-3 block">
+                  <Button variant="outline" size="lg" className="w-full">
                     <Check className="h-4 w-4" /> Saved to Passport
-                  </>
-                ) : (
-                  <>
-                    <Heart className="h-4 w-4" /> Add to Passport
-                  </>
-                )}
-              </Button>
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  variant="gold"
+                  size="lg"
+                  className="w-full mt-3"
+                  onClick={handleSave}
+                >
+                  <Heart className="h-4 w-4" /> Add to Passport
+                </Button>
+              )}
 
               <button
                 onClick={handleShare}
@@ -269,18 +274,19 @@ export default function PlaceExperience({
             {place.name}
           </p>
         </div>
-        <Button
-          variant={saved ? "outline" : "gold"}
-          size="sm"
-          onClick={() => setPlanOpen(true)}
-        >
-          {saved ? (
-            <Check className="h-4 w-4" />
-          ) : (
+        {saved ? (
+          <Link href="/passport">
+            <Button variant="outline" size="sm">
+              <Check className="h-4 w-4" />
+              Saved
+            </Button>
+          </Link>
+        ) : (
+          <Button variant="gold" size="sm" onClick={() => setPlanOpen(true)}>
             <Heart className="h-4 w-4" />
-          )}
-          {saved ? "Saved" : "Add"}
-        </Button>
+            Add
+          </Button>
+        )}
       </div>
       <div className="lg:hidden h-20" aria-hidden />
 

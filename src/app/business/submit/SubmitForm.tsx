@@ -86,19 +86,19 @@ export default function SubmitForm() {
   return (
     <>
       {/* Header */}
-      <section className="bg-[#18384E]">
-        <div className="container mx-auto px-4 py-12 sm:py-16 max-w-2xl">
+      <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
+        <div className="container mx-auto px-5 lg:px-8 pt-28 pb-14 md:pt-36 md:pb-16 max-w-2xl">
           <Link
             href="/business"
-            className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary-foreground/80 hover:text-gold transition-colors"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-3.5 w-3.5" />
             Back to Advertising
           </Link>
-          <h1 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight">
-            Submit Your Business
+          <h1 className="mt-6 font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
+            Submit Your <span className="italic text-gold">Business</span>
           </h1>
-          <p className="mt-3 text-white/80 text-base">
+          <p className="mt-5 text-base md:text-lg text-primary-foreground/80 max-w-xl">
             Fill out the form below and choose the plan that fits your business.
           </p>
         </div>

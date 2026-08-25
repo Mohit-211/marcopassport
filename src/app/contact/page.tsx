@@ -16,7 +16,7 @@ export default function ContactPage() {
           <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
             Say hello
           </p>
-          <h1 className="font-display text-5xl md:text-6xl font-semibold mt-3 text-balance">
+          <h1 className="font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] mt-3 text-balance">
             Let&apos;s talk Marco Island.
           </h1>
           <p className="text-muted-foreground mt-4 max-w-2xl text-lg">
