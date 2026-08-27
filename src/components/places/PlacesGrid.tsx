@@ -57,7 +57,7 @@ function PlaceCard({
 export default function PlacesGrid({ places }: { places: PlaceCardData[] }) {
   if (places.length === 0) {
     return (
-      <section className="container mx-auto px-5 lg:px-8 py-20 md:py-28">
+      <section className="containermx-auto max-w-7xl px-5 lg:px-8 py-20 md:py-28">
         <p className="text-center text-muted-foreground">
           No places to show right now — check back soon.
         </p>
@@ -66,7 +66,7 @@ export default function PlacesGrid({ places }: { places: PlaceCardData[] }) {
   }
 
   return (
-    <section className="container mx-auto px-5 lg:px-8 py-20 md:py-28">
+    <section className="container mx-auto max-w-7xl py-20 md:py-28">
       <div className="flex items-end justify-between gap-4 mb-12">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">

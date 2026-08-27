@@ -45,7 +45,7 @@ export default function NearbyAndRelated({
   console.log(related, "related")
   return (
     <>
-      <section className="container mx-auto px-5 lg:px-8 py-20 md:py-28">
+      <section className="container mx-auto max-w-7xl px-5 py-20 md:py-28">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">

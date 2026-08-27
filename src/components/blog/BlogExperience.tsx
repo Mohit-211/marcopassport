@@ -12,7 +12,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import BlogGrid from "@/components/blog/BlogGrid";
-import { GetAllBlogsApi, GetBlogCategoryApi } from "@/api/users/blog.api";
+import {
+  GetAllBlogsApi,
+  GetAllBlogsByCategoryApi,
+  GetBlogCategoryApi,
+} from "@/api/users/blog.api";
 import type { Blog } from "@/types/blog";
 type ApiCategory = {
   id: string | number;
@@ -21,14 +25,19 @@ type ApiCategory = {
   category_name?: string;
   slug?: string;
 };
+type BlogCategoryOption = {
+  name: string;
+  slug: string;
+};
+const ALL_CATEGORY_SLUG = "all";
 export default function BlogExperience() {
   const [posts, setPosts] = useState<Blog[]>([]);
   const [loadingBlogs, setLoadingBlogs] = useState(true);
   const [blogError, setBlogError] = useState("");
-  const [categories, setCategories] = useState<string[]>(["All"]);
+  const [categories, setCategories] = useState<BlogCategoryOption[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [categoryError, setCategoryError] = useState("");
-  const [activeCat, setActiveCat] = useState<string>("All");
+  const [activeCat, setActiveCat] = useState<string>(ALL_CATEGORY_SLUG);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const perPage = 6;
@@ -44,30 +53,32 @@ export default function BlogExperience() {
             "Blog category API did not return an array:",
             responseData
           );
-          setCategories(["All"]);
+          setCategories([]);
           setCategoryError("Unable to load categories.");
           return;
         }
-        const categoryNames = responseData
+        const categoryOptions = responseData
           .map((category: ApiCategory | string) => {
             if (typeof category === "string") {
-              return category;
+              return { name: category, slug: category };
             }
-            return (
+            const name =
               category.name ||
               category.title ||
               category.category_name ||
-              ""
-            );
+              "";
+            return { name, slug: category.slug || name };
           })
-          .filter(Boolean);
+          .filter((category) => Boolean(category.name));
         const uniqueCategories = Array.from(
-          new Set(categoryNames)
+          new Map(
+            categoryOptions.map((category) => [category.slug, category])
+          ).values()
         );
-        setCategories(["All", ...uniqueCategories]);
+        setCategories(uniqueCategories);
       } catch (error) {
         console.error("Failed to fetch blog categories:", error);
-        setCategories(["All"]);
+        setCategories([]);
         setCategoryError("Failed to load categories.");
       } finally {
         setLoadingCategories(false);
@@ -80,7 +91,10 @@ export default function BlogExperience() {
       try {
         setLoadingBlogs(true);
         setBlogError("");
-        const res = await GetAllBlogsApi();
+        const res =
+          activeCat === ALL_CATEGORY_SLUG
+            ? await GetAllBlogsApi()
+            : await GetAllBlogsByCategoryApi(activeCat);
         const responseData = res?.data?.data;
         if (!Array.isArray(responseData)) {
           console.error("Blogs API did not return an array:", responseData);
@@ -98,20 +112,24 @@ export default function BlogExperience() {
       }
     };
     fetchBlogs();
-  }, []);
+  }, [activeCat]);
+  const activeCatName = useMemo(() => {
+    if (activeCat === ALL_CATEGORY_SLUG) return "All";
+    return (
+      categories.find((c) => c.slug === activeCat)?.name ?? "All"
+    );
+  }, [categories, activeCat]);
   const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return posts;
     return posts.filter((p) => {
-      const matchesCat =
-        activeCat === "All" || p.blog_category?.name === activeCat;
-      const q = query.trim().toLowerCase();
-      const matchesQuery =
-        !q ||
+      return (
         p.title.toLowerCase().includes(q) ||
         (p.description ?? "").toLowerCase().includes(q) ||
-        (p.blog_category?.name ?? "").toLowerCase().includes(q);
-      return matchesCat && matchesQuery;
+        (p.blog_category?.name ?? "").toLowerCase().includes(q)
+      );
     });
-  }, [posts, activeCat, query]);
+  }, [posts, query]);
   const [featured, ...rest] = filtered;
   const totalPages = Math.max(
     1,
@@ -179,7 +197,7 @@ export default function BlogExperience() {
           CATEGORY PILLS
       ====================================================== */}
       <section className="border-b border-border bg-background sticky top-16 z-10 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-        <div className="container mx-auto px-5 lg:px-8 py-4 flex gap-2 overflow-x-auto scrollbar-none">
+        <div className="container mx-auto max-w-7xl py-4 flex gap-2 overflow-x-auto scrollbar-none">
           {/* Loading */}
           {loadingCategories && (
             <>
@@ -210,32 +228,34 @@ export default function BlogExperience() {
           {/* Categories */}
           {!loadingCategories &&
             !categoryError &&
-            categories.map((cat) => {
-              const active = activeCat === cat;
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => {
-                    setActiveCat(cat);
-                    setPage(1);
-                  }}
-                  className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all border ${active
-                    ? "bg-gold text-gold-foreground border-gold shadow-gold"
-                    : "bg-background text-primary border-border hover:border-gold hover:text-gold-foreground hover:bg-gold/10"
-                    }`}
-                >
-                  {cat}
-                </button>
-              );
-            })}
+            [{ name: "All", slug: ALL_CATEGORY_SLUG }, ...categories].map(
+              (cat) => {
+                const active = activeCat === cat.slug;
+                return (
+                  <button
+                    key={cat.slug}
+                    type="button"
+                    onClick={() => {
+                      setActiveCat(cat.slug);
+                      setPage(1);
+                    }}
+                    className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all border ${active
+                      ? "bg-gold text-gold-foreground border-gold shadow-gold"
+                      : "bg-background text-primary border-border hover:border-gold hover:text-gold-foreground hover:bg-gold/10"
+                      }`}
+                  >
+                    {cat.name}
+                  </button>
+                );
+              }
+            )}
         </div>
       </section>
       {/* =====================================================
           FEATURED
       ====================================================== */}
       {featured && (
-        <section className="container mx-auto px-5 lg:px-8 py-14 md:py-20">
+        <section className="container mx-auto max-w-7xl py-14 md:py-20">
           <Link
             href={`/blog/${featured.slug}/${featured?.id}`}
             className="group grid md:grid-cols-2 gap-8 md:gap-12 items-center"
@@ -287,7 +307,7 @@ export default function BlogExperience() {
       {/* =====================================================
           BLOG GRID
       ====================================================== */}
-      <section className="container mx-auto px-5 lg:px-8 pb-20">
+      <section className="container mx-auto max-w-7xl pb-20">
         <div className="flex items-end justify-between mb-8">
           <div>
             <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary">
@@ -298,12 +318,12 @@ export default function BlogExperience() {
               {filtered.length === 1
                 ? "article"
                 : "articles"}
-              {activeCat !== "All" && (
+              {activeCat !== ALL_CATEGORY_SLUG && (
                 <>
                   {" "}
                   in{" "}
                   <span className="text-primary font-medium">
-                    {activeCat}
+                    {activeCatName}
                   </span>
                 </>
               )}

@@ -48,7 +48,7 @@ export default async function PlacesPage() {
       <EditorialGuide />
 
       {/* CTA */}
-      <section className="container mx-auto px-5 lg:px-8 py-20 md:py-28">
+      <section className="container mx-auto max-w-7xl px-5 lg:px-8 py-20 md:py-28">
         <div className="rounded-[2rem] bg-primary text-primary-foreground p-10 md:p-16 grid md:grid-cols-[1fr_auto] items-center gap-8 shadow-elegant relative overflow-hidden">
           <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
           <div className="relative">

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 export default function BlogNewsletter() {
   return (
     <section className="bg-primary text-primary-foreground">
-      <div className="container mx-auto px-5 lg:px-8 py-16 md:py-20 grid md:grid-cols-2 gap-10 items-center">
+      <div className="container mx-auto max-w-7xl py-16 md:py-20 grid md:grid-cols-2 gap-10 items-center">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-gold font-semibold">
             The Dispatch

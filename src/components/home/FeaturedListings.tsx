@@ -1,10 +1,46 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Bookmark, MapPin, Star } from "lucide-react";
 
-import { featuredListings } from "@/data/content";
+import { GetAllBusinessApi } from "@/api/users/business.api";
+import { mapBusinessToListing } from "@/lib/business";
+import type { Listing } from "@/components/explore/ListingCard";
+import type { PlacesResponse } from "@/types/business";
+
+const FEATURED_LIMIT = 6;
 
 export function FeaturedListings() {
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        setLoading(true);
+        const res = await GetAllBusinessApi();
+        console.log(res, "res")
+        const payload: PlacesResponse = res?.data?.data ?? {};
+        const responseData = payload.places ?? [];
+        if (!Array.isArray(responseData)) {
+          setListings([]);
+          return;
+        }
+        const mapped = responseData.map(mapBusinessToListing);
+        const featured = mapped.filter((l) => l.featured);
+        setListings((featured.length ? featured : mapped).slice(0, FEATURED_LIMIT));
+      } catch (error) {
+        console.error("Failed to fetch featured listings:", error);
+        setListings([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchListings();
+  }, []);
+
   return (
     <section className="px-4 py-16 sm:px-6 md:py-24">
       <div className="mx-auto max-w-7xl">
@@ -33,70 +69,80 @@ export function FeaturedListings() {
         </div>
 
         {/* Listings */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {featuredListings.map((listing) => (
-            <Link
-              key={listing.id}
-              href={`/listings/${listing.id}`}
-              className="group"
-            >
-              {/* Image */}
-              <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
-                <Image
-                  src={listing.image}
-                  alt={listing.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+        {loading ? (
+          <p className="py-16 text-center text-sm text-muted-foreground">
+            Loading listings...
+          </p>
+        ) : listings.length === 0 ? (
+          <p className="py-16 text-center text-sm text-muted-foreground">
+            No listings found.
+          </p>
+        ) : (
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {listings.map((listing) => (
+              <Link
+                key={listing.id}
+                href={`/listings/${listing.slug}`}
+                className="group"
+              >
+                {/* Image */}
+                <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
+                  <img
+                    src={listing.image}
+                    alt={listing.name}
+                    
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
 
-                {/* Subtle bottom gradient */}
-                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent" />
+                  {/* Subtle bottom gradient */}
+                  <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent" />
 
-                {/* Bookmark */}
-                <span className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-background/85 text-primary backdrop-blur-sm transition-colors group-hover:bg-gold">
-                  <Bookmark className="h-4 w-4" />
-                </span>
-
-                {/* Image metadata */}
-                <div className="absolute inset-x-4 bottom-4 flex items-center justify-between">
-                  <span className="text-xs font-medium text-white">
-                    {listing.category}
+                  {/* Bookmark */}
+                  <span className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-background/85 text-primary backdrop-blur-sm transition-colors group-hover:bg-gold">
+                    <Bookmark className="h-4 w-4" />
                   </span>
 
-                  <span className="text-xs font-medium text-white">
-                    {listing.price}
-                  </span>
-                </div>
-              </div>
+                  {/* Image metadata */}
+                  <div className="absolute inset-x-4 bottom-4 flex items-center justify-between">
+                    <span className="text-xs font-medium text-white">
+                      {listing.category}
+                    </span>
 
-              {/* Content */}
-              <div className="pt-5">
-                <div className="flex items-center gap-3 text-xs">
-                  <span className="inline-flex items-center gap-1 font-semibold text-gold">
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    {listing.rating}
-                  </span>
-
-                  <span className="h-1 w-1 rounded-full bg-border" />
-
-                  <span className="inline-flex items-center gap-1 text-muted-foreground">
-                    <MapPin className="h-3.5 w-3.5" />
-                    {listing.location}
-                  </span>
+                    <span className="text-xs font-medium text-white">
+                      {listing.price}
+                    </span>
+                  </div>
                 </div>
 
-                <h3 className="mt-2 font-display text-xl font-semibold text-primary sm:text-2xl">
-                  {listing.name}
-                </h3>
+                {/* Content */}
+                <div className="pt-5">
+                  <div className="flex items-center gap-3 text-xs">
+                    <span className="inline-flex items-center gap-1 font-semibold text-gold">
+                      <Star className="h-3.5 w-3.5 fill-current" />
+                      {listing.rating}
+                    </span>
 
-                <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
-                  {listing.description}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
+                    <span className="h-1 w-1 rounded-full bg-border" />
+
+                    <span className="inline-flex items-center gap-1 text-muted-foreground">
+                      <MapPin className="h-3.5 w-3.5" />
+                      {listing.location}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-2 font-display text-xl font-semibold text-primary sm:text-2xl">
+                    {listing.name}
+                  </h3>
+
+                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
+                    {listing.description}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
 
         {/* Mobile link */}
         <Link

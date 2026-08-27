@@ -101,7 +101,7 @@ console.log(listing,"listing===============bhv")
   return (
     <>
       {/* Breadcrumbs */}
-      <div className="container mx-auto px-5 lg:px-8 pt-24 md:pt-28">
+      <div className="container mx-auto max-w-7xl pt-24 md:pt-28">
         <nav className="text-xs uppercase tracking-[0.18em] text-muted-foreground flex items-center gap-2">
           <Link href="/" className="hover:text-primary">
             Home
@@ -118,7 +118,7 @@ console.log(listing,"listing===============bhv")
       <ListingGallery listing={listing} />
 
       {/* Main content */}
-      <section className="container mx-auto px-5 lg:px-8 py-14 md:py-20">
+      <section className="container mx-auto max-w-7xl py-14 md:py-20">
         <div className="grid lg:grid-cols-[1fr_380px] gap-12 lg:gap-16">
           <div className="space-y-14">
             <ListingInfoContent listing={listing} />

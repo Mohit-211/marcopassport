@@ -91,6 +91,7 @@ export function ListingCard({ listing: l }: { listing: Listing }) {
   return (
     <article className="group bg-card rounded-3xl overflow-hidden border border-border shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-500 flex flex-col">
       <div className="relative aspect-[16/9] overflow-hidden">
+      
         <img
           src={l.image}
           alt={l.name}

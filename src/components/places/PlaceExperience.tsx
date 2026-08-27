@@ -36,6 +36,7 @@ export default function PlaceExperience({
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [planOpen, setPlanOpen] = useState(false);
   const [loginPromptOpen, setLoginPromptOpen] = useState(false);
+  console.log(place,"placeplaceplaceplace")
   const [saved, setSaved] = useState(place.isInPassport);
 
   // The detail page is server-rendered, so the initial fetch runs without
@@ -94,74 +95,74 @@ export default function PlaceExperience({
     setLightbox((i) =>
       i === null ? 0 : (i - 1 + place.gallery.length) % place.gallery.length
     );
+    console.log(saved,"saved")
   return (
     <>
       {/* Hero */}
 
 
-      <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
-        {/* Background */}
-        <div className="absolute inset-0 -z-20">
-          <img
-            src={place.image}
-            alt={place.name}
-            // priority
-            className="object-cover object-center"
-            sizes="100vw"
-          />
-        </div>
-        {/* Image treatment */}
-        <div className="absolute inset-0 -z-10 bg-primary/15" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/85 via-primary/40 to-transparent" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/70 via-transparent to-primary/10" />
+    <section className="relative isolate overflow-hidden bg-primary text-primary-foreground pt-10">
+  <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 sm:py-20 lg:px-10">
+    <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      {/* Content */}
+      <div>
+        {/* Eyebrow */}
+        <Link
+          href="/places"
+          className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary-foreground/80 hover:text-gold transition-colors"
+        >
+          <ChevronLeft className="h-3.5 w-3.5" /> All places
+        </Link>
 
-        {/* Content */}
-        <div className="mx-auto flex h-full max-w-7xl items-center px-6 sm:px-8 lg:px-10">
-          <div className="max-w-3xl">
-            {/* Eyebrow */}
-            <Link
-              href="/places"
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary-foreground/80 hover:text-gold transition-colors"
+        <div className="mt-6">
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur border border-primary-foreground/20 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-gold">
+            <MapPin className="h-3.5 w-3.5" /> {place.tag} · Marco Island
+          </div>
+
+          <h1 className="mt-6 font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
+            {place.name}
+          </h1>
+
+          <p className="mt-6 text-lg md:text-xl text-primary-foreground/85 max-w-2xl">
+            {place.blurb}
+          </p>
+
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            {!saved && (
+              <Button variant="gold" size="lg" onClick={openPlanModal}>
+                <CalendarIcon className="h-4 w-4" /> Add to Passport
+              </Button>
+            )}
+            
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={handleShare}
+              className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 hover:text-primary-foreground"
             >
-              <ChevronLeft className="h-3.5 w-3.5" /> All places
-            </Link>
-            <div className="max-w-3xl mt-6">
-              <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur border border-primary-foreground/20 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-gold">
-                <MapPin className="h-3.5 w-3.5" /> {place.tag} · Marco Island
-              </div>
-              <h1 className="mt-6 font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
-                {place.name}
-              </h1>
-              <p className="mt-6 text-lg md:text-xl text-primary-foreground/85 max-w-2xl">
-                {place.blurb}
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                {!saved &&
-                  <Button
-                    variant="gold"
-                    size="lg"
-                    onClick={openPlanModal}
-                  >
-                    <CalendarIcon className="h-4 w-4" /> Add to Passport
-                  </Button>
-                }
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={handleShare}
-                  className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 hover:text-primary-foreground"
-                >
-                  <Share2 className="h-4 w-4" /> Share
-                </Button>
-              </div>
-            </div>
+              <Share2 className="h-4 w-4" /> Share
+            </Button>
           </div>
         </div>
-      </section>
+      </div>
+
+      {/* Image */}
+      <div className="relative aspect-video w-full overflow-hidden rounded-2xl shadow-2xl">
+        <img
+          src={place.image}
+          alt={place.name}
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          sizes="(min-width: 1024px) 50vw, 100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/40 via-transparent to-transparent" />
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Gallery */}
       <section className="bg-background py-12 md:py-16">
-        <div className="container mx-auto px-5 lg:px-8">
+        <div className="container mx-auto max-w-7xl">
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
               <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
@@ -204,7 +205,7 @@ export default function PlaceExperience({
       </section>
 
       {/* Main content */}
-      <section className="container mx-auto px-5 lg:px-8 pb-16 md:pb-24 grid lg:grid-cols-[1fr_360px] gap-12 lg:gap-16">
+      <section className="container mx-auto max-w-7xl px-5 pb-16 md:pb-24 grid lg:grid-cols-[1fr_360px] gap-12 lg:gap-16">
         <PlaceStoryContent place={place} />
 
         {/* Sticky plan-your-visit (desktop) */}

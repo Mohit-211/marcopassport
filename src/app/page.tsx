@@ -29,7 +29,7 @@ export default function Home() {
       <EditorLetter />
       <Categories />
       <FeaturedListings />
-      <TopPlaces />
+      {/* <TopPlaces /> */}
       <MagazineStrip />
       <BlogPreview />
       <PassportCTA />

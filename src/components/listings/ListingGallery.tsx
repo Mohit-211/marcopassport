@@ -39,7 +39,7 @@ export default function ListingGallery({ listing }: ListingGalleryProps) {
 
   return (
     <>
-      <section className="container mx-auto px-5 lg:px-8 mt-6">
+      <section className="container mx-auto max-w-7xl mt-6">
         <div className="grid md:grid-cols-4 gap-3 rounded-3xl overflow-hidden">
           <button
             onClick={() => openLightbox(0)}

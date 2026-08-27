@@ -46,7 +46,7 @@ export default function SimilarAndRelated({
   return (
     <>
       {/* Related reads */}
-      <section className="container mx-auto px-5 lg:px-8 py-16 md:py-24">
+      <section className="container mx-auto max-w-7xl py-16 md:py-24">
         <div className="flex items-end justify-between gap-4 mb-10">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
@@ -64,7 +64,7 @@ export default function SimilarAndRelated({
           {related.map((p) => (
             <Link
               key={`${p.slug}-${p.id}`}
-              href={`/places/${p.slug}`}
+              href={`/listings/${p.slug}`}
               className="group block"
             >
               <div className="aspect-[16/9] overflow-hidden rounded-2xl">

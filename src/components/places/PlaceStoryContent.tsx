@@ -29,22 +29,28 @@ export default function PlaceStoryContent({ place }: { place: PlaceDetail }) {
   return (
     <div className="space-y-16">
       {/* Story */}
-      {aboutParagraphs.length > 0 && (
-        <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
-            The story
-          </p>
-          <div className="mt-8 space-y-6 text-foreground/80 leading-relaxed text-lg">
-            <p
-              className={
-                "first-letter:font-display first-letter:text-5xl first-letter:font-semibold first-letter:text-primary first-letter:float-left first-letter:mr-2 first-letter:leading-[0.9]"
-              }
-              dangerouslySetInnerHTML={{ __html: place.about }} />
-          </div>
-        </div>
-      )}
+     {aboutParagraphs.length > 0 && (
+  <div>
+    <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
+      The story
+    </p>
+    <div
+      className={[
+        "mt-8 text-foreground/80 leading-relaxed text-lg",
+        // reset default browser/editor margins on the first & last block
+        "[&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
+        // control image spacing explicitly instead of inheriting TinyMCE's <p> margins
+        "[&_img]:block [&_img]:mx-auto [&_img]:my-6 [&_img]:rounded-2xl [&_img]:shadow-elegant [&_img]:max-w-full [&_img]:h-auto",
+        // if the editor wraps images in their own <p>, kill that paragraph's margin so it doesn't double up with [&_img]:my-6
+        "[&_p:has(img):only-child]:m-0",
+        "first-letter:font-display first-letter:text-5xl first-letter:font-semibold first-letter:text-primary first-letter:float-left first-letter:mr-2 first-letter:leading-[0.9]",
+      ].join(" ")}
+      dangerouslySetInnerHTML={{ __html: place.about }}
+    />
+  </div>
+)}
 
-      {/* What to expect */}
+     
       {/* What to expect */}
       {expectItems.length > 0 && (
         <div>
@@ -169,7 +175,7 @@ export default function PlaceStoryContent({ place }: { place: PlaceDetail }) {
           )}
           {/* Tips */}
           {/* Tips */}
-          {tips.length > 0 && (
+          {/* {tips.length > 0 && (
             <div className="mt-8 rounded-2xl border border-gold/40 bg-gold/10 p-5 flex gap-4">
               <Lightbulb className="h-5 w-5 text-gold-foreground shrink-0 mt-0.5" />
               <div>
@@ -193,7 +199,7 @@ export default function PlaceStoryContent({ place }: { place: PlaceDetail }) {
                 </ul>
               </div>
             </div>
-          )}
+          )} */}
           {tips.length > 0 && (
             <div className="mt-8">
               <h3 className="font-display text-xl font-semibold flex items-center gap-2">

@@ -267,8 +267,8 @@ export function ExplorePage() {
       </section>
 
       {/* Main */}
-      <section className="container mx-auto px-5 lg:px-8 py-10 md:py-14">
-        <div className="grid lg:grid-cols-[280px_1fr] gap-8">
+      <section className="container mx-auto max-w-7xl py-10 md:py-14">
+        <div className="grid lg:grid-cols-[350px_1fr] gap-8">
           <aside className="hidden lg:block">
             <div className="sticky top-24 bg-card rounded-2xl border border-border p-6 shadow-soft">
               {filterPanel}
@@ -395,7 +395,7 @@ export function ExplorePage() {
             ) : pageItems.length === 0 ? (
               <EmptyState clearAction={clearAll} />
             ) : (
-              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid sm:grid-cols-2 xl:grid-cols-2 gap-6">
                 {pageItems.map((l) => (
                   <ListingCard key={l.id} listing={l} />
                 ))}

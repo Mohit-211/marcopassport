@@ -66,5 +66,5 @@ export default async function BlogDetailPage({ params }: Props) {
       </div>
     );
   }
-  return <BlogArticleExperience post={post} related={[]} />;
+  return <BlogArticleExperience post={post} />;
 }

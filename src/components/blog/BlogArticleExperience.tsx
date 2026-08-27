@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -17,27 +18,45 @@ import {
   TwitterGlyph,
   FacebookGlyph,
 } from "@/components/blog/ShareControls";
+import { GetAllBlogsByCategoryApi } from "@/api/users/blog.api";
 import type { Blog } from "@/types/blog";
-
 const imageUrl = (image?: string) =>
   image ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${image}` : "/assets/blog-1.jpg";
-
 const formatDate = (date?: string) =>
   date
     ? new Date(date).toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })
     : "";
-
 export default function BlogArticleExperience({
   post,
-  related,
+  related: relatedProp,
 }: {
   post: Blog;
-  related: Blog[];
+  related?: Blog[];
 }) {
+  const [related, setRelated] = useState<Blog[]>(relatedProp ?? []);
+  console.log(related, "related")
+  useEffect(() => {
+    const categorySlug = post.blog_category?.slug;
+    if (!categorySlug) {
+      setRelated([]);
+      return;
+    }
+    const fetchRelated = async () => {
+      try {
+        const res = await GetAllBlogsByCategoryApi(categorySlug);
+        const responseData = res?.data?.data;
+        console.log(responseData, "responseData")
+        setRelated(responseData)
+      } catch (error) {
+        console.error("Failed to fetch related blogs:", error);
+      }
+    };
+    fetchRelated();
+  }, [post.blog_category?.slug, post.id]);
   const handleShare = (type: "twitter" | "facebook" | "copy") => {
     if (typeof window === "undefined") return;
     const url = window.location.href;
@@ -54,7 +73,6 @@ export default function BlogArticleExperience({
         : `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
     window.open(href, "_blank", "noopener,noreferrer");
   };
-
   return (
     <>
       {/* Hero */}
@@ -215,7 +233,7 @@ export default function BlogArticleExperience({
       </section>
       {/* Related */}
       {related.length > 0 && (
-        <section className="container mx-auto px-5 lg:px-8 py-20">
+        <section className="container  mx-auto max-w-7xl  px-5 lg:px-8 py-20">
           <div className="flex items-end justify-between mb-10">
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-gold font-semibold">
