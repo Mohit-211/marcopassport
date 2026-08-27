@@ -56,7 +56,7 @@ export async function Categories() {
         </div>
         {/* Categories */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => (
+          {categories.map((category:any) => (
             <Link
               key={category.slug}
               href={`/places/${category.slug}`}
