@@ -16,50 +16,60 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import type { PlaceCard, PlaceDetail } from "@/lib/place";
+import { mapPlaceToCard, type PlaceCard, type PlaceDetail } from "@/lib/place";
 import { cn } from "@/lib/utils";
 import { AddToPassportModal } from "@/components/passport/AddToPassportModal";
+import { LoginRequiredModal } from "@/components/auth/LoginRequiredModal";
 import PlaceStoryContent from "@/components/places/PlaceStoryContent";
 import NearbyAndRelated from "@/components/places/NearbyAndRelated";
-import type { blogPosts } from "@/data/content";
-import { GetPlacesDetailsBySlugApi } from "@/api/users/places.api";
 import { getAuthToken } from "@/lib/auth";
+import { GetRelatesPlaceByCategoryId } from "@/api/users/places.api";
 
 export default function PlaceExperience({
   place,
-  nearby,
-  related,
+
 }: {
   place: PlaceDetail;
-  nearby: PlaceCard[];
-  related: (typeof blogPosts)[number][];
+  
 }) {
+
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [planOpen, setPlanOpen] = useState(false);
+  const [loginPromptOpen, setLoginPromptOpen] = useState(false);
   const [saved, setSaved] = useState(place.isInPassport);
 
   // The detail page is server-rendered, so the initial fetch runs without
   // the user's token (it lives in localStorage) and is_in_passport always
   // comes back false. Re-check it here now that we're on the client.
+
+
+  // Returning here from the sign-in prompt (see LoginRequiredModal) — pick
+
+  // Returning here from the sign-in prompt (see LoginRequiredModal) — pick
+  // straight back up where the user left off and open the passport modal.
   useEffect(() => {
-    const token = getAuthToken();
-    if (!token) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("openPassport") !== "1" || !getAuthToken()) return;
 
-    let cancelled = false;
-    GetPlacesDetailsBySlugApi(place.slug)
-      .then((res) => {
-        if (!cancelled && res?.data?.data?.is_in_passport) {
-          setSaved(true);
-        }
-      })
-      .catch(() => {});
+    setPlanOpen(true);
+    params.delete("openPassport");
+    const newSearch = params.toString();
+    window.history.replaceState(
+      {},
+      "",
+      window.location.pathname + (newSearch ? `?${newSearch}` : "")
+    );
+  }, []);
 
-    return () => {
-      cancelled = true;
-    };
-  }, [place.slug]);
+  const openPlanModal = () => {
+    if (!getAuthToken()) {
+      setLoginPromptOpen(true);
+      return;
+    }
+    setPlanOpen(true);
+  };
 
-  const handleSave = () => setPlanOpen(true);
+  const handleSave = () => openPlanModal();
 
   const handleShare = async () => {
     if (typeof navigator !== "undefined" && navigator.share) {
@@ -84,52 +94,66 @@ export default function PlaceExperience({
     setLightbox((i) =>
       i === null ? 0 : (i - 1 + place.gallery.length) % place.gallery.length
     );
-
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10">
+
+
+      <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
+        {/* Background */}
+        <div className="absolute inset-0 -z-20">
           <img
             src={place.image}
             alt={place.name}
-            className="absolute inset-0 h-full w-full object-cover"
+            // priority
+            className="object-cover object-center"
+            sizes="100vw"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.22_0.06_240/0.45),oklch(0.22_0.06_240/0.3)_40%,oklch(0.22_0.06_240/0.92))]" />
         </div>
-        <div className="container mx-auto px-5 lg:px-8 pt-32 pb-28 md:pt-44 md:pb-40 text-primary-foreground">
-          <Link
-            href="/places"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary-foreground/80 hover:text-gold transition-colors"
-          >
-            <ChevronLeft className="h-3.5 w-3.5" /> All places
-          </Link>
-          <div className="max-w-3xl mt-6">
-            <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur border border-primary-foreground/20 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-gold">
-              <MapPin className="h-3.5 w-3.5" /> {place.tag} · Marco Island
-            </div>
-            <h1 className="mt-6 font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
-              {place.name}
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-primary-foreground/85 max-w-2xl">
-              {place.blurb}
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button
-                variant="gold"
-                size="lg"
-                onClick={() => setPlanOpen(true)}
-              >
-                <CalendarIcon className="h-4 w-4" /> Add to Passport
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={handleShare}
-                className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 hover:text-primary-foreground"
-              >
-                <Share2 className="h-4 w-4" /> Share
-              </Button>
+        {/* Image treatment */}
+        <div className="absolute inset-0 -z-10 bg-primary/15" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/85 via-primary/40 to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/70 via-transparent to-primary/10" />
+
+        {/* Content */}
+        <div className="mx-auto flex h-full max-w-7xl items-center px-6 sm:px-8 lg:px-10">
+          <div className="max-w-3xl">
+            {/* Eyebrow */}
+            <Link
+              href="/places"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary-foreground/80 hover:text-gold transition-colors"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" /> All places
+            </Link>
+            <div className="max-w-3xl mt-6">
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur border border-primary-foreground/20 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-gold">
+                <MapPin className="h-3.5 w-3.5" /> {place.tag} · Marco Island
+              </div>
+              <h1 className="mt-6 font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
+                {place.name}
+              </h1>
+              <p className="mt-6 text-lg md:text-xl text-primary-foreground/85 max-w-2xl">
+                {place.blurb}
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                {!saved &&
+                  <Button
+                    variant="gold"
+                    size="lg"
+                    onClick={openPlanModal}
+                  >
+                    <CalendarIcon className="h-4 w-4" /> Add to Passport
+                  </Button>
+                }
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={handleShare}
+                  className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 hover:text-primary-foreground"
+                >
+                  <Share2 className="h-4 w-4" /> Share
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -160,14 +184,14 @@ export default function PlaceExperience({
                   "group relative shrink-0 snap-start overflow-hidden rounded-3xl shadow-soft hover:shadow-elegant transition-all duration-500",
                   i === 0
                     ? "w-[80vw] md:w-[640px] aspect-[16/10]"
-                    : "w-[60vw] md:w-[400px] aspect-[4/5]"
+                    : "w-[60vw] md:w-[400px] aspect-[5/4]"
                 )}
               >
                 <img
                   src={src}
                   alt={`${place.name} — view ${i + 1}`}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 aspect-[16/9]"
                 />
                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/15 transition-colors" />
                 <span className="absolute bottom-4 right-4 inline-flex items-center justify-center h-9 w-9 rounded-full bg-background/90 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
@@ -203,7 +227,7 @@ export default function PlaceExperience({
                 <Button
                   variant="outline"
                   className="mt-5 w-full justify-start text-muted-foreground"
-                  onClick={() => setPlanOpen(true)}
+                  onClick={openPlanModal}
                 >
                   <CalendarIcon className="h-4 w-4" />
                   Pick a visit date
@@ -262,7 +286,10 @@ export default function PlaceExperience({
         </aside>
       </section>
 
-      <NearbyAndRelated nearby={nearby} related={related} />
+      <NearbyAndRelated
+        categoriesId={place?.categories?.[0]?.id}
+        currentSlug={place.slug}
+      />
 
       {/* Mobile sticky bar */}
       <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur border-t border-border px-4 py-3 flex items-center gap-3 shadow-elegant">
@@ -282,7 +309,7 @@ export default function PlaceExperience({
             </Button>
           </Link>
         ) : (
-          <Button variant="gold" size="sm" onClick={() => setPlanOpen(true)}>
+          <Button variant="gold" size="sm" onClick={openPlanModal}>
             <Heart className="h-4 w-4" />
             Add
           </Button>
@@ -303,6 +330,9 @@ export default function PlaceExperience({
         }}
         onSaved={() => setSaved(true)}
       />
+
+      {/* Sign-in prompt */}
+      <LoginRequiredModal open={loginPromptOpen} onOpenChange={setLoginPromptOpen} />
 
       {/* Lightbox */}
       <Dialog

@@ -6,11 +6,13 @@ import ListingInfoContent from "@/components/listings/ListingInfoContent";
 import ListingActionsPanel from "@/components/listings/ListingActionsPanel";
 import ReviewsSection from "@/components/listings/ReviewsSection";
 import SimilarAndRelated from "@/components/listings/SimilarAndRelated";
-import { GetBusinessDetailsBySlugApi } from "@/api/users/business.api";
+
 import { GetAllBlogsApi } from "@/api/users/blog.api";
 import { mapBusinessToListing } from "@/lib/business";
 import type { ApiBusiness } from "@/types/business";
 import type { Blog } from "@/types/blog";
+import { GetRelatesPlaceByCategoryId } from "@/api/users/places.api";
+import { GetBusinessDetailsBySlugApi } from "@/api/users/business.api";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -25,6 +27,18 @@ async function getListing(slug: string) {
   } catch (error) {
     console.error("Failed to fetch business details:", error);
     return undefined;
+  }
+}
+
+async function getSimilarPlaces(categoryId: number) {
+  try {
+    const res = await GetRelatesPlaceByCategoryId(categoryId);
+    const list = res?.data?.data?.places;
+    if (!Array.isArray(list)) return [];
+    return list;
+  } catch (error) {
+    console.error("Failed to fetch similar places:", error);
+    return [];
   }
 }
 
@@ -83,9 +97,7 @@ export default async function ListingDetailPage({ params }: Props) {
   }
 
   const listing = mapBusinessToListing(item);
-  const similar = (item.similar_places ?? []).map(mapBusinessToListing);
-  const relatedBlog = await getRelatedBlogPosts(3);
-
+console.log(listing,"listing===============bhv")
   return (
     <>
       {/* Breadcrumbs */}
@@ -118,8 +130,13 @@ export default async function ListingDetailPage({ params }: Props) {
           />
         </div>
       </section>
+ {/* <NearbyAndRelated
+        categoriesId={place?.categories?.[0]?.id}
+        currentSlug={place.slug}
+      /> */}
+      <SimilarAndRelated categoriesId={listing?.categories?.[0]?.id} />
+      {/* <SimilarAndRelated categoriesId={2} /> */}
 
-      <SimilarAndRelated similar={similar} relatedBlog={relatedBlog} />
     </>
   );
 }

@@ -18,10 +18,11 @@ export const Blogs = {
   GET_BLOG_DETAILS_BY_ID: (blogId: string) => `/blog/${blogId}`
 }
 export const Business = {
-  CREATE_BUSINESS:"/business-submission",
+  CREATE_BUSINESS: "/business-submission",
   BUSINESS_CATEGORIES: "/place-category/?type=business",
   GET_ALL_BUSINESS: "explore",
   GET_ALL_BUSINESS_BY_CATEGORIES_SLUG: (category_slug: string) => `explore?category=${category_slug}`,
+  GET_ALL_BUSINESS_BY_CATEGORIES_ID: (category_id: number | string) => `explore?category=${category_id}`,
   GET_BUSINESS_DETAILS_BY_SLUG: (slug: string) => `explore/listing/${slug}`,
 }
 export const Passport = {
@@ -35,4 +36,5 @@ export const Rating = {
 export const Place = {
   GET_ALL_PLACES: "/explore/places",
   GET_PLACE_DETAILS: (slug: string) => `/explore/places/${slug}`,
+  GET_RELATED_PALCE_BY_CATEGORY_ID: (category_id: number) => `/explore/places?category_id=${category_id}`
 }

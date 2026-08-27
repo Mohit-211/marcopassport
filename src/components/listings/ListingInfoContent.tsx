@@ -6,9 +6,13 @@ import {
   Globe,
   Check,
   ArrowRight,
+  CreditCard,
+  ParkingCircle,
+  CalendarDays,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import { splitTextField } from "@/lib/place";
 type ListingInfoContentProps = {
   listing: {
     name: string;
@@ -21,26 +25,62 @@ type ListingInfoContentProps = {
     email?: string;
     hours?: string;
     website_url?: string;
-    highlights?: string;
+    highlights?: string | null;
+    fees?: string | null;
+    parking?: string | null;
+    best_time_to_visit?: string | null;
+    insider_tips?: string | null;
+    what_to_expect?: string | null;
   };
 };
-
-function parseHighlights(highlights?: string): string[] {
+function parseHighlights(highlights?: string | null): string[] {
   if (!highlights) return [];
+  try {
+    const parsed = JSON.parse(highlights);
+    if (Array.isArray(parsed)) {
+      return parsed.map((h) => String(h).trim()).filter(Boolean);
+    }
+  } catch {
+    // Not JSON — fall back to plain text splitting.
+  }
   return highlights
     .split(/\r?\n|,/)
     .map((h) => h.trim())
     .filter(Boolean);
 }
-
+function parseTips(tips?: string | null): string[] {
+  if (!tips) return [];
+  try {
+    const parsed = JSON.parse(tips);
+    if (Array.isArray(parsed)) {
+      return parsed.map((t) => String(t).trim()).filter(Boolean);
+    }
+  } catch {
+    // Not JSON — fall back to plain text splitting.
+  }
+  return splitTextField(tips);
+}
+function parseExpectItems(
+  value?: string | null
+): { title: string; description: string }[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return parsed;
+  } catch {
+    // Not JSON — ignore.
+  }
+  return [];
+}
 export default function ListingInfoContent({
   listing,
 }: ListingInfoContentProps) {
   const highlights = parseHighlights(listing.highlights);
+  const tips = parseTips(listing.insider_tips);
+  const expectItems = parseExpectItems(listing.what_to_expect);
   const websiteHost = listing.website_url
     ? listing.website_url.replace(/^https?:\/\//, "").replace(/\/$/, "")
     : undefined;
-
   return (
     <div className="space-y-14">
       <div>
@@ -51,19 +91,17 @@ export default function ListingInfoContent({
           {listing.name}
         </h2>
         <div className="mt-6 space-y-5 text-foreground/80 leading-relaxed text-[17px]">
-          {(listing.about ?? listing.description)
-            .split(/\r?\n+/)
-            .filter(Boolean)
-            .map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
+          <p
+            className={
+              "first-letter:font-display first-letter:text-5xl first-letter:font-semibold first-letter:text-primary first-letter:float-left first-letter:mr-2 first-letter:leading-[0.9]"
+            }
+            dangerouslySetInnerHTML={{ __html: listing.about ?? listing.description }} />
         </div>
       </div>
-
       {highlights.length > 0 && (
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
-            What to expect
+            Highlights
           </p>
           <h2 className="font-display text-3xl font-semibold mt-2">
             Key highlights
@@ -80,7 +118,31 @@ export default function ListingInfoContent({
           </ul>
         </div>
       )}
-
+      {expectItems.length > 0 && (
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+            What to expect
+          </p>
+          <h2 className="font-display text-3xl font-semibold mt-2">
+            The vibe, at a glance
+          </h2>
+          <div className="mt-6 grid sm:grid-cols-2 gap-4">
+            {expectItems.map((item, i) => (
+              <div
+                key={i}
+                className="rounded-3xl border border-border bg-card p-5"
+              >
+                <p className="font-display text-lg font-semibold">
+                  {item.title}
+                </p>
+                <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       {/* Info + Map */}
       <div className="grid md:grid-cols-2 gap-6">
         <div className="rounded-3xl border border-border bg-card p-7 shadow-soft">
@@ -119,6 +181,21 @@ export default function ListingInfoContent({
                 {listing.hours}
               </InfoRow>
             )}
+            {listing.fees && (
+              <InfoRow icon={CreditCard} label="Fees">
+                {listing.fees}
+              </InfoRow>
+            )}
+            {listing.parking && (
+              <InfoRow icon={ParkingCircle} label="Parking">
+                {listing.parking}
+              </InfoRow>
+            )}
+            {listing.best_time_to_visit && (
+              <InfoRow icon={CalendarDays} label="Best time to visit">
+                {listing.best_time_to_visit}
+              </InfoRow>
+            )}
             {listing.website_url && (
               <InfoRow icon={Globe} label="Website">
                 <a
@@ -133,7 +210,6 @@ export default function ListingInfoContent({
             )}
           </ul>
         </div>
-
         <div className="rounded-3xl overflow-hidden border border-border bg-card shadow-soft min-h-[320px] relative">
           <div className="absolute inset-0 bg-[linear-gradient(135deg,oklch(0.94_0.02_220),oklch(0.88_0.04_200))]" />
           <svg
@@ -173,10 +249,27 @@ export default function ListingInfoContent({
           </div>
         </div>
       </div>
+      {tips.length > 0 && (
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+            Practical info
+          </p>
+          <h3 className="font-display text-2xl font-semibold mt-2 flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-gold" /> Insider tips
+          </h3>
+          <ul className="mt-6 space-y-3">
+            {tips.map((tip, i) => (
+              <li key={i} className="flex gap-3 text-foreground/85">
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
+                <span className="leading-relaxed text-[15px]">{tip}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
-
 function InfoRow({
   icon: Icon,
   label,

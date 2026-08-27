@@ -6,6 +6,7 @@ export type ApiPlaceCategory = {
 };
 
 export type ApiPlace = {
+  category_id: number;
   id: number;
   type?: string;
   name: string;
@@ -37,6 +38,7 @@ export type ApiPlace = {
   top_pick_rank?: number | null;
   is_active?: boolean;
   is_in_passport?: boolean;
+  updated_at?: string;
   categories?: ApiPlaceCategory[];
   similar_places?: ApiPlace[];
 };

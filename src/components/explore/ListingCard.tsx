@@ -3,12 +3,14 @@ import { Star, MapPin, Bookmark, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export type Listing = {
+  categories: any;
   is_in_passport: boolean;
   slug: string;
   id: string;
   name: string;
   category: string;
   categorySlug: string;
+  
   image: string;
   rating: number;
   price: string;
@@ -21,7 +23,12 @@ export type Listing = {
   phone?: string;
   email?: string;
   hours?: string;
-  highlights?: string;
+  fees?: string | null;
+  parking?: string | null;
+  best_time_to_visit?: string | null;
+  insider_tips?: string | null;
+  what_to_expect?: string | null;
+  highlights?: string | null;
   reviewCount?: number;
   galleryImages?: string[];
 };
@@ -81,10 +88,9 @@ export type Listing = {
 // ];
 
 export function ListingCard({ listing: l }: { listing: Listing }) {
-  console.log(l,"test")
   return (
     <article className="group bg-card rounded-3xl overflow-hidden border border-border shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-500 flex flex-col">
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-[16/9] overflow-hidden">
         <img
           src={l.image}
           alt={l.name}

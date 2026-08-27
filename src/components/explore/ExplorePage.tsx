@@ -64,7 +64,6 @@ export function ExplorePage() {
             : await GetAllBusinessApi();
         const payload: PlacesResponse = res?.data?.data ?? {};
         const responseData = payload.places ?? [];
-        console.log(responseData,"responseData")
         if (!Array.isArray(responseData)) {
           console.error(
             "Business API did not return an array:",
@@ -198,7 +197,6 @@ export function ExplorePage() {
       clearFiltersAction={clearAll}
     />
   );
-  console.log(pageItems,"pageItem============")
 
   return (
     <>

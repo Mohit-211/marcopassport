@@ -29,6 +29,7 @@ export default function PlacesHero({ total }: { total: number }) {
             <Compass className="h-3.5 w-3.5" />
             Places to Visit
           </div>
+          
           {/* Heading */}
 
           <h1 className="font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">

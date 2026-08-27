@@ -112,7 +112,7 @@ export default function BlogArticleExperience({
             <img
               src={imageUrl(post.featured_image)}
               alt={post.title}
-              className="w-full aspect-[4/3] object-cover rounded-xl shadow-elegant"
+              className="w-full aspect-[16/9] object-cover rounded-xl shadow-elegant"
             />
           </div>
         </section>
@@ -239,7 +239,7 @@ export default function BlogArticleExperience({
                 href={`/blog/${r.slug}/${r.id}`}
                 className="group block rounded-3xl bg-card border border-border shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-300 overflow-hidden"
               >
-                <div className="relative overflow-hidden aspect-[4/3]">
+                <div className="relative overflow-hidden aspect-[16/9]">
                   <img
                     src={imageUrl(r.featured_image)}
                     alt={r.title}

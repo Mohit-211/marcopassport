@@ -240,12 +240,12 @@ export default function BlogExperience() {
             href={`/blog/${featured.slug}/${featured?.id}`}
             className="group grid md:grid-cols-2 gap-8 md:gap-12 items-center"
           >
-            <div className="relative overflow-hidden rounded-3xl aspect-[4/3] shadow-elegant">
+            <div className="relative overflow-hidden rounded-3xl aspect-[16/9] shadow-elegant">
               <img
                 src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${featured.featured_image}`}
                 alt={featured.title}
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="h-full w-full transition-transform duration-700 group-hover:scale-110"
               />
               <span className="absolute top-5 left-5 bg-gold text-gold-foreground text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-gold">
                 Featured

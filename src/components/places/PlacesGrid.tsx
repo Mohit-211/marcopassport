@@ -1,14 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import type { PlaceCard as PlaceCardData } from "@/lib/place";
-
-function getSpan(index: number): "wide" | "tall" | "default" {
-  if (index % 6 === 0) return "wide";
-  if (index % 6 === 3) return "tall";
-  return "default";
-}
 
 function PlaceCard({
   place,
@@ -17,20 +10,10 @@ function PlaceCard({
   place: PlaceCardData;
   index: number;
 }) {
-  const spanClass =
-    getSpan(index) === "wide"
-      ? "sm:col-span-2 row-span-1"
-      : getSpan(index) === "tall"
-        ? "row-span-2"
-        : "row-span-1";
-
   return (
     <Link
       href={`/places/${place.slug}`}
-      className={cn(
-        "group relative overflow-hidden rounded-3xl block shadow-soft hover:shadow-elegant transition-all duration-500",
-        spanClass
-      )}
+      className="group relative aspect-[16/9] overflow-hidden rounded-3xl block shadow-soft hover:shadow-elegant transition-all duration-500"
     >
       <img
         src={place.image}
@@ -98,7 +81,7 @@ export default function PlacesGrid({ places }: { places: PlaceCardData[] }) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[260px] md:auto-rows-[300px] gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {places.map((p, i) => (
           <PlaceCard key={p.id} place={p} index={i} />
         ))}

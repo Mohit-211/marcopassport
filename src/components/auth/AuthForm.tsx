@@ -1,7 +1,7 @@
 "use client";
 import { useState, useCallback } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Compass, ShieldCheck, Loader2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,12 @@ function getErrorMessage(error: unknown, fallback: string) {
 }
 export function AuthForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get("redirect");
+  const redirectTo =
+    redirectParam && redirectParam.startsWith("/") && !redirectParam.startsWith("//")
+      ? redirectParam
+      : "/passport";
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -129,7 +135,7 @@ export function AuthForm() {
         return;
       }
       toast.success("Welcome back");
-      router.push("/passport");
+      router.push(redirectTo);
     } catch (error) {
       toast.error(
         getErrorMessage(error, "Something went wrong. Please try again.")
@@ -324,7 +330,7 @@ export function AuthForm() {
               className="w-full sm:w-auto"
               onClick={() => {
                 setShowSuccessModal(false);
-                router.push("/passport");
+                router.push(redirectTo);
               }}
             >
               Continue to Passport

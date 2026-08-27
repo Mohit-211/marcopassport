@@ -22,7 +22,7 @@ function EditorialRow({
   return (
     <article className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
       <div className={cn("relative", align === "right" && "md:order-2")}>
-        <div className="aspect-[4/5] overflow-hidden rounded-3xl shadow-elegant">
+        <div className="aspect-[16/9] overflow-hidden rounded-3xl shadow-elegant">
           <img
             src={image}
             alt={title}

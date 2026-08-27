@@ -41,7 +41,7 @@ export function FeaturedListings() {
               className="group"
             >
               {/* Image */}
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+              <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
                 <Image
                   src={listing.image}
                   alt={listing.name}

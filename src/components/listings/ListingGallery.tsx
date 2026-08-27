@@ -21,7 +21,6 @@ type ListingGalleryProps = {
 };
 
 export default function ListingGallery({ listing }: ListingGalleryProps) {
-  console.log(listing,"listing====")
   const gallery =
     listing.galleryImages && listing.galleryImages.length > 0
       ? listing.galleryImages
@@ -91,7 +90,7 @@ export default function ListingGallery({ listing }: ListingGalleryProps) {
             <button
               key={i}
               onClick={() => openLightbox(i + 1)}
-              className="relative aspect-[4/3] md:aspect-auto md:h-[254px] overflow-hidden group hidden md:block"
+              className="relative aspect-[16/9] md:aspect-auto md:h-[254px] overflow-hidden group hidden md:block"
             >
               <img
                 src={src}

@@ -44,7 +44,7 @@ export default function BlogGrid({
           href={`/blog/${p.slug}/${p.id}`}
           className="group block rounded-3xl bg-card border border-border shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-300 overflow-hidden"
         >
-          <div className="relative overflow-hidden aspect-[4/3]">
+          <div className="relative overflow-hidden aspect-[16/9]">
             <img
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${p.featured_image}`}
               alt={p.title}

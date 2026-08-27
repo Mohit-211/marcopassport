@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
@@ -7,16 +6,13 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { GetBusinessCategoryApi } from "@/api/users/business.api";
-
-export const PRICE_OPTIONS = ["$", "$$", "$$$", "$$$$"] as const;
-
+export const PRICE_OPTIONS = ["100", "1000", "10000", "10000"] as const;
 export const NEIGHBORHOODS = [
   "Marco Marina",
   "Old Marco",
   "Tigertail",
   "Esplanade",
 ] as const;
-
 type ApiCategory = {
   id?: string | number;
   name?: string;
@@ -27,13 +23,11 @@ type ApiCategory = {
   business_count?: number;
   total?: number;
 };
-
 type Category = {
   slug: string;
   name: string;
   count: number;
 };
-
 function Section({
   title,
   children,
@@ -48,27 +42,20 @@ function Section({
     </section>
   );
 }
-
 type FilterPanelProps = {
   selectedCats: string[];
   toggleCategoryAction: (category: string) => void;
-
   selectedPrices: string[];
   togglePriceAction: (price: string) => void;
-
   selectedHoods: string[];
   toggleNeighborhoodAction: (hood: string) => void;
-
   minRating: number;
   setMinRatingAction: (rating: number) => void;
-
   featuredOnly: boolean;
   setFeaturedOnlyAction: (value: boolean) => void;
-
   activeCount: number;
   clearFiltersAction: () => void;
 };
-
 export function FilterPanel({
   selectedCats,
   toggleCategoryAction,
@@ -86,7 +73,6 @@ export function FilterPanel({
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [categoryError, setCategoryError] = useState("");
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -127,13 +113,11 @@ export function FilterPanel({
     };
     fetchCategories();
   }, []);
-
   return (
     <div className="rounded-2xl border border-border bg-card p-5">
       {/* Header */}
       <div className="mb-2 flex items-center justify-between">
         <h2 className="font-display text-xl font-semibold">Filters</h2>
-
         {activeCount > 0 && (
           <button
             type="button"
@@ -144,14 +128,12 @@ export function FilterPanel({
           </button>
         )}
       </div>
-
       {/* Featured */}
       <Section title="Featured">
         <div className="flex items-center justify-between">
           <Label htmlFor="featured-only" className="cursor-pointer text-sm">
             Featured listings only
           </Label>
-
           <Switch
             id="featured-only"
             checked={featuredOnly}
@@ -159,7 +141,6 @@ export function FilterPanel({
           />
         </div>
       </Section>
-
       {/* Category */}
       <Section title="Category">
         <div className="space-y-2.5">
@@ -168,11 +149,9 @@ export function FilterPanel({
               Loading categories...
             </p>
           )}
-
           {!loadingCategories && categoryError && (
             <p className="text-xs text-red-500">{categoryError}</p>
           )}
-
           {!loadingCategories &&
             !categoryError &&
             categories.map((category) => (
@@ -184,11 +163,9 @@ export function FilterPanel({
                   checked={selectedCats.includes(category.slug)}
                   onCheckedChange={() => toggleCategoryAction(category.slug)}
                 />
-
                 <span className="flex-1 text-sm transition-colors group-hover:text-primary">
                   {category.name}
                 </span>
-
                 <span className="text-xs text-muted-foreground">
                   {category.count}
                 </span>
@@ -196,13 +173,11 @@ export function FilterPanel({
             ))}
         </div>
       </Section>
-
       {/* Price */}
       <Section title="Price">
         <div className="flex flex-wrap gap-2">
           {PRICE_OPTIONS.map((price) => {
             const active = selectedPrices.includes(price);
-
             return (
               <button
                 key={price}
@@ -221,28 +196,6 @@ export function FilterPanel({
           })}
         </div>
       </Section>
-
-      {/* Neighborhood */}
-      <Section title="Neighborhood">
-        <div className="space-y-2.5">
-          {NEIGHBORHOODS.map((hood) => (
-            <label
-              key={hood}
-              className="group flex cursor-pointer items-center gap-3"
-            >
-              <Checkbox
-                checked={selectedHoods.includes(hood)}
-                onCheckedChange={() => toggleNeighborhoodAction(hood)}
-              />
-
-              <span className="flex-1 text-sm transition-colors group-hover:text-primary">
-                {hood}
-              </span>
-            </label>
-          ))}
-        </div>
-      </Section>
-
       {/* Rating */}
       <Section
         title={
@@ -260,7 +213,6 @@ export function FilterPanel({
           max={5}
           step={0.5}
         />
-
         <div className="mt-2 flex justify-between text-xs text-muted-foreground">
           <span>Any</span>
           <span>5.0</span>

@@ -33,7 +33,7 @@ export function BlogPreview() {
             href={`/blog/${post.slug}`}
             className="group block"
           >
-            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-soft">
+            <div className="relative aspect-[16/9] overflow-hidden rounded-3xl shadow-soft">
               <Image
                 src={post.image}
                 alt={post.title}

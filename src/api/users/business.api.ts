@@ -22,5 +22,8 @@ export const GetAllBusinessApi = () =>
 export const GetAllBusinessByCategoryApi = (categorySlug: string) =>
     client.get(Business.GET_ALL_BUSINESS_BY_CATEGORIES_SLUG(categorySlug));
 
+export const GetAllBusinessByCategoryIdApi = (categoriesId: number | string) =>
+    client.get(Business.GET_ALL_BUSINESS_BY_CATEGORIES_ID(categoriesId));
+
 export const GetBusinessDetailsBySlugApi = (slug: string) =>
     client.get(Business.GET_BUSINESS_DETAILS_BY_SLUG(slug));
