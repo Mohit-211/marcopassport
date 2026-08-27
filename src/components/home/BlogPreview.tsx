@@ -42,7 +42,7 @@ export function BlogPreview() {
     return null;
   }
   return (
-    <section className="container md:py-28 mx-auto max-w-7xl">
+    <section className="container md:py-28 px-5 mx-auto max-w-7xl">
       <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-gold text-xs font-semibold uppercase tracking-[0.2em]">

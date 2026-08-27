@@ -267,7 +267,7 @@ export function ExplorePage() {
       </section>
 
       {/* Main */}
-      <section className="container mx-auto max-w-7xl py-10 md:py-14">
+      <section className="container mx-auto max-w-7xl px-4 py-10 md:py-14">
         <div className="grid lg:grid-cols-[350px_1fr] gap-8">
           <aside className="hidden lg:block">
             <div className="sticky top-24 bg-card rounded-2xl border border-border p-6 shadow-soft">

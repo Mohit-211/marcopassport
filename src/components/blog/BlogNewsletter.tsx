@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 export default function BlogNewsletter() {
   return (
     <section className="bg-primary text-primary-foreground">
-      <div className="container mx-auto max-w-7xl py-16 md:py-20 grid md:grid-cols-2 gap-10 items-center">
+      <div className="container mx-auto max-w-7xl py-16 px-4 md:py-20 grid md:grid-cols-2 gap-10 items-center">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-gold font-semibold">
             The Dispatch
@@ -21,7 +21,7 @@ export default function BlogNewsletter() {
         </div>
         <form
           onSubmit={(e) => e.preventDefault()}
-          className="flex flex-col sm:flex-row gap-3 bg-background/10 backdrop-blur p-2 rounded-full border border-primary-foreground/15"
+          className="flex flex-col sm:flex-row gap-3 bg-background/10 backdrop-blur p-2  border border-primary-foreground/15"
         >
           <Input
             type="email"

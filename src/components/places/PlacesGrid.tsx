@@ -66,7 +66,7 @@ export default function PlacesGrid({ places }: { places: PlaceCardData[] }) {
   }
 
   return (
-    <section className="container mx-auto max-w-7xl py-20 md:py-28">
+    <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
       <div className="flex items-end justify-between gap-4 mb-12">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">

@@ -197,7 +197,7 @@ export default function BlogExperience() {
           CATEGORY PILLS
       ====================================================== */}
       <section className="border-b border-border bg-background sticky top-16 z-10 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-        <div className="container mx-auto max-w-7xl py-4 flex gap-2 overflow-x-auto scrollbar-none">
+        <div className="container mx-auto max-w-7xl py-4 px-4 flex gap-2 overflow-x-auto scrollbar-none">
           {/* Loading */}
           {loadingCategories && (
             <>
@@ -255,7 +255,7 @@ export default function BlogExperience() {
           FEATURED
       ====================================================== */}
       {featured && (
-        <section className="container mx-auto max-w-7xl py-14 md:py-20">
+        <section className="container mx-auto max-w-7xl py-14 px-4 md:py-20">
           <Link
             href={`/blog/${featured.slug}/${featured?.id}`}
             className="group grid md:grid-cols-2 gap-8 md:gap-12 items-center"
@@ -307,7 +307,7 @@ export default function BlogExperience() {
       {/* =====================================================
           BLOG GRID
       ====================================================== */}
-      <section className="container mx-auto max-w-7xl pb-20">
+      <section className="container mx-auto max-w-7xl pb-20 px-4">
         <div className="flex items-end justify-between mb-8">
           <div>
             <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary">

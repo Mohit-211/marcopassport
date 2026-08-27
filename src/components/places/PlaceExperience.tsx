@@ -162,7 +162,7 @@ export default function PlaceExperience({
 
       {/* Gallery */}
       <section className="bg-background py-12 md:py-16">
-        <div className="container mx-auto max-w-7xl">
+        <div className="container mx-auto max-w-7xl px-4">
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
               <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
