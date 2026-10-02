@@ -279,16 +279,18 @@ export function ExplorePage() {
             <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
               <div className="flex items-center gap-3">
                 <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
-                  <SheetTrigger>
-                    <Button variant="outline" size="sm" className="lg:hidden">
-                      <SlidersHorizontal className="h-4 w-4" />
-                      Filters
-                      {activeFilterCount > 0 && (
-                        <span className="ml-1 inline-grid place-items-center h-5 min-w-5 px-1.5 rounded-full bg-gold text-gold-foreground text-[11px] font-bold">
-                          {activeFilterCount}
-                        </span>
-                      )}
-                    </Button>
+                  <SheetTrigger
+                    render={
+                      <Button variant="outline" size="sm" className="lg:hidden" />
+                    }
+                  >
+                    <SlidersHorizontal className="h-4 w-4" />
+                    Filters
+                    {activeFilterCount > 0 && (
+                      <span className="ml-1 inline-grid place-items-center h-5 min-w-5 px-1.5 rounded-full bg-gold text-gold-foreground text-[11px] font-bold">
+                        {activeFilterCount}
+                      </span>
+                    )}
                   </SheetTrigger>
                   <SheetContent
                     side="left"

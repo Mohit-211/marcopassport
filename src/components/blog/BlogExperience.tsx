@@ -32,8 +32,6 @@ type BlogCategoryOption = {
 const ALL_CATEGORY_SLUG = "all";
 export default function BlogExperience() {
   const [posts, setPosts] = useState<Blog[]>([]);
-  const [loadingBlogs, setLoadingBlogs] = useState(true);
-  const [blogError, setBlogError] = useState("");
   const [categories, setCategories] = useState<BlogCategoryOption[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [categoryError, setCategoryError] = useState("");
@@ -89,8 +87,6 @@ export default function BlogExperience() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        setLoadingBlogs(true);
-        setBlogError("");
         const res =
           activeCat === ALL_CATEGORY_SLUG
             ? await GetAllBlogsApi()
@@ -98,17 +94,13 @@ export default function BlogExperience() {
         const responseData = res?.data?.data;
         if (!Array.isArray(responseData)) {
           console.error("Blogs API did not return an array:", responseData);
-          setBlogError("Unable to load blogs.");
           setPosts([]);
           return;
         }
         setPosts(responseData);
       } catch (error) {
         console.error("Failed to fetch blogs:", error);
-        setBlogError("Failed to load blogs.");
         setPosts([]);
-      } finally {
-        setLoadingBlogs(false);
       }
     };
     fetchBlogs();

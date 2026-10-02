@@ -1,9 +1,7 @@
 import {
   ArrowUpRight,
-  Check,
   Clock,
   CreditCard,
-  Lightbulb,
   MapPin,
   ParkingCircle,
   Sparkles,

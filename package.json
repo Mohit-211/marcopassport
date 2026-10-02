@@ -41,5 +41,9 @@
     "prettier": "^3.9.5",
     "tailwindcss": "^4",
     "typescript": "^5.9.3"
+  },
+  "allowScripts": {
+    "sharp@0.34.5": true,
+    "unrs-resolver@1.12.2": true
   }
 }

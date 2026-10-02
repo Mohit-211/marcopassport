@@ -17,25 +17,6 @@ export default function BlogGrid({
     );
   }
 
-  const getImageUrl = (image?: string) => {
-    if (!image) {
-      return "/assets/blog-1.jpg";
-    }
-
-    // If API already returns complete URL
-    if (image.startsWith("http://") || image.startsWith("https://")) {
-      return image;
-    }
-
-    // Add API base URL for relative image path
-    const baseUrl =
-      process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "";
-
-    const imagePath = image.replace(/^\//, "");
-
-    return `${baseUrl}/${imagePath}`;
-  };
-
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
       {posts.map((p) => (

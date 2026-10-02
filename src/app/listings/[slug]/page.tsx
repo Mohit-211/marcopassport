@@ -7,11 +7,8 @@ import ListingActionsPanel from "@/components/listings/ListingActionsPanel";
 import ReviewsSection from "@/components/listings/ReviewsSection";
 import SimilarAndRelated from "@/components/listings/SimilarAndRelated";
 
-import { GetAllBlogsApi } from "@/api/users/blog.api";
 import { mapBusinessToListing } from "@/lib/business";
 import type { ApiBusiness } from "@/types/business";
-import type { Blog } from "@/types/blog";
-import { GetRelatesPlaceByCategoryId } from "@/api/users/places.api";
 import { GetBusinessDetailsBySlugApi } from "@/api/users/business.api";
 
 type Props = {
@@ -27,30 +24,6 @@ async function getListing(slug: string) {
   } catch (error) {
     console.error("Failed to fetch business details:", error);
     return undefined;
-  }
-}
-
-async function getSimilarPlaces(categoryId: number) {
-  try {
-    const res = await GetRelatesPlaceByCategoryId(categoryId);
-    const list = res?.data?.data?.places;
-    if (!Array.isArray(list)) return [];
-    return list;
-  } catch (error) {
-    console.error("Failed to fetch similar places:", error);
-    return [];
-  }
-}
-
-async function getRelatedBlogPosts(limit = 3): Promise<Blog[]> {
-  try {
-    const res = await GetAllBlogsApi();
-    const posts: Blog[] = res?.data?.data ?? [];
-    if (!Array.isArray(posts)) return [];
-    return posts.slice(0, limit);
-  } catch (error) {
-    console.error("Failed to fetch related blog posts:", error);
-    return [];
   }
 }
 

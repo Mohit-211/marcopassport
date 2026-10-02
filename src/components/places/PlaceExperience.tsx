@@ -16,14 +16,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { mapPlaceToCard, type PlaceCard, type PlaceDetail } from "@/lib/place";
+import type { PlaceDetail } from "@/lib/place";
 import { cn } from "@/lib/utils";
 import { AddToPassportModal } from "@/components/passport/AddToPassportModal";
 import { LoginRequiredModal } from "@/components/auth/LoginRequiredModal";
 import PlaceStoryContent from "@/components/places/PlaceStoryContent";
 import NearbyAndRelated from "@/components/places/NearbyAndRelated";
 import { getAuthToken } from "@/lib/auth";
-import { GetRelatesPlaceByCategoryId } from "@/api/users/places.api";
 
 export default function PlaceExperience({
   place,
@@ -36,7 +35,6 @@ export default function PlaceExperience({
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [planOpen, setPlanOpen] = useState(false);
   const [loginPromptOpen, setLoginPromptOpen] = useState(false);
-  console.log(place,"placeplaceplaceplace")
   const [saved, setSaved] = useState(place.isInPassport);
 
   // The detail page is server-rendered, so the initial fetch runs without
@@ -45,13 +43,13 @@ export default function PlaceExperience({
 
 
   // Returning here from the sign-in prompt (see LoginRequiredModal) — pick
-
-  // Returning here from the sign-in prompt (see LoginRequiredModal) — pick
   // straight back up where the user left off and open the passport modal.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("openPassport") !== "1" || !getAuthToken()) return;
 
+    // The URL flag is only readable after hydration, so this must run on mount
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPlanOpen(true);
     params.delete("openPassport");
     const newSearch = params.toString();

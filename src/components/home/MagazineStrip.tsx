@@ -20,7 +20,7 @@ export function MagazineStrip() {
             </h2>
 
             <p className="mt-4 max-w-xl text-sm leading-6 text-primary-foreground/70 sm:text-base">
-              Coastal lifestyle, local culture, and the season's best openings,
+              Coastal lifestyle, local culture, and the season&apos;s best openings,
               collected in a print-quality digital edition.
             </p>
           </div>

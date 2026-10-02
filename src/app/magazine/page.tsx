@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { magazines } from "@/data/magazines";
 import MagazineHero from "@/components/magazine/MagazineHero";
@@ -29,7 +29,7 @@ export default function MagazinePage() {
 
   return (
     <>
-      <MagazineHero featured={featured} />
+      <MagazineHero />
       <FeaturedEdition featured={featured} />
 
       {/* Current grid */}

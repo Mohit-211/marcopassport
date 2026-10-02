@@ -5,8 +5,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GetRelatesPlaceByCategoryId } from "@/api/users/places.api";
-import { mapPlaceToCard, type PlaceCard } from "@/lib/place";
-import type { ApiPlace } from "@/types/place";
+import type { PlaceCard } from "@/lib/place";
 
 type NearbyAndRelatedProps = {
   categoriesId?: number;
@@ -18,7 +17,6 @@ export default function NearbyAndRelated({
   currentSlug,
 }: NearbyAndRelatedProps) {
   const [related, setRelated] = useState<PlaceCard[]>([]);
-  console.log(related, "related")
   useEffect(() => {
     if (!categoriesId) return;
 
@@ -27,10 +25,8 @@ export default function NearbyAndRelated({
     (async () => {
       try {
         const res = await GetRelatesPlaceByCategoryId(categoriesId);
-        const list=res?.data?.data?.places;
-      
-        setRelated(list)
-
+        const list = res?.data?.data?.places;
+        if (!cancelled) setRelated(list ?? []);
       } catch (error) {
         console.error("Failed to fetch related places:", error);
       }
@@ -42,7 +38,6 @@ export default function NearbyAndRelated({
   }, [categoriesId, currentSlug]);
 
   if (related.length === 0) return null;
-  console.log(related, "related")
   return (
     <>
       <section className="container mx-auto max-w-7xl px-5 py-20 md:py-28">

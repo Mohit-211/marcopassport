@@ -37,26 +37,22 @@ export default function BlogArticleExperience({
   post: Blog;
   related?: Blog[];
 }) {
-  const [related, setRelated] = useState<Blog[]>(relatedProp ?? []);
-  console.log(related, "related")
+  const categorySlug = post.blog_category?.slug;
+  const [relatedState, setRelated] = useState<Blog[]>(relatedProp ?? []);
+  const related = categorySlug ? relatedState : [];
   useEffect(() => {
-    const categorySlug = post.blog_category?.slug;
-    if (!categorySlug) {
-      setRelated([]);
-      return;
-    }
+    if (!categorySlug) return;
     const fetchRelated = async () => {
       try {
         const res = await GetAllBlogsByCategoryApi(categorySlug);
         const responseData = res?.data?.data;
-        console.log(responseData, "responseData")
-        setRelated(responseData)
+        setRelated(Array.isArray(responseData) ? responseData : []);
       } catch (error) {
         console.error("Failed to fetch related blogs:", error);
       }
     };
     fetchRelated();
-  }, [post.blog_category?.slug, post.id]);
+  }, [categorySlug, post.id]);
   const handleShare = (type: "twitter" | "facebook" | "copy") => {
     if (typeof window === "undefined") return;
     const url = window.location.href;

@@ -12,7 +12,7 @@ export function PassportEmptyState() {
         Your Passport is empty
       </h2>
       <p className="mt-3 text-muted-foreground max-w-md mx-auto">
-        Start exploring Marco Island and save the places you'd love to visit.
+        Start exploring Marco Island and save the places you&apos;d love to visit.
         Add dates and times to plan your perfect trip.
       </p>
       <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">

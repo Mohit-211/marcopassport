@@ -5,7 +5,7 @@ export const sections = [
     id: "about",
     eyebrow: "01 — About",
     title: "About Marco Island",
-    image: "/assets/place-sunset.jpg",
+    image: "/assets/pier-pic.jpg",
     body: [
       "Tucked at the northern edge of Florida's Ten Thousand Islands, Marco is the largest of a chain of barrier islands fringed by white-sand beaches and shallow, sun-warmed gulf water.",
       "It's small enough to feel like a village and polished enough to feel like a resort — a quiet rhythm of marinas, mangroves, and long, slow sunsets.",
@@ -16,7 +16,7 @@ export const sections = [
     id: "when",
     eyebrow: "02 — When to go",
     title: "Best Time to Visit",
-    image: "/assets/place-tigertail.jpg",
+    image: "/assets/best-time.jpg",
     body: [
       "High season runs December through April: dry, breezy, and consistently in the high 70s. Expect busier beaches and book early.",
       "May and November are the sweet spots — warm water, fewer crowds, softer prices. Summer is lush and humid with daily afternoon storms that pass quickly.",
@@ -48,7 +48,7 @@ export const sections = [
     id: "tips",
     eyebrow: "04 — Travel tips",
     title: "Travel Tips",
-    image: "/assets/place-caxambas.jpg",
+    image: "/assets/travel-tip.jpg",
     body: [
       "Mornings belong to the beach — calmer water, softer light, and the chance to spot dolphins close to shore.",
       "Pack reef-safe sunscreen, a light layer for breezy evenings, and reservations for sunset dining on weekends.",
@@ -59,7 +59,7 @@ export const sections = [
     id: "culture",
     eyebrow: "05 — Local culture",
     title: "Local Culture",
-    image: "/assets/place-museum.jpg",
+    image: "/assets/museum.jpg",
     body: [
       "Marco's identity is woven from Calusa heritage, a fishing-village past, and a quiet, design-forward present.",
       "Expect a calmer Florida — gallery openings, dockside seafood, live music at golden hour, and a community that takes its sunsets seriously.",

@@ -56,7 +56,7 @@ export default async function BlogDetailPage({ params }: Props) {
           Story not found
         </h1>
         <p className="text-muted-foreground mt-3">
-          The article you're looking for may have been moved.
+          The article you&apos;re looking for may have been moved.
         </p>
         <Link href="/blog" className="inline-block mt-6">
           <Button className="rounded-full bg-gold text-gold-foreground hover:bg-gold/90">

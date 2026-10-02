@@ -6,15 +6,6 @@ import { useEffect, useState } from "react";
 import { PlaceCard } from "@/lib/place";
 import { GetAllBusinessByCategoryIdApi } from "@/api/users/business.api";
 
-
-function blogDate(dateString?: string) {
-  if (!dateString) return "";
-  return new Date(dateString).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-}
 type NearbyAndRelatedProps = {
   categoriesId?: number;
   currentSlug?: string;
@@ -24,7 +15,6 @@ export default function SimilarAndRelated({
   currentSlug,
 }: NearbyAndRelatedProps) {
   const [related, setRelated] = useState<PlaceCard[]>([]);
-  console.log(related, "related")
   useEffect(() => {
     if (!categoriesId) return;
     let cancelled = false;
@@ -32,7 +22,7 @@ export default function SimilarAndRelated({
       try {
         const res = await GetAllBusinessByCategoryIdApi(categoriesId);
         const list = res?.data?.data?.places;
-        setRelated(list)
+        if (!cancelled) setRelated(list ?? []);
       } catch (error) {
         console.error("Failed to fetch related places:", error);
       }
@@ -42,7 +32,6 @@ export default function SimilarAndRelated({
     };
   }, [categoriesId, currentSlug]);
   if (related.length === 0) return null;
-  console.log(related, "related")
   return (
     <>
       {/* Related reads */}

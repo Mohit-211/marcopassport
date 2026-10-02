@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { logoutApi } from "@/api/auth/auth.api";
@@ -12,29 +12,34 @@ interface AuthUser {
   name?: string;
 }
 
+function subscribeToAuth(onChange: () => void) {
+  window.addEventListener(AUTH_CHANGE_EVENT, onChange);
+  window.addEventListener("storage", onChange);
+  return () => {
+    window.removeEventListener(AUTH_CHANGE_EVENT, onChange);
+    window.removeEventListener("storage", onChange);
+  };
+}
+
+const noopSubscribe = () => () => {};
+
 export function useAuth() {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [ready, setReady] = useState(false);
+  // Token lives in localStorage, so the server snapshot is always "signed out"
+  const isAuthenticated = useSyncExternalStore(
+    subscribeToAuth,
+    () => !!getAuthToken(),
+    () => false,
+  );
+  // false during SSR and hydration, true once running on the client
+  const ready = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
+  const [profile, setUser] = useState<AuthUser | null>(null);
+  const user = isAuthenticated ? profile : null;
   const [loggingOut, setLoggingOut] = useState(false);
-
-  const syncFromStorage = useCallback(() => {
-    const token = getAuthToken();
-    setIsAuthenticated(!!token);
-    if (!token) setUser(null);
-    setReady(true);
-  }, []);
-
-  useEffect(() => {
-    syncFromStorage();
-    window.addEventListener(AUTH_CHANGE_EVENT, syncFromStorage);
-    window.addEventListener("storage", syncFromStorage);
-    return () => {
-      window.removeEventListener(AUTH_CHANGE_EVENT, syncFromStorage);
-      window.removeEventListener("storage", syncFromStorage);
-    };
-  }, [syncFromStorage]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -61,7 +66,6 @@ export function useAuth() {
     } finally {
       clearAuthToken();
       setUser(null);
-      setIsAuthenticated(false);
       setLoggingOut(false);
       toast.success("Signed out");
       router.push("/auth");

@@ -12,7 +12,7 @@ export default function Error({
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold">This page didn't load</h1>
+        <h1 className="text-xl font-semibold">This page didn&apos;t load</h1>
 
         <p className="mt-2 text-muted-foreground">
           Something went wrong on our end.

@@ -70,7 +70,7 @@ export function PassportPage() {
             {/* Description */}
             <p className="mt-5 max-w-lg text-sm leading-6 text-primary-foreground/80 sm:mt-6 sm:text-base sm:leading-7">
               Plan and manage your visits across Marco Island. Add places, pick
-              dates and build the trip you've been imagining.
+              dates and build the trip you&apos;ve been imagining.
             </p>
             <p className="mt-4 text-sm text-primary-foreground/60">
               Signed in as{" "}

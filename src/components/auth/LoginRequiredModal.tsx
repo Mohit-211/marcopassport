@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { LogIn } from "lucide-react";
 import {
@@ -13,6 +13,16 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
+const noopSubscribe = () => () => {};
+
+// Sign-in link that brings the user back here with the passport modal open
+function getAuthHref() {
+  const params = new URLSearchParams(window.location.search);
+  params.set("openPassport", "1");
+  const currentPath = `${window.location.pathname}?${params.toString()}`;
+  return `/auth?redirect=${encodeURIComponent(currentPath)}`;
+}
+
 interface LoginRequiredModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -24,14 +34,7 @@ export function LoginRequiredModal({
   onOpenChange,
   description = "Please sign in to save this to your Passport.",
 }: LoginRequiredModalProps) {
-  const [authHref, setAuthHref] = useState("/auth");
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    params.set("openPassport", "1");
-    const currentPath = `${window.location.pathname}?${params.toString()}`;
-    setAuthHref(`/auth?redirect=${encodeURIComponent(currentPath)}`);
-  }, []);
+  const authHref = useSyncExternalStore(noopSubscribe, getAuthHref, () => "/auth");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -9,8 +9,7 @@ export default function ReviewsSection({ id }: { id: string }) {
   const [reviews, setReviews] = useState<ApiReview[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchReviews = useCallback(() => {
-    setLoading(true);
+  const loadReviews = useCallback(() => {
     GetReviewsApi(id)
       .then((res) => {
         const data = res?.data?.data;
@@ -20,9 +19,15 @@ export default function ReviewsSection({ id }: { id: string }) {
       .finally(() => setLoading(false));
   }, [id]);
 
+  // Refetch after a new review is posted
+  const fetchReviews = useCallback(() => {
+    setLoading(true);
+    loadReviews();
+  }, [loadReviews]);
+
   useEffect(() => {
-    fetchReviews();
-  }, [fetchReviews]);
+    loadReviews();
+  }, [loadReviews]);
 
   return (
     <div className="space-y-8">

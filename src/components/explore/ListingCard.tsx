@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Star, MapPin, Bookmark, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import type { ApiBusinessCategory } from "@/types/business";
 
 export type Listing = {
-  categories: any;
+  categories: ApiBusinessCategory[];
   is_in_passport: boolean;
   slug: string;
   id: string;

@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PlacesHero from "@/components/places/PlacesHero";
-import TopPicksScroll from "@/components/places/TopPicksScroll";
 import PlacesGrid from "@/components/places/PlacesGrid";
 import EditorialGuide from "@/components/places/EditorialGuide";
 import { GetAllPlacesApi } from "@/api/users/places.api";
@@ -59,7 +58,7 @@ export default async function PlacesPage() {
               Save these places and build your itinerary
             </h2>
             <p className="text-primary-foreground/80 mt-4 max-w-xl">
-              Bookmark what catches your eye and we'll thread the timing,
+              Bookmark what catches your eye and we&apos;ll thread the timing,
               distances and reservations into a single shareable plan.
             </p>
           </div>

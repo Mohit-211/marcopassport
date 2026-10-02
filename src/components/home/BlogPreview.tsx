@@ -1,19 +1,9 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { GetAllBlogsApi } from "@/api/users/blog.api";
 import type { Blog } from "@/types/blog";
-const getImageUrl = (image?: string) => {
-  if (!image) {
-    return "/assets/blog-1.jpg";
-  }
-  if (image.startsWith("http://") || image.startsWith("https://")) {
-    return image;
-  }
-  return `${process.env.NEXT_PUBLIC_IMAGE_URL ?? ""}${image}`;
-};
 export function BlogPreview() {
   const [posts, setPosts] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -79,13 +69,6 @@ export function BlogPreview() {
               className="group block"
             >
               <div className="relative aspect-[16/9] overflow-hidden rounded-3xl shadow-soft">
-                {/* <Image
-                    src={getImageUrl(post.featured_image)}
-                    alt={post.title}
-                    fill
-                    sizes="(max-width:768px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  /> */}
                 <img
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.featured_image}`}
                   alt={post.title}

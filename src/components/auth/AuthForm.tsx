@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { AuthFields, type FieldErrors } from "@/components/auth/AuthFields";
-import { GoogleIcon } from "@/components/auth/GoogleIcon";
 import {
   Dialog,
   DialogContent,
@@ -143,11 +142,6 @@ export function AuthForm() {
     } finally {
       setLoading(false);
     }
-  };
-  const handleGoogle = () => {
-    toast.info("Google sign-in coming soon", {
-      description: "We're working on adding faster sign-in options.",
-    });
   };
   const handleForgot = () => {
     const query = email ? `?email=${encodeURIComponent(email)}` : "";

@@ -233,7 +233,7 @@ export default function MagazineExperience({
             <aside className="lg:sticky lg:top-24 space-y-4">
               <div className="rounded-3xl border border-border bg-card p-5 shadow-soft sm:p-6">
                 <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
-                  What's inside
+                  What&apos;s inside
                 </p>
                 <h3 className="font-display text-xl font-semibold mt-2 sm:text-2xl">
                   Highlights
@@ -280,7 +280,7 @@ export default function MagazineExperience({
                   Share this issue
                 </p>
                 <p className="text-sm text-primary-foreground/80 mt-2 leading-relaxed">
-                  Send the link to someone who'd love it. We'll keep your spot
+                  Send the link to someone who&apos;d love it. We&apos;ll keep your spot
                   here.
                 </p>
                 <Button

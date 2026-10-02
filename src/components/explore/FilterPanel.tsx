@@ -6,7 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { GetBusinessCategoryApi } from "@/api/users/business.api";
-export const PRICE_OPTIONS = ["100", "1000", "10000", "10000"] as const;
+export const PRICE_OPTIONS = ["100", "1000", "10000", "100000"] as const;
 export const NEIGHBORHOODS = [
   "Marco Marina",
   "Old Marco",
@@ -61,8 +61,6 @@ export function FilterPanel({
   toggleCategoryAction,
   selectedPrices,
   togglePriceAction,
-  selectedHoods,
-  toggleNeighborhoodAction,
   minRating,
   setMinRatingAction,
   featuredOnly,

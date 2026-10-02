@@ -5,7 +5,6 @@ import { AboutUs } from "@/components/home/AboutUs";
 import { EditorLetter } from "@/components/home/EditorLetter";
 import { Categories } from "@/components/home/Categories";
 import { FeaturedListings } from "@/components/home/FeaturedListings";
-import { TopPlaces } from "@/components/home/TopPlaces";
 import { MagazineStrip } from "@/components/home/MagazineStrip";
 import { BlogPreview } from "@/components/home/BlogPreview";
 import { PassportCTA } from "@/components/home/PassportCTA";

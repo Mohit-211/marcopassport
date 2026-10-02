@@ -12,7 +12,7 @@ export function TopPlaces() {
         <div className="mb-10 flex items-end justify-between gap-6 md:mb-14">
           <div>
             <p className="text-sm font-medium uppercase tracking-[0.16em] text-primary/60">
-              Editor's Picks
+              Editor&apos;s Picks
             </p>
 
             <h2 className="mt-2 max-w-2xl font-display text-3xl font-semibold text-primary sm:text-4xl md:text-5xl">

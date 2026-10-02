@@ -20,10 +20,10 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 
 const NAV = [
+  { href: "/", label: "Home" },
   { href: "/magazine", label: "Magazine" },
   { href: "/local-info", label: "Local Info" },
   { href: "/blog", label: "Blog" },
-  { href: "/", label: "Home" },
   { href: "/places", label: "Explore" },
   { href: "/passport", label: "Your Custom Passport" },
   { href: "/explore", label: "Business Directory" },
@@ -50,9 +50,12 @@ export function Navbar() {
     };
   }, []);
 
-  useEffect(() => {
+  // Close the mobile menu on route change (adjust state during render, not in an effect)
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
     setOpen(false);
-  }, [pathname]);
+  }
 
   return (
     <header
@@ -60,7 +63,7 @@ export function Navbar() {
         "fixed inset-x-0 top-0 z-50 border-b border-primary/8",
         "bg-cream/50 backdrop-blur-xl",
         "transition-all duration-300",
-        scrolled ? "shadow-soft" : "shadow-none"
+        scrolled ? "shadow-soft" : "shadow-none",
       )}
     >
       <div className="container mx-auto flex h-20 items-center justify-between px-5 lg:px-8">
@@ -95,7 +98,9 @@ export function Navbar() {
                 className={cn(
                   "relative rounded-lg px-3 py-2 text-[13px] font-medium tracking-[-0.01em]",
                   "transition-colors duration-200",
-                  active ? "text-primary" : "text-primary/75 hover:text-primary"
+                  active
+                    ? "text-primary"
+                    : "text-primary/75 hover:text-primary",
                 )}
               >
                 {item.label}
@@ -117,7 +122,7 @@ export function Navbar() {
                   className={cn(
                     "flex items-center gap-1.5 rounded-full border border-primary/15 py-1.5 pl-2 pr-2.5 text-[13px] font-medium text-primary/80",
                     "transition-colors hover:bg-primary/5 hover:text-primary",
-                    "data-popup-open:bg-primary/5 data-popup-open:text-primary"
+                    "data-popup-open:bg-primary/5 data-popup-open:text-primary",
                   )}
                 >
                   <span className="grid h-6 w-6 place-items-center rounded-full bg-primary/10 text-primary">
@@ -176,7 +181,7 @@ export function Navbar() {
                 "h-10 rounded-full px-5 text-sm font-semibold",
                 "bg-primary text-primary-foreground",
                 "shadow-sm transition-all duration-200",
-                "hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md"
+                "hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md",
               )}
             >
               Advertise With Us
@@ -209,7 +214,7 @@ export function Navbar() {
       <div
         className={cn(
           "overflow-hidden border-t border-primary/10 bg-cream/50 transition-all duration-300 lg:hidden",
-          open ? "max-h-[650px]" : "max-h-0"
+          open ? "max-h-[650px]" : "max-h-0",
         )}
       >
         <nav className="container mx-auto flex flex-col gap-1 px-5 py-4">
@@ -228,7 +233,7 @@ export function Navbar() {
                   "transition-colors duration-200",
                   active
                     ? "bg-primary text-primary-foreground"
-                    : "text-primary/80 hover:bg-primary/10 hover:text-primary"
+                    : "text-primary/80 hover:bg-primary/10 hover:text-primary",
                 )}
               >
                 {item.label}

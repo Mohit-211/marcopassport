@@ -83,7 +83,7 @@ export default function EditorialGuide() {
             How to make the most of the island
           </h2>
           <p className="text-muted-foreground mt-4">
-            Three short guides from our editors — written the way we'd tell a
+            Three short guides from our editors — written the way we&apos;d tell a
             friend.
           </p>
         </div>

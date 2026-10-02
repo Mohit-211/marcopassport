@@ -2,7 +2,6 @@ import {
   Lightbulb,
   MapPin,
   Sun,
-  Waves,
   Calendar,
   Languages,
   Phone,
@@ -22,7 +21,6 @@ const quickTips = [
   },
   { icon: MapPin, label: "Getting here", value: "RSW · 50 min · APF · 30 min" },
   { icon: Sun, label: "Average temp", value: "75°F winter · 88°F summer" },
-  { icon: Waves, label: "Beach safety", value: "Check daily surf flags" },
 ];
 
 export function QuickTips() {

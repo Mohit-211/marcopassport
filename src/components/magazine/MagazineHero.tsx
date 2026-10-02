@@ -2,11 +2,7 @@ import Image from "next/image";
 import { BookOpen } from "lucide-react";
 import { magazines } from "@/data/magazines";
 
-export default function MagazineHero({
-  featured,
-}: {
-  featured: (typeof magazines)[number];
-}) {
+export default function MagazineHero() {
   return (
     <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
       {/* Background */}

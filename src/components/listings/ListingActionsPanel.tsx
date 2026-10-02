@@ -28,7 +28,7 @@ import { getAuthToken } from "@/lib/auth";
 
 type ListingActionsPanelProps = {
   listing: {
-    is_in_passport: any;
+    is_in_passport?: boolean;
     slug: string;
     id: string;
     price: string;

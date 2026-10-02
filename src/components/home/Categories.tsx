@@ -1,43 +1,13 @@
-import { GetAllBusinessApi, GetBusinessCategoryApi } from "@/api/users/business.api";
-import Image from "next/image";
 import Link from "next/link";
-import { categories as fallbackCategories } from "@/data/content";
 import { GetAllPlacesApi } from "@/api/users/places.api";
-type ApiCategory = {
-  id?: string | number;
-  name?: string;
-  title?: string;
-  category_name?: string;
-  slug?: string;
-  image?: string;
-  count?: number;
-  business_count?: number;
-  total?: number;
-};
-type DisplayCategory = {
-  slug: string;
-  name: string;
-  image: string;
-  placesCount: number;
-};
-function mapApiCategory(category: ApiCategory): DisplayCategory | null {
-  const name = category.name || category.title || category.category_name || "";
-  if (!name) return null;
-  const slug = category.slug || name.toLowerCase().replace(/\s+/g, "-");
-  const fallback = fallbackCategories.find((c) => c.slug === slug);
-  return {
-    slug,
-    name,
-    image: category.image || fallback?.image || "/assets/cat-services.jpg",
-    placesCount: category.count ?? category.business_count ?? category.total ?? 0,
-  };
-}
+import type { ApiPlace } from "@/types/place";
+
+// TODO: the places API does not return `placesCount`, so the count label renders empty
+type CategoryPlace = ApiPlace & { placesCount?: number };
+
 export async function Categories() {
   const res = await GetAllPlacesApi();
-  const responseData = res?.data?.data?.places
-  console.log(responseData, "responseData")
-  const categories = responseData
-  console.log(categories, "categoriesbbb")
+  const categories: CategoryPlace[] = res?.data?.data?.places ?? [];
   return (
     <section className="px-4 py-16 sm:px-6 md:py-24">
       <div className="mx-auto max-w-7xl">
@@ -56,7 +26,7 @@ export async function Categories() {
         </div>
         {/* Categories */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category:any) => (
+          {categories.map((category) => (
             <Link
               key={category.slug}
               href={`/places/${category.slug}`}

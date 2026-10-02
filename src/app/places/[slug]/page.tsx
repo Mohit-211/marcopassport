@@ -3,8 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import PlaceExperience from "@/components/places/PlaceExperience";
 import { GetPlacesDetailsBySlugApi } from "@/api/users/places.api";
-import { GetRelatesPlaceByCategoryId } from "@/api/users/places.api";
-import { mapPlaceToCard, mapPlaceToDetail } from "@/lib/place";
+import { mapPlaceToDetail } from "@/lib/place";
 import type { ApiPlace } from "@/types/place";
 
 type Props = {
@@ -38,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     keywords: [
       place.name,
       place.neighborhood,
-      ...(place.categories?.map((category: any) => category.name) || []),
+      ...(place.categories?.map((category) => category.name) || []),
     ],
     openGraph: {
       title: `${place.name} — The Marco Passport`,
@@ -78,7 +77,5 @@ export default async function PlaceDetailPage({ params }: Props) {
   }
 
   const place = mapPlaceToDetail(item);
-  const categoryId = item.categories?.[0]?.id;
-
   return <PlaceExperience place={place} />;
 }
