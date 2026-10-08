@@ -1,18 +1,28 @@
 import { clearAuthToken, getAuthToken } from "../lib/auth";
+import { isAuthError, showApiError } from "./apiError";
+
+// Give the user a moment to read the "session expired" popup before leaving the page.
+const AUTH_REDIRECT_DELAY = 1500;
+let redirectingToAuth = false;
 
 export const handleApiError = (error) => {
-  if (!error.response) {
-    return Promise.reject(error);
-  }
+  showApiError(error);
 
-  const { status } = error.response;
+  // Token is missing/invalid/expired server-side (401, "Token Not Found",
+  // "Please authenticate"): sign the user out locally so the UI reflects the
+  // real auth state, then send them to sign in. The /auth pages are skipped,
+  // so a failed login just shows its error.
+  if (isAuthError(error) && typeof window !== "undefined") {
+    if (getAuthToken()) clearAuthToken();
 
-  // Token is missing/invalid/expired server-side — sign the user out locally
-  // so the UI (Navbar, Passport page, etc.) reflects the real auth state.
-  if (status === 401 && getAuthToken()) {
-    clearAuthToken();
-    if (typeof window !== "undefined") {
-      window.location.href = "/auth";
+    const { pathname, search } = window.location;
+    if (!redirectingToAuth && !pathname.startsWith("/auth")) {
+      redirectingToAuth = true;
+      // Bring the user back to this page after they sign in.
+      const redirect = encodeURIComponent(pathname + search);
+      window.setTimeout(() => {
+        window.location.href = `/auth?redirect=${redirect}`;
+      }, AUTH_REDIRECT_DELAY);
     }
   }
 

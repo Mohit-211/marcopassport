@@ -11,6 +11,7 @@ import {
   Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HeroBackground } from "@/components/site/HeroBackground";
 
 export const metadata: Metadata = {
   title: "Advertise With Us | The Marco Passport",
@@ -43,9 +44,10 @@ export default function BusinessPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
+      <section className="hero-viewport">
+        <HeroBackground src="/assets/listing-restaurant.jpg" alt="Waterfront restaurant on Marco Island" />
         {/* Content */}
-        <div className="mx-auto flex h-full max-w-7xl items-center px-6 sm:px-8 lg:px-10">
+        <div className="hero-container">
           <div className="max-w-2xl">
             {/* Eyebrow */}
             <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">
@@ -81,7 +83,7 @@ export default function BusinessPage() {
 
       {/* Rate Sheet — styled after the print rate card */}
       <section className="bg-background">
-        <div className="container mx-auto px-4 py-14 sm:py-16 max-w-2xl">
+        <div className="site-container py-14 sm:py-16 max-w-2xl">
           <div className="rounded-3xl border-2 border-[#EBBD00]/70 bg-[#0F2A3F] shadow-elegant overflow-hidden">
             {/* Card header */}
             <div className="px-6 sm:px-10 pt-10 pb-6 text-center border-b border-white/10">

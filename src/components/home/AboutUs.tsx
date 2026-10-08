@@ -21,7 +21,7 @@ const highlights = [
 export function AboutUs() {
   return (
     <section className="bg-sand">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+      <div className="site-container max-w-6xl py-20 md:py-28">
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr] md:gap-16">
           <div>
             <span className="text-xs font-semibold tracking-[0.2em] text-primary/60 uppercase">

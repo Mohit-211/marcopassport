@@ -25,8 +25,8 @@ const NAV = [
   { href: "/local-info", label: "Local Info" },
   { href: "/blog", label: "Blog" },
   { href: "/places", label: "Explore" },
-  { href: "/passport", label: "Your Custom Passport" },
   { href: "/explore", label: "Business Directory" },
+  { href: "/passport", label: "Your Custom Passport" },
 ];
 
 export function Navbar() {
@@ -66,7 +66,7 @@ export function Navbar() {
         scrolled ? "shadow-soft" : "shadow-none",
       )}
     >
-      <div className="container mx-auto flex h-20 items-center justify-between px-5 lg:px-8">
+      <div className="site-container flex h-20 items-center justify-between">
         {/* Logo */}
         <Link
           href="/"
@@ -217,7 +217,7 @@ export function Navbar() {
           open ? "max-h-[650px]" : "max-h-0",
         )}
       >
-        <nav className="container mx-auto flex flex-col gap-1 px-5 py-4">
+        <nav className="site-container flex flex-col gap-1 py-4">
           {NAV.map((item) => {
             const active =
               item.href === "/"

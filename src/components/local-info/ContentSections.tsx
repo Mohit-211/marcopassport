@@ -78,7 +78,7 @@ export function ContentSections() {
           <section
             key={section.id}
             id={section.id}
-            className="container mx-auto px-5 lg:px-8 py-16 md:py-24 scroll-mt-32"
+            className="site-container py-16 md:py-24 scroll-mt-32"
           >
             <div
               className={`grid md:grid-cols-2 gap-10 lg:gap-16 items-center ${

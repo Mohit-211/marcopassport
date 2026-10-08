@@ -24,6 +24,7 @@ import Flipbook, {
   ReaderPage,
   buildSpreads,
 } from "@/components/magazine/Flipbook";
+import { HeroBackground } from "@/components/site/HeroBackground";
 
 function IconBtn({
   children,
@@ -116,8 +117,10 @@ export default function MagazineExperience({
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
-        <div className="container mx-auto px-5 lg:px-8 pt-24 pb-10 sm:pt-28 sm:pb-12 md:pt-32 md:pb-16">
+      <section className="hero-viewport">
+        <HeroBackground src={magazine.sections[0]?.image ?? magazine.cover} />
+        <div className="hero-container">
+          <div className="w-full">
           {/* Back link */}
           <Link
             href="/magazine"
@@ -144,7 +147,7 @@ export default function MagazineExperience({
               <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
                 {magazine.issue} · {magazine.season}
               </p>
-              <h1 className="mt-3 font-display text-3xl font-semibold leading-[1.05] text-balance sm:text-5xl md:text-6xl">
+              <h1 className="mt-3 font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
                 {magazine.title}
               </h1>
               <p className="mt-3 text-sm italic text-primary-foreground/85 sm:mt-4 sm:text-base md:text-lg">
@@ -186,12 +189,13 @@ export default function MagazineExperience({
               </div>
             </div>
           </div>
+          </div>
         </div>
       </section>
 
       {/* Reader + What's Inside */}
       <section className="bg-sand py-14 sm:py-20 md:py-28">
-        <div className="container mx-auto px-5 lg:px-8">
+        <div className="site-container">
           <div className="grid lg:grid-cols-[1fr_320px] gap-10 lg:gap-16 items-start">
             {/* Reader */}
             <div>
@@ -297,7 +301,7 @@ export default function MagazineExperience({
       </section>
 
       {/* More editions */}
-      <section className="container mx-auto px-5 lg:px-8 py-14 sm:py-20 md:py-28">
+      <section className="site-container py-14 sm:py-20 md:py-28">
         <div className="flex items-end justify-between gap-4 mb-8 sm:mb-12">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
@@ -311,7 +315,7 @@ export default function MagazineExperience({
             <Button variant="outline">All editions</Button>
           </Link>
         </div>
-        <div className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-5 px-5 sm:gap-8 lg:mx-0 lg:px-0">
+        <div className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-(--site-gutter) px-(--site-gutter) sm:gap-8 lg:mx-0 lg:px-0">
           {others.map((m) => (
             <Link
               key={m.slug}
@@ -359,7 +363,10 @@ export default function MagazineExperience({
 
       {/* Fullscreen reader */}
       <Dialog open={reader} onOpenChange={setReader}>
-        <DialogContent className="max-w-[95vw] w-[95vw] h-[92vh] bg-primary border-none p-0 overflow-hidden text-primary-foreground">
+        <DialogContent
+          showCloseButton={false}
+          className="inset-0 top-0 left-0 block h-dvh w-screen max-w-none translate-x-0 translate-y-0 gap-0 overflow-hidden rounded-none bg-primary p-0 text-primary-foreground ring-0 sm:max-w-none"
+        >
           <div className="flex flex-col h-full">
             {/* Top bar */}
             <div className="flex items-center justify-between gap-4 px-5 py-3 border-b border-primary-foreground/10 shrink-0">
@@ -398,13 +405,21 @@ export default function MagazineExperience({
                 </IconBtn>
               </div>
             </div>
-            {/* Page — one portrait page, centered, same on every screen size */}
-            <div className="flex-1 min-h-0 overflow-y-auto bg-[radial-gradient(ellipse_at_center,oklch(0.32_0.06_240)_0%,oklch(0.18_0.05_240)_100%)] p-4 grid place-items-center md:p-10">
+            {/* Page — one portrait page sized to fit the screen; zoom grows it
+                in layout (not via transform) so a zoomed page can be scrolled */}
+            <div className="flex-1 min-h-0 bg-[radial-gradient(ellipse_at_center,oklch(0.32_0.06_240)_0%,oklch(0.18_0.05_240)_100%)] p-4 md:p-8">
               <div
-                style={{ transform: `scale(${zoom})` }}
-                className="w-full max-w-[340px] sm:max-w-[380px] md:max-w-[420px] transition-transform duration-300"
+                className="h-full overflow-auto [scrollbar-width:thin]"
+                style={{ containerType: "size" }}
               >
-                <ReaderPage page={currentPage!} magazine={magazine} />
+                <div className="flex min-h-full min-w-full w-fit">
+                  <div
+                    className="m-auto shrink-0 overflow-hidden rounded-md shadow-elegant transition-[width] duration-300"
+                    style={{ width: `calc(min(100cqw, 75cqh) * ${zoom})` }}
+                  >
+                    <ReaderPage page={currentPage!} magazine={magazine} />
+                  </div>
+                </div>
               </div>
             </div>
             {/* Bottom nav */}

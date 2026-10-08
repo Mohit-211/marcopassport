@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import {
   Search,
   SlidersHorizontal,
@@ -34,6 +33,7 @@ import {
 import { mapBusinessToListing } from "@/lib/business";
 import type { PlacesResponse } from "@/types/business";
 import { cn } from "@/lib/utils";
+import { HeroBackground } from "@/components/site/HeroBackground";
 
 type SortOption = "featured" | "popular" | "rating" | "recent";
 
@@ -201,25 +201,11 @@ export function ExplorePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
-        {/* Background */}
-        <div className="absolute inset-0 -z-20">
-          <Image
-            src="/assets/explore-hero.jpg"
-            alt="Marco Island marina at golden hour with yachts and palm trees"
-            fill
-            priority
-            className="object-cover object-center"
-            sizes="100vw"
-          />
-        </div>
-        {/* Image treatment */}
-        <div className="absolute inset-0 -z-10 bg-primary/15" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/85 via-primary/40 to-transparent" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/70 via-transparent to-primary/10" />
+      <section className="hero-viewport">
+        <HeroBackground src="/assets/explore-hero.jpg" alt="Marco Island marina at golden hour with yachts and palm trees" />
 
         {/* Content */}
-        <div className="mx-auto flex h-full max-w-7xl items-center px-6 sm:px-8 lg:px-10">
+        <div className="hero-container">
           <div className="max-w-3xl">
             {/* Eyebrow */}
             <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">
@@ -267,7 +253,7 @@ export function ExplorePage() {
       </section>
 
       {/* Main */}
-      <section className="container mx-auto max-w-7xl px-4 py-10 md:py-14">
+      <section className="site-container py-10 md:py-14">
         <div className="grid lg:grid-cols-[350px_1fr] gap-8">
           <aside className="hidden lg:block">
             <div className="sticky top-24 bg-card rounded-2xl border border-border p-6 shadow-soft">

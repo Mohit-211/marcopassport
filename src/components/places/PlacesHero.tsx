@@ -1,27 +1,13 @@
-import Image from "next/image";
 import { Compass } from "lucide-react";
+import { HeroBackground } from "@/components/site/HeroBackground";
 
 export default function PlacesHero({ total }: { total: number }) {
   return (
-    <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
-      {/* Background */}
-      <div className="absolute inset-0 -z-20">
-        <Image
-          src="/assets/places-hero.jpg"
-          alt="Aerial sunset view of Marco Island white sand beach with turquoise Gulf water"
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="100vw"
-        />
-      </div>
-      {/* Image treatment */}
-      <div className="absolute inset-0 -z-10 bg-primary/15" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/85 via-primary/40 to-transparent" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/70 via-transparent to-primary/10" />
+    <section className="hero-viewport">
+      <HeroBackground src="/assets/places-hero.jpg" alt="Aerial sunset view of Marco Island white sand beach with turquoise Gulf water" />
 
       {/* Content */}
-      <div className="mx-auto flex h-full max-w-7xl items-center px-6 sm:px-8 lg:px-10">
+      <div className="hero-container">
         <div className="max-w-3xl">
           {/* Eyebrow */}
           <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">

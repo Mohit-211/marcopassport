@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
@@ -18,6 +17,7 @@ import {
   GetBlogCategoryApi,
 } from "@/api/users/blog.api";
 import type { Blog } from "@/types/blog";
+import { HeroBackground } from "@/components/site/HeroBackground";
 type ApiCategory = {
   id: string | number;
   name?: string;
@@ -131,23 +131,10 @@ export default function BlogExperience() {
 
   return (
     <>
-      <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
-        <div className="absolute inset-0 -z-20">
-          <Image
-            src="/assets/listing-yacht.jpg"
-            alt=""
-            aria-hidden
-            fill
-            priority
-            className="object-cover object-center blur-3xl scale-125"
-            sizes="100vw"
-          />
-        </div>
-        <div className="absolute inset-0 -z-10 bg-primary/15" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/85 via-primary/40 to-transparent" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/70 via-transparent to-primary/10" />
+      <section className="hero-viewport">
+        <HeroBackground src="/assets/listing-yacht.jpg" />
         {/* Content */}
-        <div className="mx-auto flex h-full max-w-7xl items-center px-6 sm:px-8 lg:px-10">
+        <div className="hero-container">
           <div className="max-w-2xl">
             {/* Eyebrow */}
             <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">
@@ -189,7 +176,7 @@ export default function BlogExperience() {
           CATEGORY PILLS
       ====================================================== */}
       <section className="border-b border-border bg-background sticky top-16 z-10 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-        <div className="container mx-auto max-w-7xl py-4 px-4 flex gap-2 overflow-x-auto scrollbar-none">
+        <div className="site-container py-4 flex gap-2 overflow-x-auto scrollbar-none">
           {/* Loading */}
           {loadingCategories && (
             <>
@@ -247,7 +234,7 @@ export default function BlogExperience() {
           FEATURED
       ====================================================== */}
       {featured && (
-        <section className="container mx-auto max-w-7xl py-14 px-4 md:py-20">
+        <section className="site-container py-14 md:py-20">
           <Link
             href={`/blog/${featured.slug}/${featured?.id}`}
             className="group grid md:grid-cols-2 gap-8 md:gap-12 items-center"
@@ -264,9 +251,11 @@ export default function BlogExperience() {
               </span>
             </div>
             <div>
-              <span className="inline-block text-[11px] uppercase tracking-[0.2em] text-gold font-semibold">
-                {featured.blog_category?.name}
-              </span>
+              {featured.blog_category?.name && (
+                <span className="inline-block text-[11px] uppercase tracking-[0.2em] text-gold font-semibold">
+                  {featured.blog_category.name}
+                </span>
+              )}
               <h2 className="font-display text-3xl md:text-5xl font-semibold mt-3 text-primary text-balance group-hover:text-gold-foreground transition-colors">
                 {featured.title}
               </h2>
@@ -299,7 +288,7 @@ export default function BlogExperience() {
       {/* =====================================================
           BLOG GRID
       ====================================================== */}
-      <section className="container mx-auto max-w-7xl pb-20 px-4">
+      <section className="site-container pb-20">
         <div className="flex items-end justify-between mb-8">
           <div>
             <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary">

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Info, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CtaSection } from "@/components/site/CtaSection";
 
 const cards = [
   {
@@ -25,8 +25,9 @@ const cards = [
 
 export function ExploreMore() {
   return (
+    <>
     <section className="bg-background py-20 md:py-28">
-      <div className="container mx-auto px-5 lg:px-8">
+      <div className="site-container">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-[#EBBD00] font-semibold mb-3">
@@ -67,25 +68,15 @@ export function ExploreMore() {
             </Link>
           ))}
         </div>
-
-        <div className="mt-16 rounded-2xl border border-border bg-card p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="max-w-xl">
-            <h3 className="font-display text-2xl font-semibold text-[#002E50]">
-              Plan your trip in your Passport
-            </h3>
-            <p className="mt-2 text-foreground/70">
-              Save places, set dates, and build a simple itinerary you can take
-              with you.
-            </p>
-          </div>
-          <Link href="/passport">
-            <Button variant="gold" size="lg">
-              Open your Passport
-              <ArrowRight className="h-4 w-4 ml-1" />
-            </Button>
-          </Link>
-        </div>
       </div>
     </section>
+
+    {/* CTA */}
+    <CtaSection
+      title="Plan your trip in your Passport"
+      description="Save places, set dates, and build a simple itinerary you can take with you."
+      actions={[{ label: "Open your Passport", href: "/passport" }]}
+    />
+    </>
   );
 }

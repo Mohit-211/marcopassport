@@ -67,10 +67,7 @@ export function AddToPassportModal({
       onSaved?.();
       onOpenChange(false);
     } catch {
-      toast.error(
-        existing ? "Couldn't update your Passport entry" : "Couldn't add to your Passport",
-        { description: "Please try again." }
-      );
+      // The error popup is shown by the global API error handler.
     } finally {
       setSaving(false);
     }

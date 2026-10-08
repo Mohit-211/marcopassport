@@ -1,7 +1,7 @@
 export function EditorLetter() {
   return (
     <section className="bg-background">
-      <div className="mx-auto max-w-4xl px-6 py-20 md:py-28">
+      <div className="site-container max-w-4xl py-20 md:py-28">
         <div className="relative rounded-3xl border border-border bg-card p-8 shadow-elegant md:p-14">
           <span className="text-xs font-semibold tracking-[0.2em] text-gold uppercase">
             Letter From The Editor

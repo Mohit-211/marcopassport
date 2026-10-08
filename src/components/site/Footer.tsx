@@ -32,7 +32,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-cream">
       {/* Main Footer */}
-      <div className="mx-auto grid max-w-7xl gap-12 px-5 py-14 sm:px-6 md:grid-cols-2 md:gap-14 md:py-16 lg:grid-cols-4 lg:px-8">
+      <div className="site-container grid gap-12 py-14 md:grid-cols-2 md:gap-14 md:py-16 lg:grid-cols-4">
         {/* Brand */}
         <div className="lg:pr-6">
           <Link href="/" className="inline-block">
@@ -180,12 +180,11 @@ export function Footer() {
       <div className="border-t border-primary/10">
         <div
           className="
-            mx-auto flex max-w-7xl
+            site-container flex
             flex-col justify-between gap-4
-            px-5 py-5
+            py-5
             text-xs text-cream-foreground/50
-            sm:flex-row sm:items-center sm:px-6
-            lg:px-8
+            sm:flex-row sm:items-center
           "
         >
           <p>

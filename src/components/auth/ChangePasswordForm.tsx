@@ -12,20 +12,6 @@ import { cn } from "@/lib/utils";
 import { changePasswordApi } from "@/api/auth/auth.api";
 import { useAuth } from "@/hooks/useAuth";
 
-function getErrorMessage(error: unknown, fallback: string) {
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "response" in error &&
-    typeof (error as { response?: { data?: { message?: string } } }).response
-      ?.data?.message === "string"
-  ) {
-    return (error as { response: { data: { message: string } } }).response
-      .data.message;
-  }
-  return fallback;
-}
-
 type FieldErrors = {
   currentPassword?: string;
   password?: string;
@@ -94,10 +80,8 @@ export function ChangePasswordForm() {
         description: "Please sign in again with your new password.",
       });
       await logout();
-    } catch (err) {
-      toast.error(
-        getErrorMessage(err, "Could not update password. Please try again.")
-      );
+    } catch {
+      // The error popup is shown by the global API error handler.
     } finally {
       setLoading(false);
     }

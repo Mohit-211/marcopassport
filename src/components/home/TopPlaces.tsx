@@ -6,8 +6,8 @@ import { topPlaces } from "@/data/content";
 
 export function TopPlaces() {
   return (
-    <section className="px-4 py-16 sm:px-6 md:py-24">
-      <div className="mx-auto max-w-7xl">
+    <section className="py-16 md:py-24">
+      <div className="site-container">
         {/* Header */}
         <div className="mb-10 flex items-end justify-between gap-6 md:mb-14">
           <div>
@@ -39,7 +39,7 @@ export function TopPlaces() {
                   alt={place.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105 "
                 />
 
                 {/* Minimal number */}

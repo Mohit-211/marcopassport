@@ -41,8 +41,8 @@ export function FeaturedListings() {
   }, []);
 
   return (
-    <section className="px-4 py-16 sm:px-6 md:py-24">
-      <div className="mx-auto max-w-7xl">
+    <section className="py-16 md:py-24">
+      <div className="site-container">
         {/* Header */}
         <div className="mb-10 flex items-end justify-between gap-6 md:mb-14">
           <div>

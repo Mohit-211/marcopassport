@@ -1,46 +1,35 @@
 "use client";
 import { useState, useCallback } from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Compass, ShieldCheck, Loader2, ArrowLeft } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { ShieldCheck, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { AuthCard } from "@/components/auth/AuthShell";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { AuthFields, type FieldErrors } from "@/components/auth/AuthFields";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { PartyPopper } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { loginApi, registerApi } from "@/api/auth/auth.api";
-import { setAuthToken } from "@/lib/auth";
+import { getSafeRedirect, setAuthToken } from "@/lib/auth";
+
 const USER_ROLE_ID = 6;
-function getErrorMessage(error: unknown, fallback: string) {
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "response" in error &&
-    typeof (error as { response?: { data?: { message?: string } } }).response
-      ?.data?.message === "string"
-  ) {
-    return (error as { response: { data: { message: string } } }).response
-      .data.message;
-  }
-  return fallback;
+
+// Only needed after a successful signup, so it stays out of the initial bundle.
+const loadSuccessDialog = () => import("@/components/auth/SignupSuccessDialog");
+const SignupSuccessDialog = dynamic(
+  () => loadSuccessDialog().then((m) => m.SignupSuccessDialog),
+  { ssr: false }
+);
+
+// Read at navigation time rather than via useSearchParams, which would force
+// the whole form to client-render behind a Suspense boundary.
+function getRedirectTarget() {
+  return getSafeRedirect(
+    new URLSearchParams(window.location.search).get("redirect")
+  );
 }
+
 export function AuthForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirectParam = searchParams.get("redirect");
-  const redirectTo =
-    redirectParam && redirectParam.startsWith("/") && !redirectParam.startsWith("//")
-      ? redirectParam
-      : "/passport";
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,7 +40,6 @@ export function AuthForm() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [animating, setAnimating] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const validate = useCallback(
     (fields: {
@@ -85,17 +73,14 @@ export function AuthForm() {
     [mode, password]
   );
   const switchMode = (target: "login" | "signup") => {
-    if (target === mode) return;
-    setAnimating(true);
-    setTimeout(() => {
-      setMode(target);
-      setErrors({});
-      setTouched({});
-      setAnimating(false);
-    }, 180);
+    if (target === mode || loading) return;
+    setMode(target);
+    setErrors({});
+    setTouched({});
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setTouched({
       email: true,
       password: true,
@@ -113,12 +98,13 @@ export function AuthForm() {
           password,
           role_id: USER_ROLE_ID,
         });
-        const token = res?.data?.data?.tokens?.access
-          ?.token
+        const token = res?.data?.data?.tokens?.access?.token;
         if (token) {
           setAuthToken(token);
         }
       } else {
+        // Fetch the dialog chunk alongside the request so it opens instantly.
+        void loadSuccessDialog();
         const formData = new FormData();
         formData.append("name", name);
         formData.append("email", email);
@@ -134,204 +120,122 @@ export function AuthForm() {
         return;
       }
       toast.success("Welcome back");
-      router.push(redirectTo);
-    } catch (error) {
-      toast.error(
-        getErrorMessage(error, "Something went wrong. Please try again.")
-      );
+      router.push(getRedirectTarget());
+    } catch {
+      // The error popup is shown by the global API error handler.
     } finally {
       setLoading(false);
     }
   };
-  const handleForgot = () => {
-    const query = email ? `?email=${encodeURIComponent(email)}` : "";
-    router.push(`/auth/forgot-password${query}`);
-  };
+  const isLogin = mode === "login";
   return (
-    <main className="relative min-h-screen flex items-center justify-center px-4 py-10 overflow-hidden mt-10">
-      {/* Background image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(/assets/auth-bg.jpg)` }}
-      />
-      <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px]" />
-      <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/50" />
-      <div className="relative w-full max-w-[420px]">
-        {/* Brand */}
-        <Link
-          href="/"
-          className="flex items-center justify-center gap-2.5 mb-8 group"
-        >
-          <span className="grid h-11 w-11 place-items-center rounded-full bg-primary text-gold transition-transform duration-300 group-hover:rotate-12">
-            <Compass className="h-5 w-5" strokeWidth={2} />
-          </span>
-          <span className="font-display text-2xl font-semibold tracking-tight text-primary">
-            Marco<span className="text-gold">.</span>Passport
-          </span>
-        </Link>
-        {/* Card */}
-        <div className="rounded-3xl border border-border/80 bg-card/95 backdrop-blur-sm shadow-elegant overflow-hidden">
-          <AuthTabs mode={mode} onSwitch={switchMode} />
-          <div
-            className={cn(
-              "px-7 pb-7 pt-1 transition-all duration-200",
-              animating
-                ? "opacity-0 translate-y-1"
-                : "opacity-100 translate-y-0"
-            )}
-          >
-            <h1 className="text-[1.65rem] font-semibold text-primary leading-tight">
-              {mode === "login" ? "Welcome back" : "Create your Passport"}
-            </h1>
-            <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
-              {mode === "login"
-                ? "Sign in to access your saved places and travel plans."
-                : "Save places, plan visits, and build your Marco Island itinerary."}
-            </p>
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-              <AuthFields
-                mode={mode}
-                name={name}
-                email={email}
-                password={password}
-                confirmPassword={confirmPassword}
-                errors={errors}
-                touched={touched}
-                showPassword={showPassword}
-                showConfirm={showConfirm}
-                onNameChange={(value) => {
-                  setName(value);
-                  setErrors((prev) => ({
-                    ...prev,
-                    name: validate({ name: value }).name,
-                  }));
-                }}
-                onEmailChange={(value) => {
-                  setEmail(value);
-                  setErrors((prev) => ({
-                    ...prev,
-                    email: validate({ email: value }).email,
-                  }));
-                }}
-                onPasswordChange={(value) => {
-                  setPassword(value);
-                  setErrors((prev) => ({
-                    ...prev,
-                    password: validate({ password: value }).password,
-                  }));
-                }}
-                onConfirmPasswordChange={(value) => {
-                  setConfirmPassword(value);
-                  setErrors((prev) => ({
-                    ...prev,
-                    confirmPassword: validate({ confirmPassword: value })
-                      .confirmPassword,
-                  }));
-                }}
-                onBlurField={(field) =>
-                  setTouched((t) => ({ ...t, [field]: true }))
-                }
-                onToggleShowPassword={() => setShowPassword((s) => !s)}
-                onToggleShowConfirm={() => setShowConfirm((s) => !s)}
-                onForgotPassword={handleForgot}
-              />
-              {/* Submit */}
-              <Button
-                type="submit"
-                variant="gold"
-                size="lg"
-                disabled={loading}
-                className="w-full mt-2 shadow-gold"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    {mode === "login" ? "Signing in…" : "Creating account…"}
-                  </>
-                ) : mode === "login" ? (
-                  "Sign In"
-                ) : (
-                  "Create Account"
-                )}
-              </Button>
-              {/* Divider */}
-              {/* <div className="relative flex items-center gap-3 my-2">
-                <div className="h-px flex-1 bg-border" />
-                <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
-                  or
-                </span>
-                <div className="h-px flex-1 bg-border" />
-              </div> */}
-              {/* Google */}
-              {/* <Button
-                type="button"
-                variant="outline"
-                size="lg"
-                onClick={handleGoogle}
-                className="w-full h-12 rounded-xl border-input hover:bg-muted/60"
-              >
-                <GoogleIcon className="h-5 w-5" />
-                Continue with Google
-              </Button> */}
-            </form>
-            {/* Privacy note */}
-            <div className="mt-5 flex items-start gap-2 text-xs text-muted-foreground/80">
-              <ShieldCheck className="h-4 w-4 text-gold shrink-0 mt-0.5" />
-              <span>
-                Your data is private and secure. We never share your information
-                with third parties.
-              </span>
-            </div>
-          </div>
-        </div>
-        {/* Bottom link */}
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          {mode === "login"
-            ? "New to The Marco Passport?"
-            : "Already have an account?"}{" "}
-          <button
-            type="button"
-            onClick={() => switchMode(mode === "login" ? "signup" : "login")}
-            className="font-medium text-primary hover:text-gold transition-colors underline underline-offset-4"
-          >
-            {mode === "login" ? "Create one" : "Sign in"}
-          </button>
-        </p>
-        <Link
-          href="/"
-          className="mt-4 flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Back to home
-        </Link>
-      </div>
-      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
-        <DialogContent showCloseButton={false} className="text-center">
-          <DialogHeader className="items-center">
-            <span className="grid h-14 w-14 place-items-center rounded-full bg-gold/15 text-gold">
-              <PartyPopper className="h-6 w-6" />
-            </span>
-            <DialogTitle className="text-xl">Account created</DialogTitle>
-            <DialogDescription>
-              Welcome to The Marco Passport! Your account is ready — start
-              saving places and planning your visits.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="sm:justify-center">
+    <>
+      <AuthCard className="p-0 sm:p-0">
+        <AuthTabs mode={mode} onSwitch={switchMode} />
+        <div className="px-6 pb-6 pt-1 sm:px-8 sm:pb-8">
+          <h1 className="text-[1.65rem] font-semibold leading-tight text-primary sm:text-3xl">
+            {isLogin ? "Welcome back" : "Create your Passport"}
+          </h1>
+          <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+            {isLogin
+              ? "Sign in to access your saved places and travel plans."
+              : "Save places, plan visits, and build your Marco Island itinerary."}
+          </p>
+          <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-4">
+            <AuthFields
+              mode={mode}
+              name={name}
+              email={email}
+              password={password}
+              confirmPassword={confirmPassword}
+              errors={errors}
+              touched={touched}
+              showPassword={showPassword}
+              showConfirm={showConfirm}
+              onNameChange={(value) => {
+                setName(value);
+                setErrors((prev) => ({
+                  ...prev,
+                  name: validate({ name: value }).name,
+                }));
+              }}
+              onEmailChange={(value) => {
+                setEmail(value);
+                setErrors((prev) => ({
+                  ...prev,
+                  email: validate({ email: value }).email,
+                }));
+              }}
+              onPasswordChange={(value) => {
+                setPassword(value);
+                setErrors((prev) => ({
+                  ...prev,
+                  password: validate({ password: value }).password,
+                }));
+              }}
+              onConfirmPasswordChange={(value) => {
+                setConfirmPassword(value);
+                setErrors((prev) => ({
+                  ...prev,
+                  confirmPassword: validate({ confirmPassword: value })
+                    .confirmPassword,
+                }));
+              }}
+              onBlurField={(field) =>
+                setTouched((t) => ({ ...t, [field]: true }))
+              }
+              onToggleShowPassword={() => setShowPassword((s) => !s)}
+              onToggleShowConfirm={() => setShowConfirm((s) => !s)}
+            />
             <Button
+              type="submit"
               variant="gold"
               size="lg"
-              className="w-full sm:w-auto"
-              onClick={() => {
-                setShowSuccessModal(false);
-                router.push(redirectTo);
-              }}
+              disabled={loading}
+              aria-busy={loading}
+              className="mt-2 w-full"
             >
-              Continue to Passport
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  {isLogin ? "Signing in…" : "Creating account…"}
+                </>
+              ) : isLogin ? (
+                "Sign In"
+              ) : (
+                "Create Account"
+              )}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </main>
+          </form>
+          <div className="mt-5 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground/80">
+            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+            <span>
+              Your data is private and secure. We never share your information
+              with third parties.
+            </span>
+          </div>
+        </div>
+        <div className="border-t border-border/70 px-6 py-4 text-center text-sm text-muted-foreground sm:px-8">
+          {isLogin ? "New to The Marco Passport?" : "Already have an account?"}{" "}
+          <button
+            type="button"
+            onClick={() => switchMode(isLogin ? "signup" : "login")}
+            className="font-medium text-primary underline underline-offset-4 transition-colors hover:text-gold focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
+            {isLogin ? "Create one" : "Sign in"}
+          </button>
+        </div>
+      </AuthCard>
+      {showSuccessModal && (
+        <SignupSuccessDialog
+          open
+          onOpenChange={setShowSuccessModal}
+          onContinue={() => {
+            setShowSuccessModal(false);
+            router.push(getRedirectTarget());
+          }}
+        />
+      )}
+    </>
   );
 }

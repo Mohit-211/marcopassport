@@ -25,7 +25,7 @@ export async function LocalStats() {
 
   return (
     <section className="border-b border-border bg-background">
-      <div className="container mx-auto px-5 py-6 lg:px-8">
+      <div className="site-container py-6">
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
           {liveStats.map((stat) => (
             <div key={stat.k}>

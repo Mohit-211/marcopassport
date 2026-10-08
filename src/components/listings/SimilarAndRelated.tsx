@@ -35,7 +35,7 @@ export default function SimilarAndRelated({
   return (
     <>
       {/* Related reads */}
-      <section className="container mx-auto max-w-7xl px-4 py-16 md:py-24">
+      <section className="site-container py-16 md:py-24">
         <div className="flex items-end justify-between gap-4 mb-10">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">

@@ -6,8 +6,8 @@ import { magazines } from "@/data/content";
 
 export function MagazineStrip() {
   return (
-    <section className="overflow-hidden bg-primary px-4 py-16 text-primary-foreground sm:px-6 md:py-24">
-      <div className="mx-auto max-w-7xl">
+    <section className="overflow-hidden bg-primary py-16 text-primary-foreground md:py-24">
+      <div className="site-container">
         {/* Intro */}
         <div className="mb-12 flex flex-col justify-between gap-8 md:mb-16 md:flex-row md:items-end">
           <div className="max-w-2xl">

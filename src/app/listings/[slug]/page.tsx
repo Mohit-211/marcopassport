@@ -55,7 +55,7 @@ export default async function ListingDetailPage({ params }: Props) {
 
   if (!item) {
     return (
-      <div className="container mx-auto px-5 py-32 text-center">
+      <div className="site-container py-32 text-center">
         <h1 className="font-display text-4xl font-semibold">
           Listing not found
         </h1>
@@ -74,7 +74,7 @@ console.log(listing,"listing===============bhv")
   return (
     <>
       {/* Breadcrumbs */}
-      <div className="container mx-auto px-4 max-w-7xl pt-24 md:pt-28">
+      <div className="site-container pt-24 md:pt-28">
         <nav className="text-xs uppercase tracking-[0.18em] text-muted-foreground flex items-center gap-2">
           <Link href="/" className="hover:text-primary">
             Home
@@ -91,7 +91,7 @@ console.log(listing,"listing===============bhv")
       <ListingGallery listing={listing} />
 
       {/* Main content */}
-      <section className="container mx-auto max-w-7xl py-14 md:py-20 px-4">
+      <section className="site-container py-14 md:py-20">
         <div className="grid lg:grid-cols-[1fr_380px] gap-12 lg:gap-16">
           <div className="space-y-14">
             <ListingInfoContent listing={listing} />

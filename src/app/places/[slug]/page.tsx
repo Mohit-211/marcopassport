@@ -64,7 +64,7 @@ export default async function PlaceDetailPage({ params }: Props) {
 
   if (!item) {
     return (
-      <div className="container mx-auto px-5 py-32 text-center">
+      <div className="site-container py-32 text-center">
         <h1 className="font-display text-4xl font-semibold">Place not found</h1>
         <p className="text-muted-foreground mt-3">
           It may have moved or been removed.

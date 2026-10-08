@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Info } from "lucide-react";
 import { LocalStats } from "@/components/local-info/LocalStats";
 import {
@@ -8,6 +7,7 @@ import {
 } from "@/components/local-info/ContentSections";
 import { ExploreMore } from "@/components/local-info/ExploreMore";
 import { QuickTips } from "@/components/local-info/QuickTips";
+import { HeroBackground } from "@/components/site/HeroBackground";
 
 export const metadata: Metadata = {
   title: "Local Info | The Marco Passport",
@@ -24,25 +24,11 @@ export default async function LocalInfoPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
-        {/* Background */}
-        <div className="absolute inset-0 -z-20">
-          <Image
-            src="/assets/hero-marco-island.jpg"
-            alt="Aerial view of Marco Island, Florida"
-            fill
-            priority
-            className="object-cover object-center"
-            sizes="100vw"
-          />
-        </div>
-        {/* Image treatment */}
-        <div className="absolute inset-0 -z-10 bg-primary/15" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/85 via-primary/40 to-transparent" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/70 via-transparent to-primary/10" />
+      <section className="hero-viewport">
+        <HeroBackground src="/assets/hero-marco-island.jpg" alt="Aerial view of Marco Island, Florida" />
 
         {/* Content */}
-        <div className="mx-auto flex h-full max-w-7xl items-center px-6 sm:px-8 lg:px-10">
+        <div className="hero-container">
           <div className="max-w-3xl">
             {/* Eyebrow */}
             <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">
@@ -68,7 +54,7 @@ export default async function LocalInfoPage() {
 
       {/* Section Navigation */}
       <section className="sticky top-[72px] z-30 border-y border-border bg-background/90 shadow-sm backdrop-blur-md">
-        <div className="container mx-auto px-5 lg:px-8">
+        <div className="site-container">
           <div className="flex items-center justify-center gap-1 overflow-x-auto py-3">
             {sections.map((section) => (
               <a

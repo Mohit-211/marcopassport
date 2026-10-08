@@ -9,8 +9,8 @@ export async function Categories() {
   const res = await GetAllPlacesApi();
   const categories: CategoryPlace[] = res?.data?.data?.places ?? [];
   return (
-    <section className="px-4 py-16 sm:px-6 md:py-24">
-      <div className="mx-auto max-w-7xl">
+    <section className="py-16 md:py-24">
+      <div className="site-container">
         {/* Section intro */}
         <div className="mb-10 max-w-2xl md:mb-14">
           <p className="text-sm font-medium uppercase tracking-[0.16em] text-primary/60">
@@ -38,7 +38,7 @@ export async function Categories() {
                 alt={category.name}
                 // fill
                 // sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ width: "100%", height: "100%" }}
               />
               {/* Simple gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/10 to-transparent" />

@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CtaSection } from "@/components/site/CtaSection";
 import { magazines } from "@/data/magazines";
 import MagazineHero from "@/components/magazine/MagazineHero";
 import FeaturedEdition from "@/components/magazine/FeaturedEdition";
@@ -33,7 +31,7 @@ export default function MagazinePage() {
       <FeaturedEdition featured={featured} />
 
       {/* Current grid */}
-      <section className="container mx-auto px-5 lg:px-8 py-20 md:py-28">
+      <section className="site-container py-20 md:py-28">
         <div className="flex items-end justify-between gap-4 mb-12">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
@@ -53,27 +51,12 @@ export default function MagazinePage() {
       <ArchiveSection archive={archive} />
 
       {/* CTA */}
-      <section className="container mx-auto px-5 lg:px-8 py-20 md:py-28">
-        <div className="rounded-[2rem] bg-sand p-10 md:p-16 grid md:grid-cols-[1fr_auto] items-center gap-8 relative overflow-hidden">
-          <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
-          <div className="relative">
-            <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
-              Stay in print
-            </p>
-            <h2 className="font-display text-3xl md:text-5xl font-semibold mt-2 text-balance max-w-2xl">
-              The next issue, in your inbox
-            </h2>
-            <p className="text-muted-foreground mt-4 max-w-xl">
-              One email per season. New stories, new photographers, no noise.
-            </p>
-          </div>
-          <Link href="/contact" className="relative">
-            <Button variant="gold" size="lg">
-              Subscribe <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-      </section>
+      <CtaSection
+        eyebrow="Stay in print"
+        title="The next issue, in your inbox"
+        description="One email per season. New stories, new photographers, no noise."
+        actions={[{ label: "Subscribe", href: "/contact" }]}
+      />
     </>
   );
 }

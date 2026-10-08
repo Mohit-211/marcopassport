@@ -51,7 +51,7 @@ export default async function BlogDetailPage({ params }: Props) {
   const post = await getBlogById(id);
   if (!post) {
     return (
-      <div className="container mx-auto px-5 lg:px-8 py-32 text-center">
+      <div className="site-container py-32 text-center">
         <h1 className="font-display text-4xl text-primary">
           Story not found
         </h1>

@@ -23,6 +23,7 @@ import {
   type PassportItem,
 } from "@/components/passport/PassportItemCard";
 import { PassportEmptyState } from "@/components/passport/PassportEmptyState";
+import { HeroBackground } from "@/components/site/HeroBackground";
 
 // TODO: replace with real passport data once wired up. Starting empty so the
 // UI reflects the true "no saved places yet" state.
@@ -52,9 +53,10 @@ export function PassportPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate h-[78vh] overflow-hidden bg-primary text-primary-foreground">
+      <section className="hero-viewport">
+        <HeroBackground src="/assets/place-sunset.jpg" alt="Sunset over a Marco Island pier" />
         {/* Content */}
-        <div className="mx-auto flex h-full max-w-7xl flex-col justify-center gap-8 px-6 sm:px-8 lg:px-10 md:flex-row md:items-center md:justify-between">
+        <div className="hero-container flex-col items-stretch justify-center gap-8 md:flex-row md:items-center md:justify-between">
           <div className="max-w-xl">
             {/* Eyebrow */}
             <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">
@@ -111,7 +113,7 @@ export function PassportPage() {
 
       {/* Content */}
       <section className="bg-background py-12 md:py-16">
-        <div className="container mx-auto px-5 lg:px-8 max-w-5xl">
+        <div className="site-container max-w-5xl">
           {items.length === 0 ? (
             <PassportEmptyState />
           ) : (

@@ -111,9 +111,12 @@ export default function ListingActionsPanel({
               Plan your visit
             </p>
             <p className="text-sm text-muted-foreground mt-1">
-              Save this place to your Passport and pick a date.
+              {saved
+                ? "This place is already in your Passport."
+                : "Save this place to your Passport and pick a date."}
             </p>
 
+            {!saved && (
             <Popover>
               <PopoverTrigger
                 className={cn(
@@ -137,6 +140,7 @@ export default function ListingActionsPanel({
                 />
               </PopoverContent>
             </Popover>
+            )}
 
             {listing.website_url ? (
               <a

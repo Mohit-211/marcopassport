@@ -75,9 +75,8 @@ export default function SubmitForm() {
       });
       toast.success("Your submission has been received!");
       router.push("/business/thank-you");
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong. Please try again.");
+    } catch {
+      // The error popup is shown by the global API error handler.
     } finally {
       setSubmitting(false);
     }
@@ -87,7 +86,7 @@ export default function SubmitForm() {
     <>
       {/* Header */}
       <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
-        <div className="container mx-auto px-5 lg:px-8 pt-28 pb-14 md:pt-36 md:pb-16 max-w-2xl">
+        <div className="site-container pt-28 pb-14 md:pt-36 md:pb-16 max-w-2xl">
           <Link
             href="/business"
             className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary-foreground/80 hover:text-gold transition-colors"
@@ -106,7 +105,7 @@ export default function SubmitForm() {
 
       {/* Form */}
       <section className="bg-background">
-        <div className="container mx-auto px-4 py-12 sm:py-14 max-w-2xl">
+        <div className="site-container py-12 sm:py-14 max-w-2xl">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Business Details */}
             <div className="space-y-5">

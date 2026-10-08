@@ -1,32 +1,15 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowDownRight } from "lucide-react";
+import { HeroBackground } from "@/components/site/HeroBackground";
 
 export function Hero() {
   return (
-    <section className="relative isolate min-h-dvh overflow-hidden bg-primary text-primary-foreground">
-      {/* Background */}
-      <div className="absolute inset-0 -z-20">
-        <Image
-          src="/assets/hero-marco-island.jpg"
-          alt="Marco Island coastline"
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="100vw"
-        />
-      </div>
-
-      {/* Image treatment */}
-      <div className="absolute inset-0 -z-10 bg-primary/15" />
-
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/85 via-primary/40 to-transparent" />
-
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/70 via-transparent to-primary/10" />
+    <section className="hero-viewport">
+      <HeroBackground src="/assets/hero-marco-island.jpg" alt="Marco Island coastline" />
 
       {/* Content */}
-      <div className="mx-auto flex min-h-dvh max-w-7xl items-center px-6 py-28 sm:px-8 sm:py-32 lg:px-10">
-        <div className="translate-y-8 max-w-2xl sm:translate-y-10 lg:translate-y-12">
+      <div className="hero-container">
+        <div className="max-w-2xl">
           {/* Eyebrow */}
           <div className="mb-5 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-6 sm:text-[11px]">
             <span className="h-px w-8 bg-gold/70" />

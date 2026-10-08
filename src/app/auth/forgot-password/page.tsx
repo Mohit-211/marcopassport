@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
+import { AuthCardSkeleton, AuthShell } from "@/components/auth/AuthShell";
 
 export const metadata: Metadata = {
   title: "Forgot password — The Marco Passport",
@@ -10,8 +11,11 @@ export const metadata: Metadata = {
 
 export default function ForgotPasswordPage() {
   return (
-    <Suspense fallback={null}>
-      <ForgotPasswordForm />
-    </Suspense>
+    <AuthShell>
+      {/* Shell paints immediately; only the card waits for the URL params. */}
+      <Suspense fallback={<AuthCardSkeleton />}>
+        <ForgotPasswordForm />
+      </Suspense>
+    </AuthShell>
   );
 }

@@ -103,7 +103,14 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
-        <Toaster richColors position="bottom-right" />
+        <Toaster
+          richColors
+          closeButton
+          position="top-right"
+          visibleToasts={3}
+          offset={{ top: 96, right: 24 }}
+          mobileOffset={{ top: 88, left: 16, right: 16 }}
+        />
       </body>
     </html>
   );

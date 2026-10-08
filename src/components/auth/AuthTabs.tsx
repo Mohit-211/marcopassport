@@ -7,39 +7,37 @@ interface AuthTabsProps {
   onSwitch: (mode: "login" | "signup") => void;
 }
 
+const TABS = [
+  { value: "login", label: "Sign In" },
+  { value: "signup", label: "Create Account" },
+] as const;
+
 export function AuthTabs({ mode, onSwitch }: AuthTabsProps) {
   return (
-    <div className="relative grid grid-cols-2 bg-muted/50 p-1.5 m-5 rounded-2xl">
+    <div className="relative mx-6 mb-5 mt-6 grid grid-cols-2 rounded-2xl bg-muted/70 p-1.5 sm:mx-8 sm:mt-8">
       <div
+        aria-hidden
         className={cn(
-          "absolute top-1.5 bottom-1.5 w-[calc(50%-3px)] rounded-xl bg-card shadow-sm transition-all duration-300 ease-out",
-          mode === "login" ? "left-1.5" : "left-[calc(50%+1.5px)]"
+          "absolute bottom-1.5 top-1.5 w-[calc(50%-6px)] rounded-xl bg-card shadow-soft transition-[left] duration-300 ease-out",
+          mode === "login" ? "left-1.5" : "left-1/2"
         )}
       />
-      <button
-        type="button"
-        onClick={() => onSwitch("login")}
-        className={cn(
-          "relative z-10 py-2.5 text-sm font-medium rounded-xl transition-colors duration-200",
-          mode === "login"
-            ? "text-primary"
-            : "text-muted-foreground hover:text-primary"
-        )}
-      >
-        Sign In
-      </button>
-      <button
-        type="button"
-        onClick={() => onSwitch("signup")}
-        className={cn(
-          "relative z-10 py-2.5 text-sm font-medium rounded-xl transition-colors duration-200",
-          mode === "signup"
-            ? "text-primary"
-            : "text-muted-foreground hover:text-primary"
-        )}
-      >
-        Create Account
-      </button>
+      {TABS.map((tab) => (
+        <button
+          key={tab.value}
+          type="button"
+          aria-pressed={mode === tab.value}
+          onClick={() => onSwitch(tab.value)}
+          className={cn(
+            "relative z-10 rounded-xl py-2.5 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+            mode === tab.value
+              ? "text-primary"
+              : "text-muted-foreground hover:text-primary"
+          )}
+        >
+          {tab.label}
+        </button>
+      ))}
     </div>
   );
 }

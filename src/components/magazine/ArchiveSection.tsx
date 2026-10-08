@@ -10,7 +10,7 @@ export default function ArchiveSection({
 
   return (
     <section className="bg-primary text-primary-foreground py-20 md:py-28">
-      <div className="container mx-auto px-5 lg:px-8">
+      <div className="site-container">
         <div className="flex items-end justify-between gap-4 mb-12 border-b border-primary-foreground/15 pb-6">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">

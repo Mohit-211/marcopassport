@@ -6,12 +6,11 @@ import {
   ArrowRight,
   Calendar,
   Clock,
-  Compass,
   Link2,
   User,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { CtaSection } from "@/components/site/CtaSection";
 import {
   ShareButton,
   ShareRail,
@@ -20,6 +19,7 @@ import {
 } from "@/components/blog/ShareControls";
 import { GetAllBlogsByCategoryApi } from "@/api/users/blog.api";
 import type { Blog } from "@/types/blog";
+import { HeroBackground } from "@/components/site/HeroBackground";
 const imageUrl = (image?: string) =>
   image ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${image}` : "/assets/blog-1.jpg";
 const formatDate = (date?: string) =>
@@ -72,31 +72,21 @@ export default function BlogArticleExperience({
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate">
-        <div className="relative h-[58vh] min-h-[420px] md:h-[68vh] w-full overflow-hidden">
-          {/* <img
-            src={imageUrl(post.featured_image)}
-            alt={post.title}
-            className="absolute inset-0 h-full w-full object-cover"
-          /> */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, color-mix(in oklab, var(--primary) 35%, transparent) 0%, color-mix(in oklab, var(--primary) 55%, transparent) 55%, var(--primary) 100%)",
-            }}
-          />
-          <div className="absolute inset-0 flex items-end">
-            <div className="container mx-auto px-5 lg:px-8 pb-14 md:pb-20 max-w-5xl text-primary-foreground">
+      <section className="hero-viewport">
+          <HeroBackground src={imageUrl(post.featured_image)} alt={post.title} />
+          <div className="hero-container">
+            <div className="w-full max-w-5xl text-primary-foreground">
               <Link
                 href="/blog"
                 className="inline-flex items-center gap-2 text-sm text-primary-foreground/80 hover:text-gold transition-colors mb-8"
               >
                 <ArrowLeft className="h-4 w-4" /> All Stories
               </Link>
-              <span className="inline-block text-[11px] uppercase tracking-[0.25em] text-gold font-semibold mx-4 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/10 backdrop-blur-sm">
-                {post.blog_category?.name}
-              </span>
+              {post.blog_category?.name && (
+                <span className="inline-block text-[11px] uppercase tracking-[0.25em] text-gold font-semibold mx-4 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/10 backdrop-blur-sm">
+                  {post.blog_category.name}
+                </span>
+              )}
               <h1 className="font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] mt-4 text-balance">
                 {post.title}
               </h1>
@@ -117,7 +107,6 @@ export default function BlogArticleExperience({
               </div>
             </div>
           </div>
-        </div>
       </section>
       {/* Featured image */}
       {post.featured_image && (
@@ -132,7 +121,7 @@ export default function BlogArticleExperience({
         </section>
       )}
       {/* Body */}
-      <section className="container mx-auto px-5 lg:px-8 py-16 md:py-24">
+      <section className="site-container py-16 md:py-24">
         <div className="grid lg:grid-cols-[1fr_minmax(0,680px)_1fr] gap-10">
           {/* Left: floating share */}
           <aside className="hidden lg:block">
@@ -149,7 +138,7 @@ export default function BlogArticleExperience({
             )}
             {post.content && (
               <div
-                className="mt-8 space-y-5 text-[17px] leading-[1.85] text-foreground/85 [&_h2]:font-display [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:font-semibold [&_h2]:text-primary [&_h2]:text-balance [&_h2]:mt-10 [&_img]:rounded-3xl [&_img]:shadow-elegant [&_blockquote]:font-display [&_blockquote]:italic [&_blockquote]:text-2xl [&_blockquote]:md:text-3xl [&_blockquote]:leading-snug [&_blockquote]:text-primary [&_blockquote]:border-l-2 [&_blockquote]:border-gold [&_blockquote]:pl-6 [&_blockquote]:md:pl-8 [&_blockquote]:my-10 [&_blockquote]:py-1 [&_blockquote_p]:m-0 [&_.insider-tip]:relative [&_.insider-tip]:rounded-2xl [&_.insider-tip]:bg-gold/10 [&_.insider-tip]:border [&_.insider-tip]:border-gold/25 [&_.insider-tip]:px-6 [&_.insider-tip]:pt-14 [&_.insider-tip]:pb-6 [&_.insider-tip]:my-8 [&_.insider-tip::before]:content-['💡'] [&_.insider-tip::before]:absolute [&_.insider-tip::before]:top-5 [&_.insider-tip::before]:left-6 [&_.insider-tip::before]:text-lg [&_.insider-tip::before]:leading-none [&_.insider-tip::after]:content-['Insider_Tip'] [&_.insider-tip::after]:absolute [&_.insider-tip::after]:top-[1.15rem] [&_.insider-tip::after]:left-14 [&_.insider-tip::after]:bg-gold [&_.insider-tip::after]:text-gold-foreground [&_.insider-tip::after]:text-[11px] [&_.insider-tip::after]:font-bold [&_.insider-tip::after]:uppercase [&_.insider-tip::after]:tracking-[0.12em] [&_.insider-tip::after]:leading-none [&_.insider-tip::after]:px-2.5 [&_.insider-tip::after]:py-1 [&_.insider-tip::after]:rounded-md [&_.insider-tip_p]:m-0 [&_.insider-tip_p]:text-foreground/85"
+                className="blog-content mt-8"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
             )}
@@ -195,41 +184,17 @@ export default function BlogArticleExperience({
         </div>
       </section>
       {/* Inline CTA back into the platform */}
-      <section className="bg-sand border-y border-border">
-        <div className="container mx-auto px-5 lg:px-8 py-14 md:py-16 max-w-4xl">
-          <div className="rounded-3xl bg-primary text-primary-foreground p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center gap-6 shadow-elegant">
-            <div className="h-12 w-12 rounded-full bg-gold text-gold-foreground flex items-center justify-center shrink-0">
-              <Compass className="h-5 w-5" />
-            </div>
-            <div className="flex-1">
-              <p className="text-[11px] uppercase tracking-[0.25em] text-gold font-semibold">
-                Continue exploring
-              </p>
-              <h3 className="font-display text-2xl md:text-3xl font-semibold mt-2 text-balance">
-                Find the places and businesses mentioned in this story.
-              </h3>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link href="/explore">
-                <Button className="rounded-full bg-gold text-gold-foreground hover:bg-gold/90 px-6">
-                  Browse Directory
-                </Button>
-              </Link>
-              <Link href="/places">
-                <Button
-                  variant="outline"
-                  className="rounded-full border-primary-foreground/40 text-black hover:bg-primary-foreground/10 px-6"
-                >
-                  See Places
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CtaSection
+        eyebrow="Continue exploring"
+        title="Find the places and businesses mentioned in this story."
+        actions={[
+          { label: "Browse Directory", href: "/explore" },
+          { label: "See Places", href: "/places" },
+        ]}
+      />
       {/* Related */}
       {related.length > 0 && (
-        <section className="container  mx-auto max-w-7xl  px-5 lg:px-8 py-20">
+        <section className="site-container py-20">
           <div className="flex items-end justify-between mb-10">
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-gold font-semibold">
@@ -260,9 +225,11 @@ export default function BlogArticleExperience({
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <span className="absolute top-4 left-4 bg-background/90 backdrop-blur text-primary text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
-                    {r.blog_category?.name}
-                  </span>
+                  {r.blog_category?.name && (
+                    <span className="absolute top-4 left-4 bg-background/90 backdrop-blur text-primary text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
+                      {r.blog_category.name}
+                    </span>
+                  )}
                 </div>
                 <div className="p-6">
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">

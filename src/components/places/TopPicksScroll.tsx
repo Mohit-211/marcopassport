@@ -7,7 +7,7 @@ export default function TopPicksScroll({ places }: { places: PlaceCard[] }) {
 
   return (
     <section className="bg-primary text-primary-foreground py-16 md:py-20 relative">
-      <div className="container mx-auto px-5 lg:px-8">
+      <div className="site-container">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
@@ -25,7 +25,7 @@ export default function TopPicksScroll({ places }: { places: PlaceCard[] }) {
       </div>
 
       <div className="overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <div className="flex gap-6 px-5 lg:px-8 container mx-auto min-w-max">
+        <div className="site-container flex gap-6 min-w-max">
           {topPicks.map((p, i) => (
             <Link
               key={p.id}
