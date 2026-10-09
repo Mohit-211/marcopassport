@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowDownRight } from "lucide-react";
+import { ArrowDownRight, Sparkles } from "lucide-react";
 import { HeroBackground } from "@/components/site/HeroBackground";
 
 export function Hero() {
@@ -31,13 +31,20 @@ export function Hero() {
           </p>
 
           {/* CTA */}
-          <div className="mt-8 sm:mt-9">
+          <div className="mt-8 flex flex-wrap gap-3 sm:mt-9">
             <Link
               href="/explore"
               className="group inline-flex items-center gap-3 rounded-full bg-gold px-5 py-3 text-sm font-medium text-gold-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-gold"
             >
               Explore the island
               <ArrowDownRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
+            </Link>
+            <Link
+              href="/my-trips"
+              className="group inline-flex items-center gap-2.5 rounded-full border border-primary-foreground/40 px-5 py-3 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-foreground/10"
+            >
+              <Sparkles className="h-4 w-4" />
+              Your Trips
             </Link>
           </div>
         </div>

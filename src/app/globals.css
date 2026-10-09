@@ -4,8 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
 
   --radius-sm: calc(var(--radius) - 6px);
   --radius-md: calc(var(--radius) - 2px);
@@ -44,6 +44,16 @@
 
   --color-sand: var(--sand);
   --color-sand-foreground: var(--sand-foreground);
+
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-hover: var(--brand-primary-hover);
+  --color-brand-primary-tint: var(--brand-primary-tint);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-page: var(--brand-page);
+  --color-brand-main: var(--brand-main);
+  --color-brand-main-soft: var(--brand-main-soft);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-cream: var(--brand-cream);
 
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
@@ -137,6 +147,28 @@
 
   --sand: oklch(0.94 0.022 78);
   --sand-foreground: oklch(0.23 0.055 245);
+
+  /* --------------------------------
+     Brand Teal (for badge)
+     -------------------------------- */
+
+  /* Brand aliases used by the trip planner; they point at the site palette
+     above so the planner always matches the rest of the site. */
+  --brand-primary: var(--primary); /* #002946 navy: buttons, active tabs, links, pins */
+  --brand-primary-hover: oklch(0.18 0.05 245); /* slightly darker navy */
+  --brand-primary-tint: color-mix(in oklab, var(--primary) 7%, white); /* "Top pick", selected rows */
+  --brand-dark: var(--primary); /* secondary buttons such as "Advertise With Us" */
+  --brand-page: var(--background); /* page background */
+
+  /* "Plan Your Trip" badge palette. Fixed values on purpose: the badge keeps
+     its look even if the site palette above changes (and in dark mode). */
+  --brand-main: #021f35; /* site navy (--primary) */
+  --brand-main-soft: #18354d; /* site lighter navy (--primary-soft) */
+  --brand-accent: #e8d5af; /* site champagne gold (--gold) */
+  --brand-cream: #f6efe3; /* site cream (--cream), used for the outline */
+
+  /* Floating badge offset; raise it if a cookie or chat banner is shown */
+  --plan-badge-bottom: max(1rem, env(safe-area-inset-bottom));
 
   /* --------------------------------
      Feedback
@@ -896,4 +928,27 @@
 [data-sonner-toaster] [data-sonner-toast][data-styled][data-type="error"] [data-close-button]:hover {
   background: color-mix(in oklab, var(--destructive) 10%, transparent);
   color: var(--destructive);
+}
+
+/* Trip planner: print only the itinerary */
+@media print {
+  body:has([data-trip-print]) > header,
+  body:has([data-trip-print]) footer,
+  body:has([data-trip-print]) [data-sonner-toaster] {
+    display: none !important;
+  }
+}
+
+/* Floating "Plan Your Trip" badge */
+@keyframes badge-swing {
+  0%, 100% { rotate: -6deg; }
+  25% { rotate: 3deg; }
+  50% { rotate: -9deg; }
+  75% { rotate: -3deg; }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --plan-badge-bottom: 1.5rem;
+  }
 }

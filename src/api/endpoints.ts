@@ -38,3 +38,15 @@ export const Place = {
   GET_PLACE_DETAILS: (slug: string) => `/explore/places/${slug}`,
   GET_RELATED_PALCE_BY_CATEGORY_ID: (category_id: number) => `/explore/places?category_id=${category_id}`
 }
+/**
+ * Trips API for signed-in users. TODO: replace these paths with the real
+ * endpoints, then set TRIPS_API_ENABLED to true. Until then signed-in users'
+ * trips are kept in localStorage.
+ */
+export const TRIPS_API_ENABLED = false;
+export const Trips = {
+  LIST: "/user/trips",
+  DETAIL: (tripId: string) => `/user/trips/${tripId}`,
+  ITEMS: (tripId: string) => `/user/trips/${tripId}/items`,
+  ITEM: (tripId: string, itemId: string) => `/user/trips/${tripId}/items/${itemId}`,
+}
