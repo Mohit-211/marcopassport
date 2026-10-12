@@ -5,7 +5,7 @@ import type { ApiBusinessCategory } from "@/types/business";
 
 export type Listing = {
   categories: ApiBusinessCategory[];
-  is_in_passport: boolean;
+  is_in_itinerary?: boolean;
   slug: string;
   id: string;
   name: string;
@@ -109,7 +109,7 @@ export function ListingCard({ listing: l }: { listing: Listing }) {
           className="absolute top-4 right-4 grid place-items-center h-10 w-10 rounded-full bg-background/90 hover:bg-gold hover:text-gold-foreground transition"
           aria-label={`Save ${l.name}`}
         >
-           <Bookmark className="h-4 w-4" fill={l.is_in_passport === true ? "currentColor" : "none"} />
+           <Bookmark className="h-4 w-4" fill={l.is_in_itinerary === true ? "currentColor" : "none"} />
 
         </button>
         <span className="absolute bottom-3 left-4 text-[11px] uppercase tracking-wider font-semibold text-primary-foreground/95">

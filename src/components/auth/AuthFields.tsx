@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Lock, Mail, User, Eye, EyeOff, type LucideIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PASSWORD_HINT } from "@/lib/password";
 import { cn } from "@/lib/utils";
 
 export type FieldErrors = {
@@ -30,6 +31,8 @@ interface AuthFieldsProps {
   onBlurField: (field: keyof FieldErrors) => void;
   onToggleShowPassword: () => void;
   onToggleShowConfirm: () => void;
+  /** Lets the login popup close itself before going to the forgot-password page */
+  onForgotPassword?: () => void;
 }
 
 const iconClass =
@@ -58,6 +61,7 @@ export function AuthFields({
   onBlurField,
   onToggleShowPassword,
   onToggleShowConfirm,
+  onForgotPassword,
 }: AuthFieldsProps) {
   const hasError = (fieldName: keyof FieldErrors) =>
     Boolean(touched[fieldName] && errors[fieldName]);
@@ -156,6 +160,7 @@ export function AuthFields({
           {mode === "login" && (
             <Link
               href={forgotHref}
+              onClick={onForgotPassword}
               className="text-xs font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-primary hover:underline"
             >
               Forgot password?
@@ -193,7 +198,10 @@ export function AuthFields({
             </button>
           </>
         )}
-        {fieldError("password")}
+        {fieldError("password") ||
+          (mode === "signup" && (
+            <p className="text-xs text-muted-foreground">{PASSWORD_HINT}</p>
+          ))}
       </div>
 
       {/* Confirm password — signup only */}

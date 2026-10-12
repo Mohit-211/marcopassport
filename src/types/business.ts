@@ -7,7 +7,7 @@ export type ApiBusinessCategory = {
 
 export type ApiBusiness = {
   category_id?: string | number;
-  is_in_passport: boolean;
+  is_in_itinerary?: boolean;
   id: number;
   name: string;
   slug: string;

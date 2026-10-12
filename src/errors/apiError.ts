@@ -13,6 +13,11 @@ declare module "axios" {
      * handles the failure itself, e.g. `client.get(url, { skipGlobalError: true })`.
      */
     skipGlobalError?: boolean;
+    /**
+     * For background requests (profile, itinerary list on page load): a 401
+     * still signs the user out, but doesn't pop the login dialog up unasked.
+     */
+    skipLoginPopup?: boolean;
   }
 }
 

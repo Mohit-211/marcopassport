@@ -1,15 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
   ArrowUpRight,
-  CalendarIcon,
-  Check,
   ChevronLeft,
   ChevronRight,
-  Heart,
   MapPin,
   Share2,
   X,
@@ -18,11 +15,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import type { PlaceDetail } from "@/lib/place";
 import { cn } from "@/lib/utils";
-import { AddToPassportModal } from "@/components/passport/AddToPassportModal";
-import { LoginRequiredModal } from "@/components/auth/LoginRequiredModal";
+import { AddToItineraryButton } from "@/features/itineraries/components/AddToItineraryButton";
+import type { ItineraryPlace } from "@/features/itineraries/types";
 import PlaceStoryContent from "@/components/places/PlaceStoryContent";
 import NearbyAndRelated from "@/components/places/NearbyAndRelated";
-import { getAuthToken } from "@/lib/auth";
 import { HeroBackground } from "@/components/site/HeroBackground";
 
 export default function PlaceExperience({
@@ -34,42 +30,15 @@ export default function PlaceExperience({
 }) {
 
   const [lightbox, setLightbox] = useState<number | null>(null);
-  const [planOpen, setPlanOpen] = useState(false);
-  const [loginPromptOpen, setLoginPromptOpen] = useState(false);
-  const [saved, setSaved] = useState(place.isInPassport);
-
-  // The detail page is server-rendered, so the initial fetch runs without
-  // the user's token (it lives in localStorage) and is_in_passport always
-  // comes back false. Re-check it here now that we're on the client.
-
-
-  // Returning here from the sign-in prompt (see LoginRequiredModal) — pick
-  // straight back up where the user left off and open the passport modal.
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("openPassport") !== "1" || !getAuthToken()) return;
-
-    // The URL flag is only readable after hydration, so this must run on mount
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPlanOpen(true);
-    params.delete("openPassport");
-    const newSearch = params.toString();
-    window.history.replaceState(
-      {},
-      "",
-      window.location.pathname + (newSearch ? `?${newSearch}` : "")
-    );
-  }, []);
-
-  const openPlanModal = () => {
-    if (!getAuthToken()) {
-      setLoginPromptOpen(true);
-      return;
-    }
-    setPlanOpen(true);
+  const itineraryPlace: ItineraryPlace = {
+    id: Number(place.id),
+    type: "place",
+    name: place.name,
+    slug: place.slug,
+    short_description: place.short_description,
+    featured_image: place.image,
+    address: place.address,
   };
-
-  const handleSave = () => openPlanModal();
 
   const handleShare = async () => {
     if (typeof navigator !== "undefined" && navigator.share) {
@@ -94,7 +63,6 @@ export default function PlaceExperience({
     setLightbox((i) =>
       i === null ? 0 : (i - 1 + place.gallery.length) % place.gallery.length
     );
-    console.log(saved,"saved")
   return (
     <>
       {/* Hero */}
@@ -129,11 +97,7 @@ export default function PlaceExperience({
 
               {/* CTA */}
               <div className="mt-7 flex flex-wrap items-center gap-3 sm:mt-8">
-                {!saved && (
-                  <Button variant="gold" size="lg" onClick={openPlanModal}>
-                    <CalendarIcon className="h-4 w-4" /> Add to Passport
-                  </Button>
-                )}
+                <AddToItineraryButton place={itineraryPlace} size="lg" />
 
                 <Button
                   variant="outline"
@@ -205,41 +169,19 @@ export default function PlaceExperience({
                 Plan your visit
               </p>
               <h3 className="font-display text-2xl font-semibold mt-2">
-                {saved ? "Saved to your Passport" : "Save this to your Passport"}
+                Add it to your itinerary
               </h3>
               <p className="text-sm text-muted-foreground mt-2">
-                {saved
-                  ? "You're all set — manage the visit date from your Passport."
-                  : "Pick a date and we'll weave it into your itinerary."}
+                Put it in visiting order with your other stops, pick a date
+                and see the route on the map in My Passport.
               </p>
 
-              {!saved && (
-                <Button
-                  variant="outline"
-                  className="mt-5 w-full justify-start text-muted-foreground"
-                  onClick={openPlanModal}
-                >
-                  <CalendarIcon className="h-4 w-4" />
-                  Pick a visit date
+              <AddToItineraryButton place={itineraryPlace} size="lg" className="mt-5 w-full" />
+              <Link href="/passport" className="mt-3 block">
+                <Button variant="outline" size="lg" className="w-full">
+                  Open My Passport
                 </Button>
-              )}
-
-              {saved ? (
-                <Link href="/passport" className="mt-3 block">
-                  <Button variant="outline" size="lg" className="w-full">
-                    <Check className="h-4 w-4" /> Saved to Passport
-                  </Button>
-                </Link>
-              ) : (
-                <Button
-                  variant="gold"
-                  size="lg"
-                  className="w-full mt-3"
-                  onClick={handleSave}
-                >
-                  <Heart className="h-4 w-4" /> Add to Passport
-                </Button>
-              )}
+              </Link>
 
               <button
                 onClick={handleShare}
@@ -291,38 +233,9 @@ export default function PlaceExperience({
             {place.name}
           </p>
         </div>
-        {saved ? (
-          <Link href="/passport">
-            <Button variant="outline" size="sm">
-              <Check className="h-4 w-4" />
-              Saved
-            </Button>
-          </Link>
-        ) : (
-          <Button variant="gold" size="sm" onClick={openPlanModal}>
-            <Heart className="h-4 w-4" />
-            Add
-          </Button>
-        )}
+        <AddToItineraryButton place={itineraryPlace} size="sm" compactLabel />
       </div>
       <div className="lg:hidden h-20" aria-hidden />
-
-      {/* Add to Passport modal */}
-      <AddToPassportModal
-        open={planOpen}
-        onOpenChange={setPlanOpen}
-        source={{
-          refId: place.id,
-          name: place.name,
-          category: place.tag,
-          image: place.gallery?.[0] ?? place.image,
-          location: "Marco Island",
-        }}
-        onSaved={() => setSaved(true)}
-      />
-
-      {/* Sign-in prompt */}
-      <LoginRequiredModal open={loginPromptOpen} onOpenChange={setLoginPromptOpen} />
 
       {/* Lightbox */}
       <Dialog

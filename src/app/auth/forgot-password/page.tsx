@@ -6,7 +6,7 @@ import { AuthCardSkeleton, AuthShell } from "@/components/auth/AuthShell";
 export const metadata: Metadata = {
   title: "Forgot password — The Marco Passport",
   description:
-    "Request a one-time code to reset your The Marco Passport account password.",
+    "Get a link to reset your The Marco Passport account password.",
 };
 
 export default function ForgotPasswordPage() {

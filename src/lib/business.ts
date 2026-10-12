@@ -21,7 +21,7 @@ export function mapBusinessToListing(item: ApiBusiness): Listing {
     description: item.short_description || item.tagline || "",
     featured: item.is_featured ?? false,
     website_url: item.website_url,
-    is_in_passport:item.is_in_passport,
+    is_in_itinerary: item.is_in_itinerary ?? false,
     about: item.about,
     address: item.address,
     phone: item.phone,

@@ -37,7 +37,7 @@ export type ApiPlace = {
   is_top_pick?: boolean;
   top_pick_rank?: number | null;
   is_active?: boolean;
-  is_in_passport?: boolean;
+  is_in_itinerary?: boolean;
   updated_at?: string;
   categories?: ApiPlaceCategory[];
   similar_places?: ApiPlace[];

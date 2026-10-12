@@ -17,7 +17,6 @@ client.interceptors.request.use(
     const token = getAuthToken();
     if (token) {
       req.headers['x-access-token'] = `${token}`;
-      req.headers['role_id'] = 6;
     }
     return req;
   },

@@ -1,23 +1,38 @@
 import client from "../client";
 import { AUTH_ENDPOINTS } from "../endpoints";
-interface SendOtpPayload {
+
+/** Login and verify-email both return this. */
+export interface AuthSession {
+  id: number;
+  name: string;
   email: string;
-  type: string;
+  role_id: number;
+  tokens: { access: { token: string; expires: string } };
 }
-// Auth
-export const loginApi = (payload: { email: string; password: string; role_id: number; }) => {
-  const { role_id, ...body } = payload;
-  return client.post(AUTH_ENDPOINTS.LOGIN, body, {
-    headers: { role_id },
-  });
-};
-export const registerApi = (payload: FormData) => client.post(AUTH_ENDPOINTS.REGISTER, payload);
+
+// These screens show the backend message inline, so the global error toast is skipped.
+const inline = { skipGlobalError: true };
+
+export const loginApi = (payload: { email: string; password: string }) =>
+  client.post(AUTH_ENDPOINTS.LOGIN, payload, inline);
+export const registerApi = (payload: {
+  name: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+}) => client.post(AUTH_ENDPOINTS.REGISTER, payload, inline);
 export const logoutApi = () => client.get(AUTH_ENDPOINTS.LOGOUT);
 
-// OTP
-export const sendOtpApi = (payload: SendOtpPayload) => client.post(AUTH_ENDPOINTS.SEND_OTP, payload);
-export const verifyOtpApi = (payload: { email: string; otp: string; type: string; }) => client.post(AUTH_ENDPOINTS.VERIFY_OTP, payload);
+// Email verification
+export const verifyEmailApi = (token: string) =>
+  client.post(AUTH_ENDPOINTS.VERIFY_EMAIL, { token }, inline);
+export const resendVerificationApi = (email: string) =>
+  client.post(AUTH_ENDPOINTS.RESEND_VERIFICATION, { email }, inline);
 
 // Password
-export const forgotPasswordApi = (payload: { email: string; password: string; confirm_password: string; token: string; }) => client.post(AUTH_ENDPOINTS.FORGOT_PASSWORD, payload);
-export const changePasswordApi = (payload: { old_password: string; new_password: string; confirm_password: string; }) => client.post(AUTH_ENDPOINTS.CHANGE_PASSWORD, payload);
+export const forgotPasswordApi = (email: string) =>
+  client.post(AUTH_ENDPOINTS.FORGOT_PASSWORD, { email }, inline);
+export const resetPasswordApi = (payload: { token: string; password: string; confirm_password: string }) =>
+  client.post(AUTH_ENDPOINTS.RESET_PASSWORD, payload, inline);
+export const changePasswordApi = (payload: { old_password: string; new_password: string; confirm_password: string }) =>
+  client.post(AUTH_ENDPOINTS.CHANGE_PASSWORD, payload, inline);

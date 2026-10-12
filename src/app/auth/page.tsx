@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AuthForm } from "@/components/auth/AuthForm";
+import { AuthPageForm } from "@/components/auth/AuthPageForm";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { DEFAULT_AUTH_REDIRECT, TOKEN_STORAGE_KEY } from "@/lib/auth";
 
@@ -25,7 +25,7 @@ export default function AuthPage() {
     <>
       <script dangerouslySetInnerHTML={{ __html: redirectIfSignedIn }} />
       <AuthShell>
-        <AuthForm />
+        <AuthPageForm />
       </AuthShell>
     </>
   );

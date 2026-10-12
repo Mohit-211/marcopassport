@@ -7,9 +7,10 @@ import { usePathname } from "next/navigation";
 import { KeyRound, LogOut, Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { ProfileDropdown } from "@/features/trips/components/ProfileDropdown";
+import { ProfileDropdown } from "@/components/site/ProfileDropdown";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { requestLogin } from "@/lib/login-popup";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -197,14 +198,16 @@ export function Navbar() {
                 </Button>
               </>
             ) : (
-              <Link href="/auth" className="mt-3">
-                <Button
-                  variant="outline"
-                  className="h-11 w-full rounded-full border-primary/15 text-sm font-semibold text-primary hover:bg-primary/5"
-                >
-                  Sign In
-                </Button>
-              </Link>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setOpen(false);
+                  void requestLogin();
+                }}
+                className="mt-3 h-11 w-full rounded-full border-primary/15 text-sm font-semibold text-primary hover:bg-primary/5"
+              >
+                Log In
+              </Button>
             ))}
 
           <Link href="/business" className="mt-2">

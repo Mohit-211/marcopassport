@@ -4,7 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
-import { TripsProvider } from "@/features/trips/TripsProvider";
+import { ItinerariesProvider } from "@/features/itineraries/ItinerariesProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -101,11 +101,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${fraunces.variable} antialiased`}>
-        <TripsProvider>
+        <ItinerariesProvider>
           <Navbar />
           <main>{children}</main>
           <Footer />
-        </TripsProvider>
+        </ItinerariesProvider>
         <Toaster
           richColors
           closeButton

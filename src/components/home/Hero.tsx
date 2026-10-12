@@ -40,11 +40,11 @@ export function Hero() {
               <ArrowDownRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
             </Link>
             <Link
-              href="/my-trips"
+              href="/passport"
               className="group inline-flex items-center gap-2.5 rounded-full border border-primary-foreground/40 px-5 py-3 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-foreground/10"
             >
               <Sparkles className="h-4 w-4" />
-              Your Trips
+              Your Passport
             </Link>
           </div>
         </div>

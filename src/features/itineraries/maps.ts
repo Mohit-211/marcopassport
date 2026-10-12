@@ -1,0 +1,67 @@
+import type { ItineraryPlace } from "./types";
+
+/**
+ * Google Maps URLs for itineraries, kept to the two free options (backend
+ * docs/frontend-handoff.md §4): the Maps Embed API iframe and plain Maps URLs.
+ * Never use the Maps JavaScript, Directions, Places or Geocoding APIs here:
+ * they're billed per call. Each stop is "name, address", which both the embed
+ * and Maps URLs resolve themselves, so nothing is geocoded on our side.
+ */
+
+export const MAPS_EMBED_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY ?? "";
+
+export type TravelMode = "driving" | "walking";
+
+type Stop = Pick<ItineraryPlace, "name" | "address">;
+
+/** URL-encoded "name, address" for one stop. */
+export function stopParam(place: Stop) {
+  const label = [place.name, place.address].map((part) => part?.trim()).filter(Boolean).join(", ");
+  return encodeURIComponent(label);
+}
+
+/** Lettered pins on the embed map: A, B, C… in visiting order. */
+export function stopLetter(index: number) {
+  return String.fromCharCode(65 + index);
+}
+
+/**
+ * The iframe src: a single pin for one stop, the whole route for 2+, null for
+ * none. The backend caps itineraries at 20 places, which fits one embed
+ * (origin + destination + up to 18 of Google's 20 allowed waypoints).
+ */
+export function embedMapSrc(places: Stop[], mode: TravelMode = "driving", key = MAPS_EMBED_KEY) {
+  if (!key || places.length === 0) return null;
+  const k = encodeURIComponent(key);
+  const stops = places.map(stopParam);
+  if (stops.length === 1) {
+    return `https://www.google.com/maps/embed/v1/place?key=${k}&q=${stops[0]}`;
+  }
+  const waypoints = stops.slice(1, -1);
+  return (
+    `https://www.google.com/maps/embed/v1/directions?key=${k}` +
+    `&origin=${stops[0]}&destination=${stops[stops.length - 1]}` +
+    (waypoints.length ? `&waypoints=${waypoints.join("|")}` : "") +
+    `&mode=${mode}`
+  );
+}
+
+/** "Directions" link from one stop to the next; opens Google Maps, no key needed. */
+export function directionsUrl(from: Stop, to: Stop, mode: TravelMode = "driving") {
+  return `https://www.google.com/maps/dir/?api=1&origin=${stopParam(from)}&destination=${stopParam(to)}&travelmode=${mode}`;
+}
+
+/**
+ * "Open whole route in Google Maps". Google limits waypoints in these links
+ * (fewer on mobile), so the per-leg links are the reliable option.
+ */
+export function routeUrl(places: Stop[], mode: TravelMode = "driving") {
+  if (places.length < 2) return null;
+  const stops = places.map(stopParam);
+  const waypoints = stops.slice(1, -1);
+  return (
+    `https://www.google.com/maps/dir/?api=1&origin=${stops[0]}&destination=${stops[stops.length - 1]}` +
+    (waypoints.length ? `&waypoints=${waypoints.join("|")}` : "") +
+    `&travelmode=${mode}`
+  );
+}

@@ -2,11 +2,11 @@ export const AUTH_ENDPOINTS = {
   LOGIN: "user/auth/login",
   REGISTER: "user/auth/register",
   LOGOUT: "user/auth/logout",
-  SEND_OTP: "user/auth/otp",
-  VERIFY_OTP: "user/auth/verify-otp",
+  VERIFY_EMAIL: "user/auth/verify-email",
+  RESEND_VERIFICATION: "user/auth/resend-verification",
   FORGOT_PASSWORD: "user/auth/forgot-password",
   RESET_PASSWORD: "user/auth/reset-password",
-  CHANGE_PASSWORD: "user/auth/reset-password",
+  CHANGE_PASSWORD: "user/auth/change-password",
 };
 export const USER_ENDPOINTS = {
   PROFILE: "user/profile",
@@ -25,9 +25,10 @@ export const Business = {
   GET_ALL_BUSINESS_BY_CATEGORIES_ID: (category_id: number | string) => `explore?category=${category_id}`,
   GET_BUSINESS_DETAILS_BY_SLUG: (slug: string) => `explore/listing/${slug}`,
 }
-export const Passport = {
-  ADD_TO_PASSPORT: "/user/passport",
-  UPDATE_PASSPORT: (id: number | string) => `/user/passport/${id}`,
+export const Itineraries = {
+  LIST: "/user/itineraries",
+  DETAIL: (id: number | string) => `/user/itineraries/${id}`,
+  ITEMS: (id: number | string) => `/user/itineraries/${id}/items`,
 }
 export const Rating = {
   ADD_TO_RATING: (id: number | string) => `explore/listing/${id}/reviews`,
@@ -37,16 +38,4 @@ export const Place = {
   GET_ALL_PLACES: "/explore/places",
   GET_PLACE_DETAILS: (slug: string) => `/explore/places/${slug}`,
   GET_RELATED_PALCE_BY_CATEGORY_ID: (category_id: number) => `/explore/places?category_id=${category_id}`
-}
-/**
- * Trips API for signed-in users. TODO: replace these paths with the real
- * endpoints, then set TRIPS_API_ENABLED to true. Until then signed-in users'
- * trips are kept in localStorage.
- */
-export const TRIPS_API_ENABLED = false;
-export const Trips = {
-  LIST: "/user/trips",
-  DETAIL: (tripId: string) => `/user/trips/${tripId}`,
-  ITEMS: (tripId: string) => `/user/trips/${tripId}/items`,
-  ITEM: (tripId: string, itemId: string) => `/user/trips/${tripId}/items/${itemId}`,
 }

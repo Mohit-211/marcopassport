@@ -59,7 +59,7 @@ export type PlaceDetail = {
   // Flags
   featured: boolean;
   isTopPick: boolean;
-  isInPassport: boolean;
+  isInItinerary: boolean;
 
   // Reviews
   rating: number;
@@ -114,7 +114,7 @@ export function mapPlaceToDetail(item: ApiPlace): PlaceDetail {
 
     featured: item.is_featured ?? false,
     isTopPick: item.is_top_pick ?? false,
-    isInPassport: item.is_in_passport ?? false,
+    isInItinerary: item.is_in_itinerary ?? false,
 
     rating: Number(item.rating) || 0,
     reviewCount: Number(item.review_count) || 0,

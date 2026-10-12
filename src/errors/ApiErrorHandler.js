@@ -1,30 +1,30 @@
 import { clearAuthToken, getAuthToken } from "../lib/auth";
+import { requestLogin } from "../lib/login-popup";
 import { isAuthError, showApiError } from "./apiError";
 
-// Give the user a moment to read the "session expired" popup before leaving the page.
-const AUTH_REDIRECT_DELAY = 1500;
-let redirectingToAuth = false;
+const SESSION_EXPIRED = "Your session has expired. Please log in again.";
+
+// Auth routes that don't need a token (or, for logout, where a 401 is moot):
+// they report their own errors instead of opening the login popup.
+const PUBLIC_AUTH_ROUTE =
+  /user\/auth\/(login|register|verify-email|resend-verification|forgot-password|reset-password|logout)/;
 
 export const handleApiError = (error) => {
-  showApiError(error);
-
-  // Token is missing/invalid/expired server-side (401, "Token Not Found",
-  // "Please authenticate"): sign the user out locally so the UI reflects the
-  // real auth state, then send them to sign in. The /auth pages are skipped,
-  // so a failed login just shows its error.
-  if (isAuthError(error) && typeof window !== "undefined") {
-    if (getAuthToken()) clearAuthToken();
-
-    const { pathname, search } = window.location;
-    if (!redirectingToAuth && !pathname.startsWith("/auth")) {
-      redirectingToAuth = true;
-      // Bring the user back to this page after they sign in.
-      const redirect = encodeURIComponent(pathname + search);
-      window.setTimeout(() => {
-        window.location.href = `/auth?redirect=${redirect}`;
-      }, AUTH_REDIRECT_DELAY);
-    }
+  // A 401 on a user route means the token expired or was revoked: sign out
+  // locally and open the login popup on top of the current page, so whatever
+  // the user was doing (e.g. editing an itinerary) is still there afterwards.
+  const config = error?.config ?? {};
+  if (
+    isAuthError(error) &&
+    typeof window !== "undefined" &&
+    !PUBLIC_AUTH_ROUTE.test(String(config.url ?? ""))
+  ) {
+    const hadToken = Boolean(getAuthToken());
+    if (hadToken) clearAuthToken();
+    if (!config.skipLoginPopup) void requestLogin(hadToken ? SESSION_EXPIRED : null);
+    return Promise.reject(error);
   }
 
+  showApiError(error);
   return Promise.reject(error);
 };
