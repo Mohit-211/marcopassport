@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
+import { InfoTip } from "@/components/ui/tooltip";
 import { EXPLORE_TYPE_LABELS, type ExploreType } from "@/lib/explore";
 import { cn } from "@/lib/utils";
 
@@ -32,10 +33,13 @@ interface ExploreFiltersProps {
   onClear: () => void;
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, hint, children }: { title: string; hint?: React.ReactNode; children: React.ReactNode }) {
   return (
     <section className="border-b border-border py-5 first:pt-0 last:border-b-0 last:pb-0">
-      <h3 className="mb-3.5 font-sans text-sm font-semibold tracking-normal text-primary">{title}</h3>
+      <h3 className="mb-3.5 flex items-center gap-1.5 font-sans text-sm font-semibold tracking-normal text-primary">
+        {title}
+        {hint && <InfoTip label={`About ${title.toLowerCase()}`}>{hint}</InfoTip>}
+      </h3>
       {children}
     </section>
   );
@@ -71,7 +75,7 @@ export function ExploreFilters({
         )}
       </div>
 
-      <Section title="Featured">
+      <Section title="Featured" hint="Places and businesses hand-picked by the Marco Passport team.">
         <div className="flex items-center justify-between gap-3">
           <Label htmlFor="featured-only" className="cursor-pointer text-sm font-normal">
             Featured only
@@ -81,7 +85,11 @@ export function ExploreFilters({
       </Section>
 
       {groups.map(({ type, options }) => (
-        <Section key={type} title={groups.length > 1 ? EXPLORE_TYPE_LABELS[type] : "Category"}>
+        <Section
+          key={type}
+          title={groups.length > 1 ? EXPLORE_TYPE_LABELS[type] : "Category"}
+          hint={groups.length > 1 ? undefined : "Tick several to see listings in any of them."}
+        >
           <div className="space-y-2.5">
             {options.map((category) => (
               <label key={category.key} className="group flex cursor-pointer items-center gap-3">
@@ -98,7 +106,7 @@ export function ExploreFilters({
       ))}
 
       {prices.length > 0 && (
-        <Section title="Price">
+        <Section title="Price" hint="Typical cost, from $ (budget) to $$$$ (splurge). Applies to businesses only.">
           <div className="flex flex-wrap gap-2">
             {prices.map((price) => {
               const active = selectedPrices.includes(price);
@@ -124,7 +132,10 @@ export function ExploreFilters({
       )}
 
       {showRating && (
-        <Section title={minRating ? `Minimum rating · ${minRating.toFixed(1)}+` : "Minimum rating"}>
+        <Section
+          title={minRating ? `Minimum rating · ${minRating.toFixed(1)}+` : "Minimum rating"}
+          hint="Average rating from visitor reviews. Listings without reviews yet are hidden while this is set."
+        >
           <Slider
             value={minRating}
             onValueChange={(value) => onMinRating(Array.isArray(value) ? (value[0] ?? 0) : value)}

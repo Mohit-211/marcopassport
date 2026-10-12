@@ -144,7 +144,7 @@ export default function MagazineExperience({
 
             {/* Info */}
             <div className="text-center sm:text-left">
-              <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
                 {magazine.issue} · {magazine.season}
               </p>
               <h1 className="mt-3 font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
@@ -194,17 +194,17 @@ export default function MagazineExperience({
       </section>
 
       {/* Reader + What's Inside */}
-      <section className="bg-cream py-14 sm:py-20 md:py-28">
+      <section className="bg-background py-16 md:py-24">
         <div className="site-container">
           <div className="grid lg:grid-cols-[1fr_320px] gap-10 lg:gap-16 items-start">
             {/* Reader */}
             <div>
               <div className="flex items-end justify-between gap-4 mb-5 sm:mb-6">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
                     The edition
                   </p>
-                  <h2 className="font-display text-2xl font-semibold mt-2 text-balance sm:text-3xl md:text-4xl">
+                  <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
                     Flip through it
                   </h2>
                 </div>
@@ -236,7 +236,7 @@ export default function MagazineExperience({
             {/* What's Inside */}
             <aside className="lg:sticky lg:top-24 space-y-4">
               <div className="rounded-3xl border border-border bg-card p-5 shadow-soft sm:p-6">
-                <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
                   What&apos;s inside
                 </p>
                 <h3 className="font-display text-xl font-semibold mt-2 sm:text-2xl">
@@ -280,7 +280,7 @@ export default function MagazineExperience({
                 </ol>
               </div>
               <div className="rounded-3xl bg-primary text-primary-foreground p-5 sm:p-6">
-                <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
                   Share this issue
                 </p>
                 <p className="text-sm text-primary-foreground/80 mt-2 leading-relaxed">
@@ -301,13 +301,13 @@ export default function MagazineExperience({
       </section>
 
       {/* More editions */}
-      <section className="site-container py-14 sm:py-20 md:py-28">
+      <section className="site-container py-16 md:py-24">
         <div className="flex items-end justify-between gap-4 mb-8 sm:mb-12">
           <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
               Continue reading
             </p>
-            <h2 className="font-display text-3xl font-semibold mt-2 text-balance sm:text-4xl md:text-5xl">
+            <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
               Explore other editions
             </h2>
           </div>

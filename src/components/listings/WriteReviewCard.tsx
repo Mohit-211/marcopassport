@@ -54,7 +54,7 @@ export default function WriteReviewCard({ id, onSuccess }: WriteReviewCardProps)
   if (ready && !isAuthenticated) {
     return (
       <div className="rounded-3xl border border-border bg-card p-7 shadow-soft">
-        <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
           Share your experience
         </p>
         <h3 className="font-display text-2xl font-semibold mt-2">Write a review</h3>
@@ -81,7 +81,7 @@ export default function WriteReviewCard({ id, onSuccess }: WriteReviewCardProps)
 
   return (
     <div className="rounded-3xl border border-border bg-card p-7 shadow-soft">
-      <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
         Share your experience
       </p>
       <h3 className="font-display text-2xl font-semibold mt-2">

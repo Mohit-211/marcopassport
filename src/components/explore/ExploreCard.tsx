@@ -3,33 +3,45 @@
 import Link from "next/link";
 import { MapPin, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { AddToItineraryButton } from "@/features/itineraries/components/AddToItineraryButton";
 import { toItineraryPlace, type ExploreItem } from "@/lib/explore";
 import { cn } from "@/lib/utils";
 
 /** Navy for places to visit, gold for businesses — the same everywhere they appear. */
+const TYPE_HINTS: Record<ExploreItem["type"], string> = {
+  place: "Beaches, parks, landmarks and nature spots to visit.",
+  business: "Restaurants, stays, shops, tours and local services.",
+};
+
 function TypeBadge({ type, className }: { type: ExploreItem["type"]; className?: string }) {
   return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] shadow-sm",
-        type === "place" ? "bg-primary text-primary-foreground" : "bg-gold text-gold-foreground",
-        className,
-      )}
-    >
-      {type === "place" ? "Place to visit" : "Business"}
-    </span>
+    <Tooltip content={TYPE_HINTS[type]}>
+      <span
+        className={cn(
+          "inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] shadow-sm",
+          type === "place" ? "bg-primary text-primary-foreground" : "bg-gold text-gold-foreground",
+          className,
+        )}
+      >
+        {type === "place" ? "Place to visit" : "Business"}
+      </span>
+    </Tooltip>
   );
 }
 
 export function RatingBadge({ rating, reviewCount, className }: { rating: number | null; reviewCount?: number; className?: string }) {
   if (rating === null) return null;
   return (
-    <span className={cn("inline-flex items-center gap-1 text-sm font-semibold text-primary", className)}>
-      <Star className="h-3.5 w-3.5 fill-gold text-gold" />
-      {rating.toFixed(1)}
-      {reviewCount ? <span className="font-normal text-muted-foreground">({reviewCount})</span> : null}
-    </span>
+    <Tooltip
+      content={`Average visitor rating${reviewCount ? ` from ${reviewCount} ${reviewCount === 1 ? "review" : "reviews"}` : ""}`}
+    >
+      <span className={cn("inline-flex items-center gap-1 text-sm font-semibold text-primary", className)}>
+        <Star className="h-3.5 w-3.5 fill-gold text-gold" />
+        {rating.toFixed(1)}
+        {reviewCount ? <span className="font-normal text-muted-foreground">({reviewCount})</span> : null}
+      </span>
+    </Tooltip>
   );
 }
 
@@ -49,9 +61,11 @@ export function ExploreCard({ item }: { item: ExploreItem }) {
         <div className="absolute left-4 top-4 flex flex-wrap gap-2">
           <TypeBadge type={item.type} />
           {item.featured && (
-            <span className="rounded-full bg-background/95 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary shadow-sm">
-              ★ Featured
-            </span>
+            <Tooltip content="Hand-picked by the Marco Passport team.">
+              <span className="rounded-full bg-background/95 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary shadow-sm">
+                ★ Featured
+              </span>
+            </Tooltip>
           )}
         </div>
       </Link>

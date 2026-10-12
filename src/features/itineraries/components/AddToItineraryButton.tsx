@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, Loader2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useItineraries } from "../ItinerariesProvider";
 import type { ItineraryPlace } from "../types";
@@ -10,7 +11,8 @@ import { AddToItineraryDialog } from "./AddToItineraryDialog";
 
 type Size = "sm" | "default" | "lg";
 
-const addedClass = "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800";
+const addedClass =
+  "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800";
 
 /**
  * "Add to itinerary" on Explore cards and detail pages. Opens a small popup to
@@ -37,17 +39,35 @@ export function AddToItineraryButton({
 
   return (
     <>
-      <Button
-        type="button"
-        variant={added ? "outline" : "gold"}
-        size={size}
-        disabled={busy}
-        onClick={() => setOpen(true)}
-        className={cn(added && addedClass, className)}
+      <Tooltip
+        content={
+          added
+            ? isAuthenticated
+              ? "Already in one of your itineraries. Click to add it to another."
+              : "Already in your trip plan on this device."
+            : isAuthenticated
+              ? "Add it to one of your itineraries and pick a visit date."
+              : "Add it to a trip plan on this device. No account needed until you save."
+        }
       >
-        {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : added ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-        {added ? "Added" : compactLabel ? "Add" : "Add to itinerary"}
-      </Button>
+        <Button
+          type="button"
+          variant={added ? "outline" : "gold"}
+          size={size}
+          disabled={busy}
+          onClick={() => setOpen(true)}
+          className={cn(added && addedClass, className)}
+        >
+          {busy ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : added ? (
+            <Check className="h-4 w-4" />
+          ) : (
+            <Plus className="h-4 w-4" />
+          )}
+          {added ? "Added" : compactLabel ? "Add" : "Add to itinerary"}
+        </Button>
+      </Tooltip>
       <AddToItineraryDialog place={place} open={open} onOpenChange={setOpen} />
     </>
   );

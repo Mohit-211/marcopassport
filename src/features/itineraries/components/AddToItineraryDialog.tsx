@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { InfoTip } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { hasPlace } from "../logic";
 import { useItineraries } from "../ItinerariesProvider";
@@ -54,14 +55,34 @@ export function AddToItineraryDialog({
 }
 
 function isFull(itinerary: Itinerary) {
-  return (itinerary.item_count ?? itinerary.items?.length ?? 0) >= MAX_ITINERARY_PLACES;
+  return (
+    (itinerary.item_count ?? itinerary.items?.length ?? 0) >=
+    MAX_ITINERARY_PLACES
+  );
 }
 
-function AddForm({ place, onClose }: { place: ItineraryPlace; onClose: () => void }) {
+function AddForm({
+  place,
+  onClose,
+}: {
+  place: ItineraryPlace;
+  onClose: () => void;
+}) {
   const router = useRouter();
-  const { isAuthenticated, itineraries, draft, addToDraft, addToItinerary, createItinerary } = useItineraries();
-  const available = itineraries.filter((i) => !hasPlace(i.items ?? [], place.id) && !isFull(i));
-  const [target, setTarget] = useState<string>(available[0] ? String(available[0].id) : NEW);
+  const {
+    isAuthenticated,
+    itineraries,
+    draft,
+    addToDraft,
+    addToItinerary,
+    createItinerary,
+  } = useItineraries();
+  const available = itineraries.filter(
+    (i) => !hasPlace(i.items ?? [], place.id) && !isFull(i),
+  );
+  const [target, setTarget] = useState<string>(
+    available[0] ? String(available[0].id) : NEW,
+  );
   const [newName, setNewName] = useState(DEFAULT_ITINERARY_NAME);
   const [visitDate, setVisitDate] = useState("");
   const [saving, setSaving] = useState(false);
@@ -70,7 +91,10 @@ function AddForm({ place, onClose }: { place: ItineraryPlace; onClose: () => voi
   const inDraft = !isAuthenticated && hasPlace(draft?.items ?? [], place.id);
   const today = new Date().toISOString().slice(0, 10);
   // Keep the date inside the chosen itinerary's trip dates, when it has them.
-  const minDate = selected?.start_date && selected.start_date > today ? selected.start_date : today;
+  const minDate =
+    selected?.start_date && selected.start_date > today
+      ? selected.start_date
+      : today;
   const maxDate = selected?.end_date ?? undefined;
 
   const submit = async (e: React.FormEvent) => {
@@ -89,7 +113,10 @@ function AddForm({ place, onClose }: { place: ItineraryPlace; onClose: () => voi
         if (itinerary) {
           toast.success(`Added to ${itinerary.name}`, {
             description: place.name,
-            action: { label: "Open", onClick: () => router.push(`/passport/${itinerary.id}`) },
+            action: {
+              label: "Open",
+              onClick: () => router.push(`/passport/${itinerary.id}`),
+            },
           });
           done = true;
         }
@@ -105,15 +132,25 @@ function AddForm({ place, onClose }: { place: ItineraryPlace; onClose: () => voi
   return (
     <form onSubmit={submit} noValidate>
       <DialogHeader>
-        <DialogTitle className="font-display text-2xl text-primary">Add to itinerary</DialogTitle>
-        <DialogDescription>Pick a date if you know it. You can change it later in My Passport.</DialogDescription>
+        <DialogTitle className="font-display text-2xl text-primary">
+          Add to itinerary
+        </DialogTitle>
+        <DialogDescription>
+          Pick a date if you know it. You can change it later in My Passport.
+        </DialogDescription>
       </DialogHeader>
 
       <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border bg-muted/50 p-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={placeImage(place.featured_image)} alt="" className="h-14 w-14 shrink-0 rounded-xl object-cover" />
+        <img
+          src={placeImage(place.featured_image)}
+          alt=""
+          className="h-14 w-14 shrink-0 rounded-xl object-cover"
+        />
         <div className="min-w-0">
-          <p className="truncate font-display font-semibold text-primary">{place.name}</p>
+          <p className="truncate font-display font-semibold text-primary">
+            {place.name}
+          </p>
           {place.address && (
             <p className="mt-0.5 flex items-center gap-1 truncate text-xs text-muted-foreground">
               <MapPin className="h-3 w-3 shrink-0" /> {place.address}
@@ -127,7 +164,11 @@ function AddForm({ place, onClose }: { place: ItineraryPlace; onClose: () => voi
           <Check className="mt-0.5 h-4 w-4 shrink-0" />
           <p>
             This place is already in your itinerary.{" "}
-            <Link href="/passport" onClick={onClose} className="font-medium underline underline-offset-4">
+            <Link
+              href="/passport"
+              onClick={onClose}
+              className="font-medium underline underline-offset-4"
+            >
               View it
             </Link>
           </p>
@@ -135,8 +176,18 @@ function AddForm({ place, onClose }: { place: ItineraryPlace; onClose: () => voi
       ) : (
         <div className="mt-5 space-y-5">
           <div className="space-y-1.5">
-            <Label htmlFor="add-visit-date" className="flex items-center gap-1.5 text-sm font-medium text-primary">
-              <CalendarDays className="h-3.5 w-3.5" /> Visit date <span className="font-normal text-muted-foreground">(optional)</span>
+            <Label
+              htmlFor="add-visit-date"
+              className="flex items-center gap-1.5 text-sm font-medium text-primary"
+            >
+              <CalendarDays className="h-3.5 w-3.5" /> Visit date{" "}
+              <span className="font-normal text-muted-foreground">
+                (optional)
+              </span>
+              <InfoTip label="About the visit date">
+                The day you plan to go. Leave it empty if you&apos;re not sure;
+                you can set or change it later in My Passport.
+              </InfoTip>
             </Label>
             <Input
               id="add-visit-date"
@@ -151,7 +202,14 @@ function AddForm({ place, onClose }: { place: ItineraryPlace; onClose: () => voi
 
           {isAuthenticated ? (
             <fieldset className="space-y-2">
-              <legend className="mb-2 text-sm font-medium text-primary">Itinerary</legend>
+              <legend className="mb-2 flex items-center gap-1.5 text-sm font-medium text-primary">
+                Itinerary
+                <InfoTip label="About itineraries">
+                  An itinerary is one trip plan. Keep separate ones for
+                  different trips; each holds up to {MAX_ITINERARY_PLACES}{" "}
+                  places.
+                </InfoTip>
+              </legend>
               {itineraries.map((itinerary) => {
                 const added = hasPlace(itinerary.items ?? [], place.id);
                 const full = !added && isFull(itinerary);
@@ -197,7 +255,8 @@ function AddForm({ place, onClose }: { place: ItineraryPlace; onClose: () => voi
           ) : (
             <p className="flex items-start gap-2 rounded-2xl bg-muted p-3 text-xs text-muted-foreground">
               <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-              It goes into your itinerary on this device. Log in from My Passport to save it to your account.
+              It goes into your itinerary on this device. Log in from My
+              Passport to save it to your account.
             </p>
           )}
         </div>
@@ -209,7 +268,11 @@ function AddForm({ place, onClose }: { place: ItineraryPlace; onClose: () => voi
         </Button>
         {!inDraft && (
           <Button type="submit" variant="gold" disabled={saving}>
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+            {saving ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Plus className="h-4 w-4" />
+            )}
             Add to itinerary
           </Button>
         )}
@@ -237,7 +300,9 @@ function Choice({
     <label
       className={cn(
         "flex cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 transition-colors",
-        checked ? "border-primary bg-primary/5" : "border-border hover:border-primary/40",
+        checked
+          ? "border-primary bg-primary/5"
+          : "border-border hover:border-primary/40",
         disabled && "cursor-not-allowed opacity-55 hover:border-border",
       )}
     >
@@ -251,8 +316,14 @@ function Choice({
         className="h-4 w-4 accent-primary"
       />
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-medium text-primary">{title}</span>
-        {detail && <span className="block truncate text-xs text-muted-foreground">{detail}</span>}
+        <span className="block truncate text-sm font-medium text-primary">
+          {title}
+        </span>
+        {detail && (
+          <span className="block truncate text-xs text-muted-foreground">
+            {detail}
+          </span>
+        )}
       </span>
     </label>
   );

@@ -42,7 +42,7 @@ export async function FeaturedListings() {
         <div className="mb-10 flex items-end justify-between gap-6 md:mb-14">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Hand-picked</p>
-            <h2 className="mt-2 font-display text-3xl font-semibold text-primary sm:text-4xl md:text-5xl">
+            <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
               Featured on Marco Island
             </h2>
             <p className="mt-4 max-w-lg text-sm leading-6 text-muted-foreground sm:text-base">

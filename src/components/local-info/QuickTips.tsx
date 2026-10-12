@@ -25,11 +25,11 @@ const quickTips = [
 
 export function QuickTips() {
   return (
-    <section className="bg-primary text-white py-20 md:py-24">
+    <section className="bg-primary text-white py-16 md:py-24">
       <div className="site-container">
         <div className="flex items-center gap-2 mb-3">
           <Lightbulb className="h-4 w-4 text-gold" />
-          <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
             Things to know
           </p>
         </div>

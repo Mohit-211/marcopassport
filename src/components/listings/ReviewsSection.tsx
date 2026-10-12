@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { GetReviewsApi } from "@/api/users/rating.api";
 import ReviewsList, { type ApiReview } from "@/components/listings/ReviewsList";
 import WriteReviewCard from "@/components/listings/WriteReviewCard";
+import { InfoTip } from "@/components/ui/tooltip";
 
 export default function ReviewsSection({ id }: { id: string }) {
   const [reviews, setReviews] = useState<ApiReview[]>([]);
@@ -13,7 +14,13 @@ export default function ReviewsSection({ id }: { id: string }) {
     GetReviewsApi(id)
       .then((res) => {
         const data = res?.data?.data;
-        setReviews(Array.isArray(data) ? data : Array.isArray(data?.reviews) ? data.reviews : []);
+        setReviews(
+          Array.isArray(data)
+            ? data
+            : Array.isArray(data?.reviews)
+              ? data.reviews
+              : [],
+        );
       })
       .catch(() => setReviews([]))
       .finally(() => setLoading(false));
@@ -32,10 +39,16 @@ export default function ReviewsSection({ id }: { id: string }) {
   return (
     <div className="space-y-8">
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
           Guest feedback
         </p>
-        <h2 className="font-display text-3xl font-semibold mt-2">Reviews</h2>
+        <h2 className="mt-2 flex items-center gap-2 font-display text-2xl font-semibold text-primary md:text-3xl">
+          Reviews
+          <InfoTip label="About reviews">
+            Reviews come from logged-in visitors, one per person. The star
+            rating shown on this page is their average.
+          </InfoTip>
+        </h2>
         <div className="mt-6">
           {loading ? (
             <p className="text-sm text-muted-foreground">Loading reviews…</p>

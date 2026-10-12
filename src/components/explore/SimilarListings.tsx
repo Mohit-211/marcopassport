@@ -48,7 +48,7 @@ export function SimilarListings({
   if (items.length === 0) return null;
 
   return (
-    <section className="bg-cream py-16 md:py-24">
+    <section className="border-t border-border bg-background py-16 md:py-24">
       <div className="site-container">
         <div className="mb-10 flex items-end justify-between gap-4">
           <div>

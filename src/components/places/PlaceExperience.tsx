@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { HeroMeta, PageHero } from "@/components/site/PageHero";
 import { LocationCard } from "@/components/site/LocationCard";
@@ -85,9 +86,11 @@ export default function PlaceExperience({ place }: { place: PlaceDetail }) {
       >
         <div className="flex flex-wrap items-center gap-3">
           <AddToItineraryButton place={itineraryPlace} size="lg" />
-          <Button variant="ghostLight" size="lg" onClick={share}>
-            <Share2 className="h-4 w-4" /> Share
-          </Button>
+          <Tooltip content="Share this place, or copy its link">
+            <Button variant="ghostLight" size="lg" onClick={share}>
+              <Share2 className="h-4 w-4" /> Share
+            </Button>
+          </Tooltip>
         </div>
         {(place.rating !== null || place.neighborhood) && (
           <div className="mt-6">

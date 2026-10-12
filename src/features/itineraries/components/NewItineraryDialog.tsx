@@ -31,7 +31,13 @@ export function NewItineraryDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[420px]">
-        {open && <NameForm placeName={placeName} onCancel={() => onOpenChange(false)} onCreate={onCreate} />}
+        {open && (
+          <NameForm
+            placeName={placeName}
+            onCancel={() => onOpenChange(false)}
+            onCreate={onCreate}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
@@ -62,7 +68,9 @@ function NameForm({
   return (
     <form onSubmit={submit} noValidate>
       <DialogHeader>
-        <DialogTitle className="font-display text-2xl text-primary">New itinerary</DialogTitle>
+        <DialogTitle className="font-display text-2xl text-primary">
+          New itinerary
+        </DialogTitle>
         <DialogDescription>
           {placeName
             ? `${placeName} will be its first stop. You can add dates and more places later.`
@@ -70,7 +78,10 @@ function NameForm({
         </DialogDescription>
       </DialogHeader>
       <div className="mt-4 space-y-1.5">
-        <Label htmlFor="new-itinerary-name" className="text-sm font-medium text-primary">
+        <Label
+          htmlFor="new-itinerary-name"
+          className="text-sm font-medium text-primary"
+        >
           Name
         </Label>
         <Input

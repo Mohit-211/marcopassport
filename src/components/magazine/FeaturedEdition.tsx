@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Bookmark, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { magazines } from "@/data/magazines";
 import { CoverMockup } from "@/components/magazine/CoverMockup";
@@ -10,22 +10,8 @@ export default function FeaturedEdition({
   featured: (typeof magazines)[number];
 }) {
   return (
-    <section className="bg-cream py-20 md:py-28">
+    <section className="bg-cream py-16 md:py-24">
       <div className="site-container">
-        <div className="flex items-end justify-between gap-4 mb-12">
-          <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
-              <Sparkles className="inline h-3.5 w-3.5 -mt-0.5 mr-1" /> The
-              current issue
-            </p>
-            <h2 className="font-display text-4xl md:text-5xl font-semibold mt-2 text-balance">
-              Featured edition
-            </h2>
-          </div>
-          <p className="hidden md:block text-sm text-muted-foreground max-w-xs text-right">
-            Out now — {featured.season}
-          </p>
-        </div>
         <div className="grid md:grid-cols-[minmax(0,420px)_1fr] gap-10 lg:gap-16 items-center">
           <Link
             href={`/magazine/${featured.slug}`}
@@ -34,28 +20,23 @@ export default function FeaturedEdition({
             <CoverMockup magazine={featured} large />
           </Link>
           <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
-              {featured.issue} · {featured.season}
+            <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+              <Sparkles className="h-3.5 w-3.5" /> The current issue · {featured.issue} · {featured.season}
             </p>
-            <h3 className="font-display text-4xl md:text-6xl font-semibold mt-3 text-balance">
+            <h2 className="mt-3 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
               {featured.title}
-            </h3>
-            <p className="text-xl text-foreground/80 mt-4 italic">
+            </h2>
+            <p className="font-display text-xl text-foreground/80 mt-3 italic">
               {featured.tagline}
             </p>
-            <div className="mt-8 space-y-4 text-foreground/80 leading-relaxed text-lg">
+            <div className="mt-6 space-y-4 text-foreground/80 leading-relaxed">
               {featured.letter.slice(0, 2).map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link href={`/magazine/${featured.slug}`}>
-                <Button variant="gold" size="lg">
-                  Read now <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Button variant="outline" size="lg">
-                <Bookmark className="h-4 w-4" /> Save for later
+              <Button variant="gold" size="lg" nativeButton={false} render={<Link href={`/magazine/${featured.slug}`} />}>
+                Read now <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-6 text-xs uppercase tracking-[0.18em] text-muted-foreground">

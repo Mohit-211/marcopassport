@@ -32,13 +32,13 @@ export function BlogPreview() {
     return null;
   }
   return (
-    <section className="site-container md:py-28">
-      <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <section className="site-container py-16 md:py-24">
+      <div className="mb-10 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-gold text-xs font-semibold uppercase tracking-[0.2em]">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
             Stories &amp; Guides
           </p>
-          <h2 className="mt-2 font-display text-4xl font-semibold text-balance md:text-5xl">
+          <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
             From the Journal
           </h2>
         </div>

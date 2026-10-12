@@ -1,12 +1,10 @@
 export function EditorLetter() {
   return (
     <section className="bg-background">
-      <div className="site-container max-w-4xl py-20 md:py-28">
+      <div className="site-container max-w-4xl py-16 md:py-24">
         <div className="relative rounded-3xl border border-border bg-card p-8 shadow-elegant md:p-14">
-          <span className="text-xs font-semibold tracking-[0.2em] text-gold uppercase">
-            Letter From The Editor
-          </span>
-          <h2 className="font-display mt-3 text-3xl leading-tight text-primary md:text-4xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Letter from the editor</p>
+          <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
             Welcome to Paradise!
           </h2>
 

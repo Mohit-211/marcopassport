@@ -95,7 +95,7 @@ export function ContentSections() {
                 </div>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold mb-3">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
                   {section.eyebrow}
                 </p>
                 <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary leading-tight flex items-center gap-3">

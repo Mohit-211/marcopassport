@@ -197,7 +197,7 @@ export default function BlogArticleExperience({
         <section className="site-container py-20">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <p className="text-xs uppercase tracking-[0.25em] text-gold font-semibold">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
                 Keep reading
               </p>
               <h2 className="font-display text-3xl md:text-4xl font-semibold mt-2 text-primary">

@@ -3,7 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, CalendarDays, Info, LogIn, MapPin, Plus, Sparkles, Trash2 } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarDays,
+  Info,
+  LogIn,
+  MapPin,
+  Plus,
+  Sparkles,
+  Trash2,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -16,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { PageHero } from "@/components/site/PageHero";
 import { Skeleton } from "@/components/ui/skeleton";
 import { requestLogin } from "@/lib/login-popup";
@@ -98,18 +108,41 @@ function GuestDraft() {
         notice={
           <p className="flex items-start gap-2 rounded-2xl bg-gold/15 px-4 py-3 text-sm text-primary">
             <Info className="mt-0.5 h-4 w-4 shrink-0" />
-            This itinerary is only kept on this device until you save it to an account.
+            This itinerary is only kept on this device until you save it to an
+            account.
           </p>
         }
         actions={
           <>
-            <Button variant="gold" size="lg" onClick={save} disabled={value.items.length === 0}>
-              <LogIn className="h-4 w-4" /> Save itinerary
-            </Button>
+            <Tooltip
+              content={
+                value.items.length === 0
+                  ? "Add at least one place first."
+                  : "Log in or create a free account to keep this itinerary and open it on any device."
+              }
+            >
+              {/* A wrapper so the hint still shows while the button is disabled */}
+              <span className="inline-flex">
+                <Button
+                  variant="gold"
+                  size="lg"
+                  onClick={save}
+                  disabled={value.items.length === 0}
+                >
+                  <LogIn className="h-4 w-4" /> Save itinerary
+                </Button>
+              </span>
+            </Tooltip>
             {draft && (
-              <Button variant="ghost" onClick={() => setConfirmClear(true)} className="text-muted-foreground hover:text-destructive">
-                <Trash2 className="h-4 w-4" /> Clear
-              </Button>
+              <Tooltip content="Remove every place from the itinerary saved on this device">
+                <Button
+                  variant="ghost"
+                  onClick={() => setConfirmClear(true)}
+                  className="text-muted-foreground hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" /> Clear
+                </Button>
+              </Tooltip>
             )}
           </>
         }
@@ -134,18 +167,29 @@ function ItineraryList({
   setCreating: (open: boolean) => void;
 }) {
   const router = useRouter();
-  const { itineraries, loading, error, reload, createItinerary, draft, completeLogin } = useItineraries();
+  const {
+    itineraries,
+    loading,
+    error,
+    reload,
+    createItinerary,
+    draft,
+    completeLogin,
+  } = useItineraries();
   const [savingDraft, setSavingDraft] = useState(false);
 
   return (
     <>
-      <h2 className="mb-6 font-display text-2xl font-semibold text-primary md:text-3xl">My itineraries</h2>
+      <h2 className="mb-6 font-display text-2xl font-semibold text-primary md:text-3xl">
+        My itineraries
+      </h2>
 
       {draft && draft.items.length > 0 && (
         <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-gold/40 bg-gold/10 p-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-primary">
-            You have an unsaved itinerary from before you logged in ({draft.items.length}{" "}
-            {draft.items.length === 1 ? "place" : "places"}).
+            You have an unsaved itinerary from before you logged in (
+            {draft.items.length} {draft.items.length === 1 ? "place" : "places"}
+            ).
           </p>
           <div className="flex shrink-0 gap-2">
             <Button
@@ -180,9 +224,12 @@ function ItineraryList({
       ) : itineraries.length === 0 ? (
         <div className="rounded-3xl border-2 border-dashed border-primary/15 bg-card/60 p-10 text-center sm:p-16">
           <MapPin className="mx-auto h-8 w-8 text-gold" />
-          <h2 className="mt-4 font-display text-2xl font-semibold text-primary">No itineraries yet</h2>
+          <h2 className="mt-4 font-display text-2xl font-semibold text-primary">
+            No itineraries yet
+          </h2>
           <p className="mx-auto mt-2 max-w-md text-muted-foreground">
-            Start one here, or use &ldquo;Add to itinerary&rdquo; on any place or business.
+            Start one here, or use &ldquo;Add to itinerary&rdquo; on any place
+            or business.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button variant="gold" onClick={() => setCreating(true)}>
@@ -217,7 +264,9 @@ function ItineraryList({
 function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
   const items = itinerary.items ?? [];
   const count = itinerary.item_count ?? items.length;
-  const covers = items.slice(0, 3).map((item) => placeImage(item.place?.featured_image));
+  const covers = items
+    .slice(0, 3)
+    .map((item) => placeImage(item.place?.featured_image));
 
   return (
     <li>
@@ -227,7 +276,10 @@ function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
       >
         <div className="relative h-40 overflow-hidden bg-primary">
           {covers.length > 0 ? (
-            <div className="grid h-full gap-0.5" style={{ gridTemplateColumns: `repeat(${covers.length}, 1fr)` }}>
+            <div
+              className="grid h-full gap-0.5"
+              style={{ gridTemplateColumns: `repeat(${covers.length}, 1fr)` }}
+            >
               {covers.map((src, i) => (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -253,7 +305,9 @@ function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
           <div className="min-w-0 space-y-1">
             <p className="flex items-center gap-2 font-medium text-primary">
               <CalendarDays className="h-4 w-4 shrink-0 text-gold" />
-              <span className="truncate">{formatDateRange(itinerary.start_date, itinerary.end_date)}</span>
+              <span className="truncate">
+                {formatDateRange(itinerary.start_date, itinerary.end_date)}
+              </span>
             </p>
             <p className="text-muted-foreground">
               {count} {count === 1 ? "place" : "places"}
@@ -268,7 +322,11 @@ function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
 
 function ListSkeleton() {
   return (
-    <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Loading">
+    <ul
+      className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      aria-busy="true"
+      aria-label="Loading"
+    >
       {[0, 1, 2].map((i) => (
         <li key={i} className="overflow-hidden rounded-3xl bg-card shadow-sm">
           <Skeleton className="h-40 rounded-none" />

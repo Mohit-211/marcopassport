@@ -26,11 +26,11 @@ const cards = [
 export function ExploreMore() {
   return (
     <>
-    <section className="bg-background py-20 md:py-28">
+    <section className="bg-background py-16 md:py-24">
       <div className="site-container">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold mb-3">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
               Keep exploring
             </p>
             <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary leading-tight">

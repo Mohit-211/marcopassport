@@ -46,10 +46,10 @@ function EditorialRow({
       </div>
 
       <div>
-        <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
           {kicker}
         </p>
-        <h3 className="font-display text-4xl md:text-5xl font-semibold mt-2 text-balance">
+        <h3 className="mt-2 font-display text-2xl font-semibold text-primary md:text-3xl text-balance">
           {title}
         </h3>
         <div className="mt-6 space-y-4 text-foreground/80 leading-relaxed text-lg">
@@ -73,13 +73,13 @@ function EditorialRow({
 
 export default function EditorialGuide() {
   return (
-    <section className="bg-cream py-20 md:py-28">
+    <section className="border-t border-border bg-background py-16 md:py-24">
       <div className="site-container">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
+        <div className="mx-auto mb-10 max-w-2xl text-center md:mb-12">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
             The guide
           </p>
-          <h2 className="font-display text-4xl md:text-5xl font-semibold mt-2 text-balance">
+          <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
             How to make the most of the island
           </h2>
           <p className="text-muted-foreground mt-4">

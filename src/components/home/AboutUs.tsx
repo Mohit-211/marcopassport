@@ -21,13 +21,11 @@ const highlights = [
 export function AboutUs() {
   return (
     <section className="bg-cream">
-      <div className="site-container max-w-6xl py-20 md:py-28">
+      <div className="site-container max-w-6xl py-16 md:py-24">
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr] md:gap-16">
           <div>
-            <span className="text-xs font-semibold tracking-[0.2em] text-primary/60 uppercase">
-              About Us
-            </span>
-            <h2 className="font-display mt-3 text-3xl leading-tight text-primary md:text-4xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">About us</p>
+            <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
               Welcome to the Marco Passport
             </h2>
             <div className="mt-6 space-y-5 text-muted-foreground leading-relaxed">

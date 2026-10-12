@@ -9,14 +9,14 @@ export default function ArchiveSection({
   if (archive.length === 0) return null;
 
   return (
-    <section className="bg-primary text-primary-foreground py-20 md:py-28">
+    <section className="bg-primary text-primary-foreground py-16 md:py-24">
       <div className="site-container">
         <div className="flex items-end justify-between gap-4 mb-12 border-b border-primary-foreground/15 pb-6">
           <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
               The archive
             </p>
-            <h2 className="font-display text-4xl md:text-5xl font-semibold mt-2 text-balance">
+            <h2 className="mt-2 font-display text-3xl font-semibold text-balance md:text-4xl">
               Past editions
             </h2>
           </div>

@@ -31,13 +31,13 @@ export default function MagazinePage() {
       <FeaturedEdition featured={featured} />
 
       {/* Current grid */}
-      <section className="site-container py-20 md:py-28">
+      <section className="site-container py-16 md:py-24">
         <div className="flex items-end justify-between gap-4 mb-12">
           <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
               The collection
             </p>
-            <h2 className="font-display text-4xl md:text-5xl font-semibold mt-2 text-balance">
+            <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
               On the shelf
             </h2>
           </div>

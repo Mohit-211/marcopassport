@@ -1,13 +1,24 @@
 import { ExternalLink, MapPin, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { directionsToUrl, embedMapSrc, placeSearchUrl } from "@/features/itineraries/maps";
+import { Tooltip } from "@/components/ui/tooltip";
+import {
+  directionsToUrl,
+  embedMapSrc,
+  placeSearchUrl,
+} from "@/features/itineraries/maps";
 
 /**
  * Where a listing is: a free Google Maps Embed of its name + address, and
  * plain Maps links for directions. Same no-cost approach as the itinerary
  * map (see features/itineraries/maps.ts).
  */
-export function LocationCard({ name, address }: { name: string; address: string | null | undefined }) {
+export function LocationCard({
+  name,
+  address,
+}: {
+  name: string;
+  address: string | null | undefined;
+}) {
   const stop = { name, address };
   const src = embedMapSrc([stop]);
 
@@ -34,23 +45,39 @@ export function LocationCard({ name, address }: { name: string; address: string 
           </span>
           <div className="min-w-0">
             <p className="font-medium text-primary">{name}</p>
-            <p className="text-sm text-muted-foreground">{address || "Marco Island, FL"}</p>
+            <p className="text-sm text-muted-foreground">
+              {address || "Marco Island, FL"}
+            </p>
           </div>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">
-          <Button
-            variant="default"
-            size="sm"
-            nativeButton={false}
-            render={<a href={directionsToUrl(stop)} target="_blank" rel="noopener noreferrer" />}
-          >
-            <Navigation className="h-3.5 w-3.5" /> Directions
-          </Button>
+          <Tooltip content="Opens Google Maps with directions from where you are now">
+            <Button
+              variant="default"
+              size="sm"
+              nativeButton={false}
+              render={
+                <a
+                  href={directionsToUrl(stop)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
+              }
+            >
+              <Navigation className="h-3.5 w-3.5" /> Directions
+            </Button>
+          </Tooltip>
           <Button
             variant="outline"
             size="sm"
             nativeButton={false}
-            render={<a href={placeSearchUrl(stop)} target="_blank" rel="noopener noreferrer" />}
+            render={
+              <a
+                href={placeSearchUrl(stop)}
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            }
           >
             <ExternalLink className="h-3.5 w-3.5" /> Google Maps
           </Button>

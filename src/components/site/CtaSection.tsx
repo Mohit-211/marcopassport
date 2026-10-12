@@ -35,21 +35,21 @@ export function CtaSection({
   headingLevel: Heading = "h2",
 }: CtaSectionProps) {
   return (
-    <section className="site-container py-20 md:py-28">
-      <div className="rounded-[2rem] bg-primary text-primary-foreground p-10 md:p-16 grid md:grid-cols-[1fr_auto] items-center gap-8 relative overflow-hidden">
-        <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-gold/25 blur-3xl" />
+    <section className="site-container py-16 md:py-24">
+      <div className="rounded-[2rem] bg-sand p-10 md:p-16 grid md:grid-cols-[1fr_auto] items-center gap-8 relative overflow-hidden">
+        <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
 
         <div className="relative">
           {eyebrow && (
-            <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
               {eyebrow}
             </p>
           )}
-          <Heading className="font-display text-3xl md:text-5xl font-semibold mt-2 text-balance max-w-2xl">
+          <Heading className="mt-2 max-w-2xl font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
             {title}
           </Heading>
           {description && (
-            <p className="text-primary-foreground/75 mt-4 max-w-xl">{description}</p>
+            <p className="text-muted-foreground mt-4 max-w-xl">{description}</p>
           )}
         </div>
 
@@ -61,7 +61,7 @@ export function CtaSection({
               {actions.map((action, i) => (
                 <Button
                   key={action.href}
-                  variant={i === 0 ? "gold" : "ghostLight"}
+                  variant={i === 0 ? "gold" : "outline"}
                   size="lg"
                   nativeButton={false}
                   render={<Link href={action.href} />}

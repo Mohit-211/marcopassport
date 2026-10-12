@@ -25,7 +25,7 @@ export function MagazineStrip() {
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
             The current issue · {issue.issue} · {issue.season}
           </p>
-          <h2 className="mt-3 font-display text-3xl font-semibold text-balance sm:text-4xl md:text-5xl">
+          <h2 className="mt-3 font-display text-3xl font-semibold text-balance md:text-4xl">
             {issue.title}
           </h2>
           <p className="mt-3 font-display text-lg italic text-primary-foreground/85 sm:text-xl">{issue.tagline}</p>

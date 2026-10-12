@@ -44,10 +44,10 @@ export default function ListingInfoContent({
   return (
     <div className="space-y-14">
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
           About
         </p>
-        <h2 className="font-display text-3xl md:text-4xl font-semibold mt-2">
+        <h2 className="mt-2 font-display text-2xl font-semibold text-primary md:text-3xl">
           {listing.name}
         </h2>
         <div className="mt-6 space-y-5 text-foreground/80 leading-relaxed text-[17px]">
@@ -60,10 +60,10 @@ export default function ListingInfoContent({
       </div>
       {highlights.length > 0 && (
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
             Highlights
           </p>
-          <h2 className="font-display text-3xl font-semibold mt-2">
+          <h2 className="mt-2 font-display text-2xl font-semibold text-primary md:text-3xl">
             Key highlights
           </h2>
           <ul className="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-3.5">
@@ -80,10 +80,10 @@ export default function ListingInfoContent({
       )}
       {expectItems.length > 0 && (
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
             What to expect
           </p>
-          <h2 className="font-display text-3xl font-semibold mt-2">
+          <h2 className="mt-2 font-display text-2xl font-semibold text-primary md:text-3xl">
             The vibe, at a glance
           </h2>
           <div className="mt-6 grid sm:grid-cols-2 gap-4">
@@ -106,7 +106,7 @@ export default function ListingInfoContent({
       {/* Contact details, then where it is */}
       <div>
         <div className="rounded-3xl border border-border bg-card p-7 shadow-soft">
-          <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
             Essentials
           </p>
           <h3 className="font-display text-2xl font-semibold mt-2">
@@ -174,7 +174,7 @@ export default function ListingInfoContent({
       <LocationCard name={listing.name} address={listing.address || listing.location} />
       {tips.length > 0 && (
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
             Practical info
           </p>
           <h3 className="font-display text-2xl font-semibold mt-2 flex items-center gap-2">

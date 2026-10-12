@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { ItinerariesProvider } from "@/features/itineraries/ItinerariesProvider";
 
 const inter = Inter({
@@ -101,11 +102,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${fraunces.variable} antialiased`}>
-        <ItinerariesProvider>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </ItinerariesProvider>
+        <TooltipProvider>
+          <ItinerariesProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </ItinerariesProvider>
+        </TooltipProvider>
         <Toaster
           richColors
           closeButton

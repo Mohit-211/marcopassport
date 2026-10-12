@@ -19,6 +19,7 @@ import {
   updateItineraryApi,
 } from "@/api/users/itineraries.api";
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HeroMeta, PageHero } from "@/components/site/PageHero";
 import { isAuthError } from "@/errors/apiError";
@@ -183,13 +184,15 @@ export function ItineraryPage({ id }: { id: string }) {
                       {saving ? "Saving…" : "Save changes"}
                     </Button>
                     {dirty && (
-                      <Button
-                        variant="ghost"
-                        onClick={() => setValue(load.saved)}
-                        disabled={saving}
-                      >
-                        Discard changes
-                      </Button>
+                      <Tooltip content="Undo your edits and go back to the last saved version">
+                        <Button
+                          variant="ghost"
+                          onClick={() => setValue(load.saved)}
+                          disabled={saving}
+                        >
+                          Discard changes
+                        </Button>
+                      </Tooltip>
                     )}
                     <Button
                       variant="ghost"

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ExternalLink, Map as MapIcon, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { embedMapSrc, routeUrl, type TravelMode } from "../maps";
@@ -44,39 +45,60 @@ export function ItineraryMap({
   const visible = !isMobile || shownOnMobile;
 
   return (
-    <section aria-label="Itinerary map" className={cn("rounded-3xl border border-border bg-card p-3 shadow-sm", className)}>
+    <section
+      aria-label="Itinerary map"
+      className={cn(
+        "rounded-3xl border border-border bg-card p-3 shadow-sm",
+        className,
+      )}
+    >
       <div className="flex flex-wrap items-center justify-between gap-2 px-1 pb-3">
-        <div role="radiogroup" aria-label="Travel mode" className="inline-flex rounded-full bg-muted p-1">
+        <div
+          role="radiogroup"
+          aria-label="Travel mode"
+          className="inline-flex rounded-full bg-muted p-1"
+        >
           {(["driving", "walking"] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              role="radio"
-              aria-checked={mode === m}
-              onClick={() => onModeChange(m)}
-              className={cn(
-                "rounded-full px-3.5 py-1 text-xs font-medium capitalize transition-colors",
-                mode === m ? "bg-background text-primary shadow-sm" : "text-muted-foreground hover:text-primary",
-              )}
-            >
-              {m}
-            </button>
+            <Tooltip key={m} content={`Draw the route and directions for ${m}`}>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={mode === m}
+                onClick={() => onModeChange(m)}
+                className={cn(
+                  "rounded-full px-3.5 py-1 text-xs font-medium capitalize transition-colors",
+                  mode === m
+                    ? "bg-background text-primary shadow-sm"
+                    : "text-muted-foreground hover:text-primary",
+                )}
+              >
+                {m}
+              </button>
+            </Tooltip>
           ))}
         </div>
         <div className="flex items-center gap-3">
           {fullRoute && (
-            <a
-              href={fullRoute}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-            >
-              Open route in Google Maps <ExternalLink className="h-3 w-3" />
-            </a>
+            <Tooltip content="Opens every stop in Google Maps. On phones Google may show fewer stops, so use the Directions links between stops for long trips.">
+              <a
+                href={fullRoute}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+              >
+                Open route in Google Maps <ExternalLink className="h-3 w-3" />
+              </a>
+            </Tooltip>
           )}
           {isMobile && places.length > 0 && (
-            <Button variant="outline" size="sm" onClick={() => setShownOnMobile((s) => !s)} aria-expanded={shownOnMobile}>
-              <MapIcon className="h-3.5 w-3.5" /> {shownOnMobile ? "Hide map" : "Show map"}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShownOnMobile((s) => !s)}
+              aria-expanded={shownOnMobile}
+            >
+              <MapIcon className="h-3.5 w-3.5" />{" "}
+              {shownOnMobile ? "Hide map" : "Show map"}
             </Button>
           )}
         </div>

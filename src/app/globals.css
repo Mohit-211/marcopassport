@@ -80,12 +80,12 @@
      Main Surfaces
      -------------------------------- */
 
-  /* Neutral off-white (no beige cast) */
-  --background: oklch(0.984 0.002 250);
+  /* Warm off-white: a hint of the beige, mostly white */
+  --background: oklch(0.986 0.004 85);
   --foreground: oklch(0.2 0.035 245);
 
-  /* Alternate section surface: a light tint of the navy */
-  --cream: oklch(0.955 0.013 240);
+  /* #F8F1E5 beige: alternate section surface, used on a few sections only */
+  --cream: oklch(0.955 0.018 82);
   --cream-foreground: oklch(0.23 0.055 245);
 
   /* --------------------------------
@@ -109,7 +109,8 @@
      Muted
      -------------------------------- */
 
-  --muted: oklch(0.955 0.008 245);
+  /* Near-neutral warm grey for tabs, chips and skeletons */
+  --muted: oklch(0.955 0.007 80);
   --muted-foreground: oklch(0.46 0.025 245);
 
   /* --------------------------------
@@ -135,8 +136,8 @@
      Sand (secondary surface for cards and callouts)
      -------------------------------- */
 
-  /* A pale gold tint, used sparingly next to the navy tints above */
-  --sand: oklch(0.965 0.028 92);
+  /* Deeper beige for callout cards and CTA blocks */
+  --sand: oklch(0.94 0.022 78);
   --sand-foreground: oklch(0.23 0.055 245);
 
   /* --------------------------------
@@ -150,8 +151,8 @@
      Borders / Inputs
      -------------------------------- */
 
-  --border: oklch(0.9 0.012 240);
-  --input: oklch(0.9 0.012 240);
+  --border: oklch(0.9 0.012 78);
+  --input: oklch(0.9 0.012 78);
   --ring: oklch(0.65 0.045 245);
 }
 
