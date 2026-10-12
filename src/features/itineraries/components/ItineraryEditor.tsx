@@ -324,14 +324,9 @@ function EmptyPlaces() {
         Use &ldquo;Add to itinerary&rdquo; on any place or business to add it here.
       </p>
       <div className="mt-5 flex flex-wrap justify-center gap-2">
-        <Link href="/places">
-          <Button variant="gold" size="sm">
-            Explore places
-          </Button>
-        </Link>
         <Link href="/explore">
-          <Button variant="outline" size="sm">
-            Business directory
+          <Button variant="gold" size="sm">
+            Browse Explore
           </Button>
         </Link>
       </div>

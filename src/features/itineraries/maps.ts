@@ -8,7 +8,7 @@ import type { ItineraryPlace } from "./types";
  * and Maps URLs resolve themselves, so nothing is geocoded on our side.
  */
 
-export const MAPS_EMBED_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY ?? "";
+const MAPS_EMBED_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY ?? "";
 
 export type TravelMode = "driving" | "walking";
 
@@ -64,4 +64,14 @@ export function routeUrl(places: Stop[], mode: TravelMode = "driving") {
     (waypoints.length ? `&waypoints=${waypoints.join("|")}` : "") +
     `&travelmode=${mode}`
   );
+}
+
+/** "Open in Google Maps" for a single listing (Maps URL, no key). */
+export function placeSearchUrl(place: Stop) {
+  return `https://www.google.com/maps/search/?api=1&query=${stopParam(place)}`;
+}
+
+/** "Get directions" to a single listing from wherever the visitor is (Maps URL, no key). */
+export function directionsToUrl(place: Stop, mode: TravelMode = "driving") {
+  return `https://www.google.com/maps/dir/?api=1&destination=${stopParam(place)}&travelmode=${mode}`;
 }

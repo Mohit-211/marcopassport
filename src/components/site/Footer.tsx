@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 const discoverLinks = [
-  { href: "/explore", label: "Directory" },
-  { href: "/places", label: "Top Places" },
+  { href: "/explore", label: "Explore" },
+  { href: "/explore?type=place", label: "Places to Visit" },
   { href: "/magazine", label: "Magazine" },
   { href: "/blog", label: "Stories" },
 ];
@@ -38,6 +38,8 @@ export function Footer() {
           <Link href="/" className="inline-block">
             <Image
               src="/logo.png"
+              // A small PNG with fine line work: re-encoding it as lossy WebP blurs the edges.
+              unoptimized
               alt="The Marco Passport"
               width={280}
               height={100}

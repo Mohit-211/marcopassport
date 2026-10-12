@@ -43,10 +43,3 @@ export type ApiBusiness = {
   similar_places?: ApiBusiness[];
 };
 
-export type PlacesResponse = {
-  total?: number;
-  page?: number;
-  limit?: number;
-  total_pages?: number;
-  places?: ApiBusiness[];
-};

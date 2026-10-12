@@ -5,14 +5,13 @@ import {
   Clock,
   Globe,
   Check,
-  ArrowRight,
   CreditCard,
   ParkingCircle,
   CalendarDays,
   Sparkles,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { splitTextField } from "@/lib/place";
+import { LocationCard } from "@/components/site/LocationCard";
+import { parseExpectItems, parseHighlights, parseTips } from "@/lib/place";
 type ListingInfoContentProps = {
   listing: {
     name: string;
@@ -33,45 +32,6 @@ type ListingInfoContentProps = {
     what_to_expect?: string | null;
   };
 };
-function parseHighlights(highlights?: string | null): string[] {
-  if (!highlights) return [];
-  try {
-    const parsed = JSON.parse(highlights);
-    if (Array.isArray(parsed)) {
-      return parsed.map((h) => String(h).trim()).filter(Boolean);
-    }
-  } catch {
-    // Not JSON — fall back to plain text splitting.
-  }
-  return highlights
-    .split(/\r?\n|,/)
-    .map((h) => h.trim())
-    .filter(Boolean);
-}
-function parseTips(tips?: string | null): string[] {
-  if (!tips) return [];
-  try {
-    const parsed = JSON.parse(tips);
-    if (Array.isArray(parsed)) {
-      return parsed.map((t) => String(t).trim()).filter(Boolean);
-    }
-  } catch {
-    // Not JSON — fall back to plain text splitting.
-  }
-  return splitTextField(tips);
-}
-function parseExpectItems(
-  value?: string | null
-): { title: string; description: string }[] {
-  if (!value) return [];
-  try {
-    const parsed = JSON.parse(value);
-    if (Array.isArray(parsed)) return parsed;
-  } catch {
-    // Not JSON — ignore.
-  }
-  return [];
-}
 export default function ListingInfoContent({
   listing,
 }: ListingInfoContentProps) {
@@ -143,8 +103,8 @@ export default function ListingInfoContent({
           </div>
         </div>
       )}
-      {/* Info + Map */}
-      <div className="grid md:grid-cols-2 gap-6">
+      {/* Contact details, then where it is */}
+      <div>
         <div className="rounded-3xl border border-border bg-card p-7 shadow-soft">
           <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
             Essentials
@@ -152,7 +112,7 @@ export default function ListingInfoContent({
           <h3 className="font-display text-2xl font-semibold mt-2">
             Visit & contact
           </h3>
-          <ul className="mt-6 space-y-4 text-sm">
+          <ul className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
             <InfoRow icon={MapPin} label="Address">
               {listing.address || listing.location || "Marco Island, FL"}
             </InfoRow>
@@ -210,45 +170,8 @@ export default function ListingInfoContent({
             )}
           </ul>
         </div>
-        <div className="rounded-3xl overflow-hidden border border-border bg-card shadow-soft min-h-[320px] relative">
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,oklch(0.94_0.02_220),oklch(0.88_0.04_200))]" />
-          <svg
-            className="absolute inset-0 h-full w-full opacity-50"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <pattern
-                id="grid"
-                width="40"
-                height="40"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 40 0 L 0 0 0 40"
-                  fill="none"
-                  stroke="oklch(0.78 0.04 220)"
-                  strokeWidth="0.5"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-          <div className="absolute inset-x-0 top-1/3 h-24 bg-[oklch(0.65_0.12_220/0.4)] -skew-y-3" />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
-            <div className="grid place-items-center h-12 w-12 rounded-full bg-gold text-gold-foreground shadow-elegant animate-pulse">
-              <MapPin className="h-6 w-6" />
-            </div>
-            <span className="text-xs font-bold uppercase tracking-widest text-primary bg-background/90 px-3 py-1 rounded-full">
-              {listing.location}
-            </span>
-          </div>
-          <div className="absolute bottom-4 right-4">
-            <Button size="sm" variant="default">
-              Get directions <ArrowRight className="h-3.5 w-3.5" />
-            </Button>
-          </div>
-        </div>
       </div>
+      <LocationCard name={listing.name} address={listing.address || listing.location} />
       {tips.length > 0 && (
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
@@ -281,7 +204,7 @@ function InfoRow({
 }) {
   return (
     <li className="flex items-start gap-3">
-      <span className="grid place-items-center h-9 w-9 rounded-full bg-sand text-primary shrink-0">
+      <span className="grid place-items-center h-9 w-9 rounded-full bg-cream text-primary shrink-0">
         <Icon className="h-4 w-4" />
       </span>
       <div className="flex-1 min-w-0">

@@ -20,7 +20,7 @@ const highlights = [
 
 export function AboutUs() {
   return (
-    <section className="bg-sand">
+    <section className="bg-cream">
       <div className="site-container max-w-6xl py-20 md:py-28">
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr] md:gap-16">
           <div>

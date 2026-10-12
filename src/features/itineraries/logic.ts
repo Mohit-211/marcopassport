@@ -25,12 +25,16 @@ export function hasPlace(items: ItineraryItem[], placeId: number) {
 }
 
 /** Appends a place, enforcing the backend's no-duplicates and 20-place rules. */
-export function withPlaceAdded(draft: ItineraryDraft, place: ItineraryPlace): AddResult {
+export function withPlaceAdded(
+  draft: ItineraryDraft,
+  place: ItineraryPlace,
+  visitDate: string | null = null,
+): AddResult {
   if (hasPlace(draft.items, place.id)) return { ok: false, reason: "duplicate" };
   if (draft.items.length >= MAX_ITINERARY_PLACES) return { ok: false, reason: "full" };
   return {
     ok: true,
-    draft: { ...draft, items: [...draft.items, { place_id: place.id, visit_date: null, place }] },
+    draft: { ...draft, items: [...draft.items, { place_id: place.id, visit_date: visitDate || null, place }] },
   };
 }
 

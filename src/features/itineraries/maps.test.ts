@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { directionsUrl, embedMapSrc, routeUrl, stopLetter, stopParam } from "./maps";
+import {
+  directionsToUrl,
+  directionsUrl,
+  embedMapSrc,
+  placeSearchUrl,
+  routeUrl,
+  stopLetter,
+  stopParam,
+} from "./maps";
 
 const a = { name: "Rum Point", address: "Rum Point Dr, North Side" };
 const b = { name: "Seven Mile Beach", address: "West Bay Rd" };
@@ -47,6 +55,13 @@ describe("Maps URLs", () => {
   it("links one leg", () => {
     expect(directionsUrl(a, b)).toBe(
       `https://www.google.com/maps/dir/?api=1&origin=${stopParam(a)}&destination=${stopParam(b)}&travelmode=driving`,
+    );
+  });
+
+  it("links a single listing", () => {
+    expect(placeSearchUrl(a)).toBe(`https://www.google.com/maps/search/?api=1&query=${stopParam(a)}`);
+    expect(directionsToUrl(a)).toBe(
+      `https://www.google.com/maps/dir/?api=1&destination=${stopParam(a)}&travelmode=driving`,
     );
   });
 

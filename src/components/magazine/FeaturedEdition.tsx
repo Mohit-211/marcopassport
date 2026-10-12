@@ -10,7 +10,7 @@ export default function FeaturedEdition({
   featured: (typeof magazines)[number];
 }) {
   return (
-    <section className="bg-sand py-20 md:py-28">
+    <section className="bg-cream py-20 md:py-28">
       <div className="site-container">
         <div className="flex items-end justify-between gap-4 mb-12">
           <div>

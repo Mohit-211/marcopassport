@@ -6,7 +6,7 @@ import type { ItineraryDraft } from "./types";
  * the email-verification round trip (the verify link opens in the same
  * browser), and is saved to the account right after login.
  */
-export const DRAFT_STORAGE_KEY = "mp_itinerary_draft";
+const DRAFT_STORAGE_KEY = "mp_itinerary_draft";
 const DRAFT_CHANGE_EVENT = "marcopassport:draft-change";
 
 function storage(): Storage | null {

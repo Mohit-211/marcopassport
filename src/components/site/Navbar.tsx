@@ -17,8 +17,7 @@ const NAV = [
   { href: "/magazine", label: "Magazine" },
   { href: "/local-info", label: "Local Info" },
   { href: "/blog", label: "Blog" },
-  { href: "/places", label: "Explore" },
-  { href: "/explore", label: "Business Directory" },
+  { href: "/explore", label: "Explore" },
   { href: "/passport", label: "Your Custom Passport" },
 ];
 
@@ -68,6 +67,8 @@ export function Navbar() {
         >
           <Image
             src="/logo.png"
+            // A small PNG with fine line work: re-encoding it as lossy WebP blurs the edges.
+            unoptimized
             alt="The Marco Passport"
             width={180}
             height={64}

@@ -73,7 +73,7 @@ function EditorialRow({
 
 export default function EditorialGuide() {
   return (
-    <section className="bg-sand py-20 md:py-28">
+    <section className="bg-cream py-20 md:py-28">
       <div className="site-container">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">

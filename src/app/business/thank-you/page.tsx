@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 
 export default function BusinessThankYouPage() {
   return (
-    <section className="bg-[#18384E] min-h-[70vh] flex items-center">
+    <section className="bg-primary-soft min-h-[70vh] flex items-center">
       <div className="site-container py-20 max-w-xl text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#EBBD00] text-[#18384E] mb-6">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold text-primary-soft mb-6">
           <CheckCircle2 className="h-8 w-8" strokeWidth={2.5} />
         </div>
         <h1 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight">

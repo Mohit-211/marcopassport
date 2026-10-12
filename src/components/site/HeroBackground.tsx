@@ -25,6 +25,8 @@ export function HeroBackground({ src, alt = "", className }: HeroBackgroundProps
           fill
           priority
           sizes="100vw"
+          // Full-bleed photos show compression artefacts at the default 75.
+          quality={90}
           // Remote (API) images aren't configured for the Next image optimizer.
           unoptimized={/^https?:\/\//.test(src)}
           className={cn("object-cover object-center", className)}

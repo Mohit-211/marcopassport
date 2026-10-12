@@ -194,7 +194,7 @@ export default function MagazineExperience({
       </section>
 
       {/* Reader + What's Inside */}
-      <section className="bg-sand py-14 sm:py-20 md:py-28">
+      <section className="bg-cream py-14 sm:py-20 md:py-28">
         <div className="site-container">
           <div className="grid lg:grid-cols-[1fr_320px] gap-10 lg:gap-16 items-start">
             {/* Reader */}
@@ -252,7 +252,7 @@ export default function MagazineExperience({
                           onClick={() => goToPage(targetPage)}
                           className={cn(
                             "group w-full text-left flex gap-3 rounded-2xl p-3 -mx-3 transition-colors",
-                            active ? "bg-gold/15" : "hover:bg-sand"
+                            active ? "bg-gold/15" : "hover:bg-background"
                           )}
                         >
                           <span

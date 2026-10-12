@@ -182,12 +182,12 @@ export default function SubmitForm() {
                       className={cn(
                         "relative text-left rounded-2xl border-2 bg-card p-4 transition-all",
                         isSelected
-                          ? "border-[#EBBD00] shadow-md"
-                          : "border-border hover:border-[#002E50]/30"
+                          ? "border-gold shadow-md"
+                          : "border-border hover:border-primary/30"
                       )}
                     >
                       {isSelected && (
-                        <span className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-[#EBBD00] text-[#002E50]">
+                        <span className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-primary">
                           <Check className="h-3 w-3" strokeWidth={3} />
                         </span>
                       )}
@@ -195,16 +195,16 @@ export default function SubmitForm() {
                         className={cn(
                           "flex h-9 w-9 items-center justify-center rounded-lg mb-3",
                           isSelected
-                            ? "bg-[#002E50] text-[#EBBD00]"
-                            : "bg-[#002E50]/5 text-[#002E50]"
+                            ? "bg-primary text-gold"
+                            : "bg-primary/5 text-primary"
                         )}
                       >
                         <p.Icon className="h-4 w-4" />
                       </div>
-                      <p className="text-sm font-semibold text-[#002E50]">
+                      <p className="text-sm font-semibold text-primary">
                         {p.name}
                       </p>
-                      <p className="text-lg font-semibold text-[#002E50] mt-0.5">
+                      <p className="text-lg font-semibold text-primary mt-0.5">
                         {p.price}
                       </p>
                     </button>

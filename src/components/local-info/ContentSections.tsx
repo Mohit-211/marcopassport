@@ -95,11 +95,11 @@ export function ContentSections() {
                 </div>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-[#EBBD00] font-semibold mb-3">
+                <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold mb-3">
                   {section.eyebrow}
                 </p>
-                <h2 className="font-display text-3xl md:text-4xl font-semibold text-[#002E50] leading-tight flex items-center gap-3">
-                  <span className="grid place-items-center h-10 w-10 rounded-full bg-[#002E50]/5 text-[#002E50]">
+                <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary leading-tight flex items-center gap-3">
+                  <span className="grid place-items-center h-10 w-10 rounded-full bg-primary/5 text-primary">
                     <Icon className="h-5 w-5" />
                   </span>
                   {section.title}
@@ -116,7 +116,7 @@ export function ContentSections() {
                         key={b}
                         className="flex items-start gap-3 text-sm text-foreground/85"
                       >
-                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#EBBD00] shrink-0" />
+                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
                         {b}
                       </li>
                     ))}

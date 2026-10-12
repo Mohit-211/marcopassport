@@ -3,18 +3,32 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, LogIn, MapPin, Save, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Loader2,
+  LogIn,
+  MapPin,
+  Save,
+  Sparkles,
+  Trash2,
+} from "lucide-react";
 import { toast } from "sonner";
-import { deleteItineraryApi, getItineraryApi, updateItineraryApi } from "@/api/users/itineraries.api";
+import {
+  deleteItineraryApi,
+  getItineraryApi,
+  updateItineraryApi,
+} from "@/api/users/itineraries.api";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { HeroMeta, PageHero } from "@/components/site/PageHero";
 import { isAuthError } from "@/errors/apiError";
 import { requestLogin } from "@/lib/login-popup";
 import { draftProblem, sameDraft, toDraft, toPayload } from "../logic";
 import { useItineraries } from "../ItinerariesProvider";
 import type { ItineraryDraft } from "../types";
 import { ItineraryEditor } from "./ItineraryEditor";
-import { ConfirmDialog, PassportHeader, formatDateRange, passportShell } from "./PassportPage";
+import { formatDateRange } from "../format";
+import { ConfirmDialog, passportShell } from "./PassportPage";
 
 type Load =
   | { status: "loading" }
@@ -34,7 +48,8 @@ function statusOf(error: unknown) {
  */
 export function ItineraryPage({ id }: { id: string }) {
   const router = useRouter();
-  const { ready, isAuthenticated, upsertItinerary, removeItinerary } = useItineraries();
+  const { ready, isAuthenticated, upsertItinerary, removeItinerary } =
+    useItineraries();
   const [load, setLoad] = useState<Load>({ status: "loading" });
   const [value, setValue] = useState<ItineraryDraft | null>(null);
   const [saving, setSaving] = useState(false);
@@ -111,109 +126,158 @@ export function ItineraryPage({ id }: { id: string }) {
   };
 
   return (
-    <section className={passportShell}>
-      <div className="site-container">
-        <Link
-          href="/passport"
-          className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-        >
-          <ArrowLeft className="h-4 w-4" /> All itineraries
-        </Link>
-
+    <>
+      <PageHero
+        size="compact"
+        image="/assets/place-sunset.jpg"
+        imageAlt="Sunset over a Marco Island pier"
+        icon={Sparkles}
+        eyebrow="My Passport"
+        title={
+          loaded && value ? value.name || "Untitled itinerary" : "Itinerary"
+        }
+      >
         {loaded && value ? (
-          <>
-            <PassportHeader
-              title={value.name || "Untitled itinerary"}
-              description={
-                <>
-                  {formatDateRange(value.start_date, value.end_date)} · {value.items.length}{" "}
-                  {value.items.length === 1 ? "place" : "places"}
-                  {dirty && <span className="ml-2 font-medium text-gold">· Unsaved changes</span>}
-                </>
-              }
-            />
-            <ItineraryEditor
-              value={value}
-              onChange={setValue}
-              actions={
-                <>
-                  <Button variant="gold" size="lg" onClick={save} disabled={!dirty || saving}>
-                    {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                    {saving ? "Saving…" : "Save changes"}
-                  </Button>
-                  {dirty && (
-                    <Button variant="ghost" onClick={() => setValue(load.saved)} disabled={saving}>
-                      Discard changes
+          <HeroMeta
+            items={[
+              formatDateRange(value.start_date, value.end_date),
+              `${value.items.length} ${value.items.length === 1 ? "place" : "places"}`,
+              ...(dirty
+                ? [
+                    <span key="dirty" className="text-gold">
+                      Unsaved changes
+                    </span>,
+                  ]
+                : []),
+            ]}
+          />
+        ) : null}
+      </PageHero>
+      <section className={passportShell}>
+        <div className="site-container">
+          <Link
+            href="/passport"
+            className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+          >
+            <ArrowLeft className="h-4 w-4" /> All itineraries
+          </Link>
+
+          {loaded && value ? (
+            <>
+              <ItineraryEditor
+                value={value}
+                onChange={setValue}
+                actions={
+                  <>
+                    <Button
+                      variant="gold"
+                      size="lg"
+                      onClick={save}
+                      disabled={!dirty || saving}
+                    >
+                      {saving ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Save className="h-4 w-4" />
+                      )}
+                      {saving ? "Saving…" : "Save changes"}
                     </Button>
-                  )}
-                  <Button
-                    variant="ghost"
-                    className="ml-auto text-muted-foreground hover:text-destructive"
-                    onClick={() => setConfirmDelete(true)}
-                    disabled={saving}
-                  >
-                    <Trash2 className="h-4 w-4" /> Delete itinerary
-                  </Button>
-                </>
+                    {dirty && (
+                      <Button
+                        variant="ghost"
+                        onClick={() => setValue(load.saved)}
+                        disabled={saving}
+                      >
+                        Discard changes
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      className="ml-auto text-muted-foreground hover:text-destructive"
+                      onClick={() => setConfirmDelete(true)}
+                      disabled={saving}
+                    >
+                      <Trash2 className="h-4 w-4" /> Delete itinerary
+                    </Button>
+                  </>
+                }
+              />
+              <ConfirmDialog
+                open={confirmDelete}
+                onOpenChange={setConfirmDelete}
+                title="Delete this itinerary?"
+                description={`"${load.saved.name}" and its places will be removed from your account. This can't be undone.`}
+                confirmLabel="Delete"
+                onConfirm={remove}
+              />
+            </>
+          ) : ready && !isAuthenticated ? (
+            <Message
+              title="Log in to see this itinerary"
+              text="Itineraries are saved to your account."
+              action={
+                <Button
+                  variant="gold"
+                  size="lg"
+                  onClick={() => void requestLogin()}
+                >
+                  <LogIn className="h-4 w-4" /> Log in
+                </Button>
               }
             />
-            <ConfirmDialog
-              open={confirmDelete}
-              onOpenChange={setConfirmDelete}
-              title="Delete this itinerary?"
-              description={`"${load.saved.name}" and its places will be removed from your account. This can't be undone.`}
-              confirmLabel="Delete"
-              onConfirm={remove}
+          ) : load.status === "missing" ? (
+            <Message
+              title="Itinerary not found"
+              text="It may have been deleted, or it belongs to another account."
+              action={
+                <Link href="/passport">
+                  <Button variant="gold" size="lg">
+                    Back to My Passport
+                  </Button>
+                </Link>
+              }
             />
-          </>
-        ) : ready && !isAuthenticated ? (
-          <Message
-            title="Log in to see this itinerary"
-            text="Itineraries are saved to your account."
-            action={
-              <Button variant="gold" size="lg" onClick={() => void requestLogin()}>
-                <LogIn className="h-4 w-4" /> Log in
-              </Button>
-            }
-          />
-        ) : load.status === "missing" ? (
-          <Message
-            title="Itinerary not found"
-            text="It may have been deleted, or it belongs to another account."
-            action={
-              <Link href="/passport">
-                <Button variant="gold" size="lg">
-                  Back to My Passport
+          ) : load.status === "error" ? (
+            <Message
+              title="We couldn't load this itinerary"
+              text="Please check your connection and try again."
+              action={
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => {
+                    setLoad({ status: "loading" });
+                    setLoadKey((k) => k + 1);
+                  }}
+                >
+                  Try again
                 </Button>
-              </Link>
-            }
-          />
-        ) : load.status === "error" ? (
-          <Message
-            title="We couldn't load this itinerary"
-            text="Please check your connection and try again."
-            action={
-              <Button variant="outline" size="lg" onClick={() => {
-                setLoad({ status: "loading" });
-                setLoadKey((k) => k + 1);
-              }}>
-                Try again
-              </Button>
-            }
-          />
-        ) : (
-          <EditorSkeleton />
-        )}
-      </div>
-    </section>
+              }
+            />
+          ) : (
+            <EditorSkeleton />
+          )}
+        </div>
+      </section>
+    </>
   );
 }
 
-function Message({ title, text, action }: { title: string; text: string; action: React.ReactNode }) {
+function Message({
+  title,
+  text,
+  action,
+}: {
+  title: string;
+  text: string;
+  action: React.ReactNode;
+}) {
   return (
     <div className="mx-auto max-w-xl rounded-3xl bg-card p-10 text-center shadow-sm">
       <MapPin className="mx-auto h-8 w-8 text-gold" />
-      <h1 className="mt-4 font-display text-3xl font-semibold text-primary">{title}</h1>
+      <h1 className="mt-4 font-display text-3xl font-semibold text-primary">
+        {title}
+      </h1>
       <p className="mt-2 text-muted-foreground">{text}</p>
       <div className="mt-6 flex justify-center">{action}</div>
     </div>
@@ -222,7 +286,11 @@ function Message({ title, text, action }: { title: string; text: string; action:
 
 function EditorSkeleton() {
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]" aria-busy="true" aria-label="Loading itinerary">
+    <div
+      className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]"
+      aria-busy="true"
+      aria-label="Loading itinerary"
+    >
       <div className="space-y-4">
         <Skeleton className="h-10 w-2/3" />
         <Skeleton className="h-36 rounded-3xl" />

@@ -38,7 +38,7 @@ export function EmptyState({ clearAction }: { clearAction: () => void }) {
       className="
         rounded-3xl
         border border-dashed border-border
-        bg-sand/40
+        bg-card
         p-16
         text-center
       "

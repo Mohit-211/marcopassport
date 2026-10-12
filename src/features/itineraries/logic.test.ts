@@ -35,6 +35,11 @@ describe("withPlaceAdded", () => {
     expect(withPlaceAdded(full, place(99))).toEqual({ ok: false, reason: "full" });
   });
 
+  it("keeps an optional visit date", () => {
+    const result = withPlaceAdded(emptyDraft(), place(4), "2026-12-03");
+    expect(result.ok && result.draft.items[0].visit_date).toBe("2026-12-03");
+  });
+
   it("does not mutate the input", () => {
     const draft = draftWith(1);
     withPlaceAdded(draft, place(2));

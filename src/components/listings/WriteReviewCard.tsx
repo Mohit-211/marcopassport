@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Star } from "lucide-react";
+import { LogIn, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { AddRatingApi } from "@/api/users/rating.api";
+import { useAuth } from "@/hooks/useAuth";
+import { requestLogin } from "@/lib/login-popup";
 
 type WriteReviewCardProps = {
   id: string;
@@ -15,6 +18,8 @@ type WriteReviewCardProps = {
 };
 
 export default function WriteReviewCard({ id, onSuccess }: WriteReviewCardProps) {
+  const router = useRouter();
+  const { isAuthenticated, ready } = useAuth();
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -37,12 +42,29 @@ export default function WriteReviewCard({ id, onSuccess }: WriteReviewCardProps)
       setSubmitted(true);
       toast.success("Thanks for your review!");
       onSuccess?.();
-    } catch (error) {
-      console.log(error);
+      // The average rating shown at the top of the page comes from the server.
+      router.refresh();
+    } catch {
+      // The error popup is shown by the global API error handler.
     } finally {
       setSubmitting(false);
     }
   };
+
+  if (ready && !isAuthenticated) {
+    return (
+      <div className="rounded-3xl border border-border bg-card p-7 shadow-soft">
+        <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+          Share your experience
+        </p>
+        <h3 className="font-display text-2xl font-semibold mt-2">Write a review</h3>
+        <p className="mt-2 text-sm text-muted-foreground">Log in to rate this listing and leave a review.</p>
+        <Button variant="gold" size="lg" className="mt-5 w-full" onClick={() => void requestLogin()}>
+          <LogIn className="h-4 w-4" /> Log in to review
+        </Button>
+      </div>
+    );
+  }
 
   if (submitted) {
     return (

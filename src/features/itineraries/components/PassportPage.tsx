@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { format, parseISO } from "date-fns";
 import { ArrowRight, CalendarDays, Info, LogIn, MapPin, Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -17,63 +16,62 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { PageHero } from "@/components/site/PageHero";
 import { Skeleton } from "@/components/ui/skeleton";
 import { requestLogin } from "@/lib/login-popup";
 import { clearDraft } from "../draft-store";
 import { draftProblem, emptyDraft } from "../logic";
 import { useItineraries } from "../ItinerariesProvider";
+import { formatDateRange } from "../format";
 import { placeImage } from "../place";
 import type { Itinerary } from "../types";
 import { ItineraryEditor } from "./ItineraryEditor";
 import { NewItineraryDialog } from "./NewItineraryDialog";
 
-export function formatDateRange(start: string | null, end: string | null) {
-  const fmt = (d: string, pattern: string) => format(parseISO(d), pattern);
-  if (start && end) return `${fmt(start, "MMM d")} – ${fmt(end, "MMM d, yyyy")}`;
-  if (start) return `From ${fmt(start, "MMM d, yyyy")}`;
-  if (end) return `Until ${fmt(end, "MMM d, yyyy")}`;
-  return "No dates yet";
-}
-
-/** Page heading for the passport screens; leaves room for the fixed site header. */
-export function PassportHeader({
-  title,
-  description,
-  actions,
-}: {
-  title: React.ReactNode;
-  description?: React.ReactNode;
-  actions?: React.ReactNode;
-}) {
-  return (
-    <header className="flex flex-col gap-4 pb-8 sm:flex-row sm:items-end sm:justify-between">
-      <div className="min-w-0">
-        <div className="mb-3 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">
-          <span className="h-px w-8 bg-gold/70" />
-          <Sparkles className="h-3.5 w-3.5" /> My Passport
-        </div>
-        <h1 className="wrap-break-word font-display text-[clamp(1.75rem,4vw,3rem)] font-medium leading-[1.05] tracking-[-0.03em] text-primary">
-          {title}
-        </h1>
-        {description && <div className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">{description}</div>}
-      </div>
-      {actions && <div className="flex shrink-0 flex-wrap items-center gap-3">{actions}</div>}
-    </header>
-  );
-}
-
-export const passportShell = "bg-cream/40 pb-20 pt-28 md:pt-32";
+/** Content area under the passport heroes. */
+export const passportShell = "bg-background py-12 md:py-16";
 
 /** /passport — guests build a draft here; signed-in users see their itineraries. */
 export function PassportPage() {
   const { ready, isAuthenticated } = useItineraries();
+  const [creating, setCreating] = useState(false);
 
   return (
-    <section className={passportShell}>
-      <div className="site-container">
-        {!ready ? <ListSkeleton /> : isAuthenticated ? <ItineraryList /> : <GuestDraft />}
-      </div>
-    </section>
+    <>
+      <PageHero
+        image="/assets/place-sunset.jpg"
+        imageAlt="Sunset over a Marco Island pier"
+        icon={Sparkles}
+        eyebrow="My Passport"
+        title={
+          <>
+            Plan your <span className="italic text-gold">itinerary</span>
+          </>
+        }
+        description={
+          ready && isAuthenticated
+            ? "Your Marco Island trip plans. Open one to reorder stops, pick visit dates and see the route on the map."
+            : "Add places from Explore, put them in visiting order and see the route on the map. Log in when you're ready to save it."
+        }
+      >
+        {ready && isAuthenticated && (
+          <Button variant="gold" size="lg" onClick={() => setCreating(true)}>
+            <Plus className="h-4 w-4" /> New itinerary
+          </Button>
+        )}
+      </PageHero>
+      <section className={passportShell}>
+        <div className="site-container">
+          {!ready ? (
+            <ListSkeleton />
+          ) : isAuthenticated ? (
+            <ItineraryList creating={creating} setCreating={setCreating} />
+          ) : (
+            <GuestDraft />
+          )}
+        </div>
+      </section>
+    </>
   );
 }
 
@@ -94,14 +92,6 @@ function GuestDraft() {
 
   return (
     <>
-      <PassportHeader
-        title={
-          <>
-            Plan your <span className="italic text-gold">itinerary</span>
-          </>
-        }
-        description="Add places from Explore and the Business Directory, put them in visiting order and see the route. Log in when you're ready to save it."
-      />
       <ItineraryEditor
         value={value}
         onChange={setDraft}
@@ -136,27 +126,20 @@ function GuestDraft() {
   );
 }
 
-function ItineraryList() {
+function ItineraryList({
+  creating,
+  setCreating,
+}: {
+  creating: boolean;
+  setCreating: (open: boolean) => void;
+}) {
   const router = useRouter();
   const { itineraries, loading, error, reload, createItinerary, draft, completeLogin } = useItineraries();
-  const [creating, setCreating] = useState(false);
   const [savingDraft, setSavingDraft] = useState(false);
 
   return (
     <>
-      <PassportHeader
-        title={
-          <>
-            My <span className="italic text-gold">itineraries</span>
-          </>
-        }
-        description="Your Marco Island trip plans. Open one to reorder stops, pick visit dates and see the route."
-        actions={
-          <Button variant="gold" size="lg" onClick={() => setCreating(true)}>
-            <Plus className="h-4 w-4" /> New itinerary
-          </Button>
-        }
-      />
+      <h2 className="mb-6 font-display text-2xl font-semibold text-primary md:text-3xl">My itineraries</h2>
 
       {draft && draft.items.length > 0 && (
         <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-gold/40 bg-gold/10 p-4 sm:flex-row sm:items-center sm:justify-between">
@@ -205,8 +188,8 @@ function ItineraryList() {
             <Button variant="gold" onClick={() => setCreating(true)}>
               <Plus className="h-4 w-4" /> New itinerary
             </Button>
-            <Link href="/places">
-              <Button variant="outline">Explore places</Button>
+            <Link href="/explore">
+              <Button variant="outline">Browse Explore</Button>
             </Link>
           </div>
         </div>

@@ -5,7 +5,7 @@ import ListingGallery from "@/components/listings/ListingGallery";
 import ListingInfoContent from "@/components/listings/ListingInfoContent";
 import ListingActionsPanel from "@/components/listings/ListingActionsPanel";
 import ReviewsSection from "@/components/listings/ReviewsSection";
-import SimilarAndRelated from "@/components/listings/SimilarAndRelated";
+import { SimilarListings } from "@/components/explore/SimilarListings";
 
 import { mapBusinessToListing } from "@/lib/business";
 import type { ApiBusiness } from "@/types/business";
@@ -63,14 +63,13 @@ export default async function ListingDetailPage({ params }: Props) {
           It may have moved or been removed.
         </p>
         <Link href="/explore" className="inline-block mt-6">
-          <Button variant="gold">Back to directory</Button>
+          <Button variant="gold">Back to Explore</Button>
         </Link>
       </div>
     );
   }
 
   const listing = mapBusinessToListing(item);
-console.log(listing,"listing===============bhv")
   return (
     <>
       {/* Breadcrumbs */}
@@ -80,8 +79,8 @@ console.log(listing,"listing===============bhv")
             Home
           </Link>
           <span className="opacity-40">/</span>
-          <Link href="/explore" className="hover:text-primary">
-            Directory
+          <Link href="/explore?type=business" className="hover:text-primary">
+            Explore
           </Link>
           <span className="opacity-40">/</span>
           <span className="text-foreground truncate">{listing.name}</span>
@@ -103,12 +102,11 @@ console.log(listing,"listing===============bhv")
           />
         </div>
       </section>
- {/* <NearbyAndRelated
-        categoriesId={place?.categories?.[0]?.id}
-        currentSlug={place.slug}
-      /> */}
-      <SimilarAndRelated categoriesId={listing?.categories?.[0]?.id} />
-      {/* <SimilarAndRelated categoriesId={2} /> */}
+      <SimilarListings
+        type="business"
+        categoryId={listing.categories?.[0]?.id}
+        currentSlug={listing.slug}
+      />
 
     </>
   );

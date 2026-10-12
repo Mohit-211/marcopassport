@@ -45,16 +45,6 @@
   --color-sand: var(--sand);
   --color-sand-foreground: var(--sand-foreground);
 
-  --color-brand-primary: var(--brand-primary);
-  --color-brand-primary-hover: var(--brand-primary-hover);
-  --color-brand-primary-tint: var(--brand-primary-tint);
-  --color-brand-dark: var(--brand-dark);
-  --color-brand-page: var(--brand-page);
-  --color-brand-main: var(--brand-main);
-  --color-brand-main-soft: var(--brand-main-soft);
-  --color-brand-accent: var(--brand-accent);
-  --color-brand-cream: var(--brand-cream);
-
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
 
@@ -79,9 +69,9 @@
      Core Brand
      -------------------------------- */
 
-  /* #002946 */
+  /* #002946 navy — the logo colour */
   --primary: oklch(0.23 0.055 245);
-  --primary-foreground: oklch(0.98 0.01 85);
+  --primary-foreground: oklch(0.985 0.003 250);
 
   /* Lighter companion to primary */
   --primary-soft: oklch(0.32 0.055 245);
@@ -90,22 +80,22 @@
      Main Surfaces
      -------------------------------- */
 
-  /* Warm off-white */
-  --background: oklch(0.985 0.006 85);
+  /* Neutral off-white (no beige cast) */
+  --background: oklch(0.984 0.002 250);
   --foreground: oklch(0.2 0.035 245);
 
-  /* #F8F1E5 */
-  --cream: oklch(0.955 0.018 82);
+  /* Alternate section surface: a light tint of the navy */
+  --cream: oklch(0.955 0.013 240);
   --cream-foreground: oklch(0.23 0.055 245);
 
   /* --------------------------------
      Cards / Popovers
      -------------------------------- */
 
-  --card: oklch(0.995 0.004 85);
+  --card: oklch(1 0 0);
   --card-foreground: oklch(0.2 0.035 245);
 
-  --popover: oklch(0.995 0.004 85);
+  --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.2 0.035 245);
 
   /* --------------------------------
@@ -119,7 +109,7 @@
      Muted
      -------------------------------- */
 
-  --muted: oklch(0.95 0.012 82);
+  --muted: oklch(0.955 0.008 245);
   --muted-foreground: oklch(0.46 0.025 245);
 
   /* --------------------------------
@@ -131,57 +121,36 @@
   --accent-foreground: oklch(0.23 0.055 245);
 
   /* --------------------------------
-     Champagne / Soft Gold
+     Gold — the secondary brand colour
      -------------------------------- */
 
   /*
-    Deliberately desaturated.
-    This replaces the previous bright yellow-gold.
+    Same family as the admin panel's #c9a227. Saturated enough to read as
+    gold, not beige, and dark enough to stay legible as text on white.
   */
-  --gold: oklch(0.88 0.055 85);
-  --gold-foreground: oklch(0.23 0.055 245);
+  --gold: oklch(0.72 0.13 85);
+  --gold-foreground: oklch(0.2 0.045 245);
 
   /* --------------------------------
-     Sand
+     Sand (secondary surface for cards and callouts)
      -------------------------------- */
 
-  --sand: oklch(0.94 0.022 78);
+  /* A pale gold tint, used sparingly next to the navy tints above */
+  --sand: oklch(0.965 0.028 92);
   --sand-foreground: oklch(0.23 0.055 245);
-
-  /* --------------------------------
-     Brand Teal (for badge)
-     -------------------------------- */
-
-  /* Brand aliases used by the trip planner; they point at the site palette
-     above so the planner always matches the rest of the site. */
-  --brand-primary: var(--primary); /* #002946 navy: buttons, active tabs, links, pins */
-  --brand-primary-hover: oklch(0.18 0.05 245); /* slightly darker navy */
-  --brand-primary-tint: color-mix(in oklab, var(--primary) 7%, white); /* "Top pick", selected rows */
-  --brand-dark: var(--primary); /* secondary buttons such as "Advertise With Us" */
-  --brand-page: var(--background); /* page background */
-
-  /* "Plan Your Trip" badge palette. Fixed values on purpose: the badge keeps
-     its look even if the site palette above changes (and in dark mode). */
-  --brand-main: #021f35; /* site navy (--primary) */
-  --brand-main-soft: #18354d; /* site lighter navy (--primary-soft) */
-  --brand-accent: #e8d5af; /* site champagne gold (--gold) */
-  --brand-cream: #f6efe3; /* site cream (--cream), used for the outline */
-
-  /* Floating badge offset; raise it if a cookie or chat banner is shown */
-  --plan-badge-bottom: max(1rem, env(safe-area-inset-bottom));
 
   /* --------------------------------
      Feedback
      -------------------------------- */
 
   --destructive: oklch(0.58 0.19 25);
-  --destructive-foreground: oklch(0.98 0.01 85);
+  --destructive-foreground: oklch(0.985 0.003 250);
 
   /* --------------------------------
      Borders / Inputs
      -------------------------------- */
 
-  --border: oklch(0.88 0.015 240);
+  --border: oklch(0.9 0.012 240);
   --input: oklch(0.9 0.012 240);
   --ring: oklch(0.65 0.045 245);
 }
@@ -343,6 +312,11 @@
     .hero-viewport {
       min-height: 100vh;
     }
+  }
+
+  /* Same treatment, shorter: for working screens like the itinerary editor. */
+  .hero-viewport.hero-viewport--compact {
+    min-height: min(62svh, 560px);
   }
 
   /* One page gutter for the whole site — every section lines up with the
@@ -845,23 +819,6 @@
     text-wrap: balance;
   }
 
-  .bg-grad-hero {
-    background: linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--primary) 10%, transparent) 0%,
-      color-mix(in oklab, var(--primary) 75%, transparent) 60%,
-      var(--primary) 100%
-    );
-  }
-
-  .bg-grad-gold {
-    background: linear-gradient(
-      135deg,
-      var(--gold),
-      color-mix(in oklab, var(--gold) 70%, white)
-    );
-  }
-
   .shadow-soft {
     box-shadow: var(--shadow-soft);
   }
@@ -874,15 +831,6 @@
     box-shadow: var(--shadow-gold);
   }
 
-  .marquee-mask {
-    mask-image: linear-gradient(
-      90deg,
-      transparent,
-      black 8%,
-      black 92%,
-      transparent
-    );
-  }
 }
 
 /* --------------------------------
@@ -928,27 +876,4 @@
 [data-sonner-toaster] [data-sonner-toast][data-styled][data-type="error"] [data-close-button]:hover {
   background: color-mix(in oklab, var(--destructive) 10%, transparent);
   color: var(--destructive);
-}
-
-/* Trip planner: print only the itinerary */
-@media print {
-  body:has([data-trip-print]) > header,
-  body:has([data-trip-print]) footer,
-  body:has([data-trip-print]) [data-sonner-toaster] {
-    display: none !important;
-  }
-}
-
-/* Floating "Plan Your Trip" badge */
-@keyframes badge-swing {
-  0%, 100% { rotate: -6deg; }
-  25% { rotate: 3deg; }
-  50% { rotate: -9deg; }
-  75% { rotate: -3deg; }
-}
-
-@media (min-width: 768px) {
-  :root {
-    --plan-badge-bottom: 1.5rem;
-  }
 }

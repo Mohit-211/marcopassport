@@ -1,5 +1,6 @@
 import client from "../client";
 import { Business } from "../endpoints";
+import type { ListParams } from "./places.api";
 
 export interface CreateBusinessPayload {
     business_name: string;
@@ -13,17 +14,9 @@ export interface CreateBusinessPayload {
 
 export const CreateBusinesssApi = (payload: CreateBusinessPayload) =>
     client.post(Business.CREATE_BUSINESS, payload);
-export const GetBusinessCategoryApi = () =>
-    client.get(Business.BUSINESS_CATEGORIES);
 
-export const GetAllBusinessApi = () =>
-    client.get(Business.GET_ALL_BUSINESS);
-
-export const GetAllBusinessByCategoryApi = (categorySlug: string) =>
-    client.get(Business.GET_ALL_BUSINESS_BY_CATEGORIES_SLUG(categorySlug));
-
-export const GetAllBusinessByCategoryIdApi = (categoriesId: number | string) =>
-    client.get(Business.GET_ALL_BUSINESS_BY_CATEGORIES_ID(categoriesId));
+export const GetAllBusinessApi = (params?: ListParams) =>
+    client.get(Business.GET_ALL_BUSINESS, { params });
 
 export const GetBusinessDetailsBySlugApi = (slug: string) =>
     client.get(Business.GET_BUSINESS_DETAILS_BY_SLUG(slug));

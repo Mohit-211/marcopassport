@@ -43,10 +43,3 @@ export type ApiPlace = {
   similar_places?: ApiPlace[];
 };
 
-export type ApiPlacesListResponse = {
-  total?: number;
-  page?: number;
-  limit?: number;
-  total_pages?: number;
-  places?: ApiPlace[];
-};

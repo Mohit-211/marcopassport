@@ -1,6 +1,6 @@
 import type { ItineraryPlace } from "./types";
 
-export const FALLBACK_PLACE_IMAGE = "/assets/explore-hero.jpg";
+const FALLBACK_PLACE_IMAGE = "/assets/explore-hero.jpg";
 
 /** Image fields are paths relative to the API host; snapshots may already hold a full URL. */
 export function placeImage(path: string | null | undefined) {

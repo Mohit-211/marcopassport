@@ -23,7 +23,7 @@ type ListingActionsPanelProps = {
     price: string;
     category: string;
     location: string;
-    rating: number;
+    rating: number | null;
     website_url?: string;
   };
   categoryMeta?: { name: string };
@@ -90,15 +90,16 @@ export default function ListingActionsPanel({
               </Button>
             )}
             <div className="mt-5 pt-5 border-t border-border grid grid-cols-2 gap-3 text-xs">
-              <div>
-                <p className="uppercase tracking-wider text-muted-foreground font-semibold">
-                  Rating
-                </p>
-                <p className="mt-1 inline-flex items-center gap-1 font-display text-lg font-semibold text-foreground">
-                  <Star className="h-4 w-4 fill-gold text-gold" />{" "}
-                  {listing.rating.toFixed(1)}
-                </p>
-              </div>
+              {listing.rating !== null && (
+                <div>
+                  <p className="uppercase tracking-wider text-muted-foreground font-semibold">
+                    Rating
+                  </p>
+                  <p className="mt-1 inline-flex items-center gap-1 font-display text-lg font-semibold text-foreground">
+                    <Star className="h-4 w-4 fill-gold text-gold" /> {listing.rating.toFixed(1)}
+                  </p>
+                </div>
+              )}
               <div>
                 <p className="uppercase tracking-wider text-muted-foreground font-semibold">
                   Area

@@ -1,17 +1,44 @@
 import type { Metadata } from "next";
-import { ExplorePage } from "@/components/explore/ExplorePage";
+import { ExplorePage, type ExploreInitialState } from "@/components/explore/ExplorePage";
+import EditorialGuide from "@/components/places/EditorialGuide";
+import { CtaSection } from "@/components/site/CtaSection";
 
 export const metadata: Metadata = {
-  title: "Explore the Directory — The Marco Passport",
+  title: "Explore Marco Island — The Marco Passport",
   description:
-    "Discover places to stay, eat, shop, explore, and find local services across Marco Island, all in one place.",
+    "Beaches, landmarks and nature spots, plus places to stay, eat, shop and explore across Marco Island, all in one place.",
   openGraph: {
-    title: "Explore the Directory — The Marco Passport",
+    title: "Explore Marco Island — The Marco Passport",
     description:
-      "Find places to stay, eat, shop, explore, and enjoy across Marco Island.",
+      "Find places to visit, stay, eat, shop and enjoy across Marco Island.",
+    images: ["/assets/explore-hero.jpg"],
   },
 };
 
-export default function Explore() {
-  return <ExplorePage />;
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+const one = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value);
+
+export default async function Explore({ searchParams }: { searchParams: SearchParams }) {
+  const params = await searchParams;
+  const type = one(params.type);
+  const initial: ExploreInitialState = {
+    type: type === "place" || type === "business" ? type : "all",
+    query: one(params.q) ?? "",
+    category: one(params.category),
+    featured: one(params.featured) === "true",
+  };
+
+  return (
+    <>
+      <ExplorePage initial={initial} />
+      <EditorialGuide />
+      <CtaSection
+        eyebrow="Your passport"
+        title="Turn what you find into an itinerary"
+        description="Add places with a visit date as you browse, put them in order and see the whole route on one map."
+        actions={[{ label: "Open My Passport", href: "/passport" }]}
+      />
+    </>
+  );
 }

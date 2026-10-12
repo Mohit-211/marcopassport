@@ -13,7 +13,7 @@ type ListingGalleryProps = {
     image: string;
     location: string;
     price: string;
-    rating: number;
+    rating: number | null;
     featured?: boolean;
     reviewCount?: number;
     galleryImages?: string[];
@@ -69,19 +69,20 @@ export default function ListingGallery({ listing }: ListingGalleryProps) {
                 {listing.name}
               </h1>
               <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-primary-foreground/90">
-                <span className="inline-flex items-center gap-1.5 text-gold font-semibold">
-                  <Star className="h-4 w-4 fill-gold" />{" "}
-                  {listing.rating.toFixed(1)}
-                  {typeof listing.reviewCount === "number" && (
-                    <span className="text-primary-foreground/70 font-normal">
-                      ({listing.reviewCount} reviews)
-                    </span>
-                  )}
-                </span>
+                {listing.rating !== null && (
+                  <span className="inline-flex items-center gap-1.5 text-gold font-semibold">
+                    <Star className="h-4 w-4 fill-gold" /> {listing.rating.toFixed(1)}
+                    {listing.reviewCount ? (
+                      <span className="text-primary-foreground/70 font-normal">
+                        ({listing.reviewCount} {listing.reviewCount === 1 ? "review" : "reviews"})
+                      </span>
+                    ) : null}
+                  </span>
+                )}
                 <span className="inline-flex items-center gap-1.5">
                   <MapPin className="h-4 w-4" /> {listing.location}
                 </span>
-                <span className="font-medium">{listing.price}</span>
+                {listing.price && <span className="font-medium">{listing.price}</span>}
               </div>
             </div>
           </button>

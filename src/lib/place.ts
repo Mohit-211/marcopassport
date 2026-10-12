@@ -1,40 +1,5 @@
+import { visibleRating } from "@/lib/explore";
 import type { ApiPlace } from "@/types/place";
-
-export type PlaceCard = {
-  featured_image: string | null;
-  updated_at: string | null;
-  short_description: string;
-  id: string;
-  slug: string;
-  name: string;
-  tag: string;
-  blurb: string;
-  image: string;
-  featured: boolean;
-  isTopPick: boolean;
-  rating: number;
-};
-
-export function mapPlaceToCard(item: ApiPlace): PlaceCard {
-  const imageBase = process.env.NEXT_PUBLIC_IMAGE_URL ?? "";
-
-  return {
-    id: String(item.id),
-    slug: item.slug,
-    name: item.name,
-    tag: item.categories?.[0]?.name ?? "Place",
-    blurb: item.short_description ?? "",
-    image: item.featured_image
-      ? `${imageBase}${item.featured_image}`
-      : "/assets/explore-hero.jpg",
-    featured_image: item.featured_image ?? null,
-    updated_at: item.updated_at ?? null,
-    short_description: item.short_description ?? "",
-    featured: item.is_featured ?? false,
-    isTopPick: item.is_top_pick ?? false,
-    rating: Number(item.rating) || 0,
-  };
-}
 
 export type PlaceDetail = {
   id: string;
@@ -61,8 +26,8 @@ export type PlaceDetail = {
   isTopPick: boolean;
   isInItinerary: boolean;
 
-  // Reviews
-  rating: number;
+  // Reviews (rating is null until the first review)
+  rating: number | null;
   reviewCount: number;
 
   // Details
@@ -116,7 +81,7 @@ export function mapPlaceToDetail(item: ApiPlace): PlaceDetail {
     isTopPick: item.is_top_pick ?? false,
     isInItinerary: item.is_in_itinerary ?? false,
 
-    rating: Number(item.rating) || 0,
+    rating: visibleRating(item.rating),
     reviewCount: Number(item.review_count) || 0,
 
     highlights: item.highlights ?? null,
@@ -138,7 +103,7 @@ export function mapPlaceToDetail(item: ApiPlace): PlaceDetail {
 
 // Splits a freeform text field (plain sentence or newline-separated list)
 // into individual bullet/paragraph entries for display.
-export function splitTextField(
+function splitTextField(
   value: string | null | undefined
 ): string[] {
   if (!value) return [];
@@ -147,4 +112,52 @@ export function splitTextField(
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
+}
+
+/** Admin "highlights": a JSON array, or newline/comma separated text. */
+export function parseHighlights(highlights?: string | null): string[] {
+  if (!highlights) return [];
+  try {
+    const parsed = JSON.parse(highlights);
+    if (Array.isArray(parsed)) {
+      return parsed.map((h) => String(h).trim()).filter(Boolean);
+    }
+  } catch {
+    // Not JSON — fall back to plain text splitting.
+  }
+  return highlights
+    .split(/\r?\n|,/)
+    .map((h) => h.trim())
+    .filter(Boolean);
+}
+/** Admin "insider tips": a JSON array, or one tip per line. */
+export function parseTips(tips?: string | null): string[] {
+  if (!tips) return [];
+  try {
+    const parsed = JSON.parse(tips);
+    if (Array.isArray(parsed)) {
+      return parsed.map((t) => String(t).trim()).filter(Boolean);
+    }
+  } catch {
+    // Not JSON — fall back to plain text splitting.
+  }
+  return splitTextField(tips);
+}
+/** Admin "what to expect": a JSON array of { title, description }; anything else is ignored. */
+export function parseExpectItems(
+  value?: string | null
+): { title: string; description: string }[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      return parsed.filter(
+        (item): item is { title: string; description: string } =>
+          !!item && typeof item === "object" && typeof item.title === "string",
+      );
+    }
+  } catch {
+    // Not JSON — ignore.
+  }
+  return [];
 }

@@ -69,8 +69,8 @@ export default async function PlaceDetailPage({ params }: Props) {
         <p className="text-muted-foreground mt-3">
           It may have moved or been removed.
         </p>
-        <Link href="/places" className="inline-block mt-6">
-          <Button variant="gold">Back to places</Button>
+        <Link href="/explore?type=place" className="inline-block mt-6">
+          <Button variant="gold">Back to Explore</Button>
         </Link>
       </div>
     );

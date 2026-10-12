@@ -50,9 +50,9 @@ interface ItinerariesContextValue {
 
   /** "Added" state for a place: in any itinerary (signed in) or in the draft (guest) */
   isAdded: (placeId: number) => boolean;
-  addToItinerary: (itineraryId: number, place: ItineraryPlace) => Promise<boolean>;
+  addToItinerary: (itineraryId: number, place: ItineraryPlace, visitDate?: string | null) => Promise<boolean>;
   createItinerary: (payload: ItineraryPayload) => Promise<Itinerary | null>;
-  addToDraft: (place: ItineraryPlace) => boolean;
+  addToDraft: (place: ItineraryPlace, visitDate?: string | null) => boolean;
 
   /** Call right after a login succeeds: saves the guest draft, if any. */
   completeLogin: () => Promise<Itinerary | null>;
@@ -106,9 +106,12 @@ export function ItinerariesProvider({ children }: { children: React.ReactNode })
   }, []);
 
   const addToItinerary = useCallback<ItinerariesContextValue["addToItinerary"]>(
-    async (itineraryId, place) => {
+    async (itineraryId, place, visitDate = null) => {
       try {
-        const itinerary = await addItineraryItemApi(itineraryId, { place_id: place.id });
+        const itinerary = await addItineraryItemApi(itineraryId, {
+          place_id: place.id,
+          visit_date: visitDate || null,
+        });
         upsertItinerary(itinerary);
         toast.success(`Added to ${itinerary.name}`, {
           description: place.name,
@@ -137,8 +140,8 @@ export function ItinerariesProvider({ children }: { children: React.ReactNode })
   );
 
   const addToDraft = useCallback<ItinerariesContextValue["addToDraft"]>(
-    (place) => {
-      const result = withPlaceAdded(readDraft() ?? emptyDraft(), place);
+    (place, visitDate = null) => {
+      const result = withPlaceAdded(readDraft() ?? emptyDraft(), place, visitDate);
       if (!result.ok) {
         if (result.reason === "full") {
           toast.error(`An itinerary can have at most ${MAX_ITINERARY_PLACES} places.`);

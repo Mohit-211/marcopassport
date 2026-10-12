@@ -4,31 +4,37 @@ import { useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  ArrowUpRight,
+  CalendarDays,
   ChevronLeft,
   ChevronRight,
+  Clock,
+  CreditCard,
+  Globe,
   MapPin,
+  ParkingCircle,
+  Phone,
   Share2,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import type { PlaceDetail } from "@/lib/place";
-import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { HeroMeta, PageHero } from "@/components/site/PageHero";
+import { LocationCard } from "@/components/site/LocationCard";
+import { RatingBadge } from "@/components/explore/ExploreCard";
+import { SimilarListings } from "@/components/explore/SimilarListings";
+import ReviewsSection from "@/components/listings/ReviewsSection";
+import PlaceStoryContent, { SectionHeading } from "@/components/places/PlaceStoryContent";
 import { AddToItineraryButton } from "@/features/itineraries/components/AddToItineraryButton";
 import type { ItineraryPlace } from "@/features/itineraries/types";
-import PlaceStoryContent from "@/components/places/PlaceStoryContent";
-import NearbyAndRelated from "@/components/places/NearbyAndRelated";
-import { HeroBackground } from "@/components/site/HeroBackground";
+import type { PlaceDetail } from "@/lib/place";
 
-export default function PlaceExperience({
-  place,
+const PHOTOS_SHOWN = 6;
 
-}: {
-  place: PlaceDetail;
-  
-}) {
-
+/**
+ * A place-to-visit page: hero, then the story on the left and one sticky
+ * "Plan your visit" card on the right that holds every practical fact once.
+ */
+export default function PlaceExperience({ place }: { place: PlaceDetail }) {
   const [lightbox, setLightbox] = useState<number | null>(null);
   const itineraryPlace: ItineraryPlace = {
     id: Number(place.id),
@@ -39,240 +45,239 @@ export default function PlaceExperience({
     featured_image: place.image,
     address: place.address,
   };
+  // The hero already shows the cover photo; the gallery only adds the rest.
+  const photos = place.gallery.length > 1 ? place.gallery : [];
 
-  const handleShare = async () => {
-    if (typeof navigator !== "undefined" && navigator.share) {
+  const facts = [
+    { icon: MapPin, label: "Address", value: place.address },
+    { icon: Clock, label: "Hours", value: place.hours },
+    { icon: CreditCard, label: "Cost", value: place.fees ?? place.priceLevel },
+    { icon: ParkingCircle, label: "Parking", value: place.parking },
+    { icon: CalendarDays, label: "Best time to visit", value: place.bestTimeToVisit },
+  ].filter((f) => f.value);
+
+  const share = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
       try {
-        await navigator.share({
-          title: place.name,
-          text: place.blurb,
-          url: window.location.href,
-        });
+        await navigator.share({ title: place.name, text: place.blurb, url });
       } catch {
         /* dismissed */
       }
-    } else if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(url);
       toast.success("Link copied to clipboard");
     }
   };
 
-  const nextImg = () =>
-    setLightbox((i) => (i === null ? 0 : (i + 1) % place.gallery.length));
-  const prevImg = () =>
-    setLightbox((i) =>
-      i === null ? 0 : (i - 1 + place.gallery.length) % place.gallery.length
-    );
+  const step = (by: number) =>
+    setLightbox((i) => (i === null ? 0 : (i + by + photos.length) % photos.length));
+
   return (
     <>
-      {/* Hero */}
-      <section className="hero-viewport">
-        <HeroBackground src={place.image} alt={place.name} />
+      <PageHero
+        image={place.image}
+        imageAlt={place.name}
+        icon={MapPin}
+        eyebrow={`${place.tag} · Marco Island`}
+        title={place.name}
+        description={place.blurb || undefined}
+      >
+        <div className="flex flex-wrap items-center gap-3">
+          <AddToItineraryButton place={itineraryPlace} size="lg" />
+          <Button variant="ghostLight" size="lg" onClick={share}>
+            <Share2 className="h-4 w-4" /> Share
+          </Button>
+        </div>
+        {(place.rating !== null || place.neighborhood) && (
+          <div className="mt-6">
+            <HeroMeta
+              items={[
+                ...(place.rating !== null
+                  ? [`★ ${place.rating.toFixed(1)}${place.reviewCount ? ` · ${place.reviewCount} reviews` : ""}`]
+                  : []),
+                ...(place.neighborhood ? [place.neighborhood] : []),
+              ]}
+            />
+          </div>
+        )}
+      </PageHero>
 
-        {/* Content */}
-        <div className="hero-container">
-          <div className="max-w-3xl">
-            {/* Eyebrow */}
-            <Link
-              href="/places"
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary-foreground/80 hover:text-gold transition-colors"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" /> All places
+      <nav aria-label="Breadcrumb" className="site-container pt-6 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+        <ol className="flex items-center gap-2">
+          <li>
+            <Link href="/explore?type=place" className="inline-flex items-center gap-1 hover:text-primary">
+              <ChevronLeft className="h-3.5 w-3.5" /> Places to visit
             </Link>
+          </li>
+          <li aria-hidden className="opacity-40">/</li>
+          <li className="truncate text-foreground">{place.name}</li>
+        </ol>
+      </nav>
 
-            <div className="mt-6">
-              <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur border border-primary-foreground/20 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-gold">
-                <MapPin className="h-3.5 w-3.5" /> {place.tag} · Marco Island
-              </div>
+      <section className="site-container grid gap-12 py-10 md:py-14 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14">
+        <div className="min-w-0 space-y-14">
+          <PlaceStoryContent place={place} />
 
-              {/* Heading */}
-              <h1 className="mt-6 font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
-                {place.name}
-              </h1>
-
-              {/* Description */}
-              <p className="mt-5 max-w-lg text-sm leading-6 text-primary-foreground/80 sm:mt-6 sm:text-base sm:leading-7">
-                {place.blurb}
-              </p>
-
-              {/* CTA */}
-              <div className="mt-7 flex flex-wrap items-center gap-3 sm:mt-8">
-                <AddToItineraryButton place={itineraryPlace} size="lg" />
-
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={handleShare}
-                  className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 hover:text-primary-foreground"
-                >
-                  <Share2 className="h-4 w-4" /> Share
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery */}
-      <section className="bg-background py-12 md:py-16">
-        <div className="site-container">
-          <div className="flex items-end justify-between gap-4 mb-6">
-            <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
-                Gallery
-              </p>
-              <h2 className="font-display text-2xl md:text-3xl font-semibold mt-1">
-                {place.gallery.length} moments
-              </h2>
-            </div>
-            <p className="hidden md:block text-sm text-muted-foreground">
-              Tap any image to expand
-            </p>
-          </div>
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {place.gallery.map((src, i) => (
-              <button
-                key={i}
-                onClick={() => setLightbox(i)}
-                className={cn(
-                  "group relative shrink-0 snap-start overflow-hidden rounded-3xl shadow-soft hover:shadow-elegant transition-all duration-500",
-                  i === 0
-                    ? "w-[80vw] md:w-[640px] aspect-[16/10]"
-                    : "w-[60vw] md:w-[400px] aspect-[5/4]"
-                )}
-              >
-                <img
-                  src={src}
-                  alt={`${place.name} — view ${i + 1}`}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 aspect-[16/9]"
-                />
-                <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/15 transition-colors" />
-                <span className="absolute bottom-4 right-4 inline-flex items-center justify-center h-9 w-9 rounded-full bg-background/90 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  <ArrowUpRight className="h-4 w-4" />
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Main content */}
-      <section className="site-container pb-16 md:pb-24 grid lg:grid-cols-[1fr_360px] gap-12 lg:gap-16">
-        <PlaceStoryContent place={place} />
-
-        {/* Sticky plan-your-visit (desktop) */}
-        <aside className="hidden lg:block">
-          <div className="sticky top-24 space-y-4">
-            <div className="rounded-3xl border border-border bg-card p-6 shadow-elegant">
-              <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
-                Plan your visit
-              </p>
-              <h3 className="font-display text-2xl font-semibold mt-2">
-                Add it to your itinerary
-              </h3>
-              <p className="text-sm text-muted-foreground mt-2">
-                Put it in visiting order with your other stops, pick a date
-                and see the route on the map in My Passport.
-              </p>
-
-              <AddToItineraryButton place={itineraryPlace} size="lg" className="mt-5 w-full" />
-              <Link href="/passport" className="mt-3 block">
-                <Button variant="outline" size="lg" className="w-full">
-                  Open My Passport
-                </Button>
-              </Link>
-
-              <button
-                onClick={handleShare}
-                className="mt-3 w-full inline-flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Share2 className="h-3.5 w-3.5" /> Share this place
-              </button>
-            </div>
-
-            <div className="rounded-3xl bg-sand p-6">
-              <p className="text-xs uppercase tracking-[0.22em] text-gold font-semibold">
-                Quick facts
-              </p>
-              <dl className="mt-4 space-y-3 text-sm">
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Best time</dt>
-                  <dd className="font-medium text-right">
-                    {place.bestTimeToVisit ?? "Anytime"}
-                  </dd>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Vibe</dt>
-                  <dd className="font-medium text-right">{place.tag}</dd>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Cost</dt>
-                  <dd className="font-medium text-right">
-                    {place.fees ?? place.priceLevel ?? "Free"}
-                  </dd>
-                </div>
+          {/* On phones the practical facts follow the story instead of a sidebar. */}
+          {facts.length > 0 && (
+            <section className="space-y-4 lg:hidden">
+              <SectionHeading eyebrow="Plan your visit" title="Good to know" />
+              <dl className="divide-y divide-border rounded-3xl border border-border bg-card px-5 text-sm">
+                {facts.map(({ icon: Icon, label, value }) => (
+                  <div key={label} className="flex gap-3 py-4">
+                    <Icon className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                    <div className="min-w-0">
+                      <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{label}</dt>
+                      <dd className="mt-0.5 text-foreground">{value}</dd>
+                    </div>
+                  </div>
+                ))}
               </dl>
-            </div>
+            </section>
+          )}
+
+          {photos.length > 0 && (
+            <section className="space-y-6">
+              <SectionHeading eyebrow="Gallery" title="Photos" />
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {photos.slice(0, PHOTOS_SHOWN).map((src, i) => (
+                  <button
+                    key={src}
+                    type="button"
+                    onClick={() => setLightbox(i)}
+                    aria-label={`Open photo ${i + 1} of ${photos.length}`}
+                    className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt=""
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {i === PHOTOS_SHOWN - 1 && photos.length > PHOTOS_SHOWN && (
+                      <span className="absolute inset-0 grid place-items-center bg-primary/65 text-sm font-semibold text-primary-foreground">
+                        +{photos.length - PHOTOS_SHOWN} more
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <section className="space-y-6">
+            <SectionHeading eyebrow="Getting there" title="Location" />
+            <LocationCard name={place.name} address={place.address} />
+          </section>
+
+          <ReviewsSection id={place.id} />
+        </div>
+
+        <aside className="hidden lg:block">
+          <div className="sticky top-24 rounded-3xl border border-border bg-card p-6 shadow-elegant">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Plan your visit</p>
+            <h2 className="mt-2 font-display text-2xl font-semibold text-primary">{place.name}</h2>
+            <RatingBadge rating={place.rating} reviewCount={place.reviewCount} className="mt-2" />
+            <AddToItineraryButton place={itineraryPlace} size="lg" className="mt-5 w-full" />
+
+            {facts.length > 0 && (
+              <dl className="mt-6 space-y-4 border-t border-border pt-6 text-sm">
+                {facts.map(({ icon: Icon, label, value }) => (
+                  <div key={label} className="flex gap-3">
+                    <Icon className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                    <div className="min-w-0">
+                      <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{label}</dt>
+                      <dd className="mt-0.5 text-foreground">{value}</dd>
+                    </div>
+                  </div>
+                ))}
+              </dl>
+            )}
+
+            {(place.phone || place.websiteUrl) && (
+              <div className="mt-6 flex flex-wrap gap-2 border-t border-border pt-6">
+                {place.phone && (
+                  <Button variant="outline" size="sm" nativeButton={false} render={<a href={`tel:${place.phone}`} />}>
+                    <Phone className="h-3.5 w-3.5" /> Call
+                  </Button>
+                )}
+                {place.websiteUrl && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    nativeButton={false}
+                    render={<a href={place.websiteUrl} target="_blank" rel="noopener noreferrer" />}
+                  >
+                    <Globe className="h-3.5 w-3.5" /> Website
+                  </Button>
+                )}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={share}
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              <Share2 className="h-3.5 w-3.5" /> Share this place
+            </button>
           </div>
         </aside>
+
       </section>
 
-      <NearbyAndRelated
-        categoriesId={place?.categories?.[0]?.id}
-        currentSlug={place.slug}
-      />
+      <SimilarListings type="place" categoryId={place.categories?.[0]?.id} currentSlug={place.slug} />
 
-      {/* Mobile sticky bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur border-t border-border px-4 py-3 flex items-center gap-3 shadow-elegant">
+      {/* Mobile action bar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-border bg-background/95 px-4 py-3 shadow-elegant backdrop-blur lg:hidden">
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-            {place.tag}
-          </p>
-          <p className="font-display text-base font-semibold truncate">
-            {place.name}
-          </p>
+          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{place.tag}</p>
+          <p className="truncate font-display text-base font-semibold text-primary">{place.name}</p>
         </div>
         <AddToItineraryButton place={itineraryPlace} size="sm" compactLabel />
       </div>
-      <div className="lg:hidden h-20" aria-hidden />
+      <div className="h-20 lg:hidden" aria-hidden />
 
-      {/* Lightbox */}
-      <Dialog
-        open={lightbox !== null}
-        onOpenChange={(o) => !o && setLightbox(null)}
-      >
-        <DialogContent className="max-w-6xl bg-primary border-none p-0 overflow-hidden">
+      <Dialog open={lightbox !== null} onOpenChange={(o) => !o && setLightbox(null)}>
+        <DialogContent showCloseButton={false} className="max-w-6xl overflow-hidden border-none bg-primary p-0 sm:max-w-6xl">
+          <DialogTitle className="sr-only">{place.name} photos</DialogTitle>
           {lightbox !== null && (
             <div className="relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={place.gallery[lightbox]}
-                alt={`${place.name} — view ${lightbox + 1}`}
-                className="w-full max-h-[85vh] object-contain bg-primary"
+                src={photos[lightbox]}
+                alt={`${place.name}, photo ${lightbox + 1}`}
+                className="max-h-[85vh] w-full bg-primary object-contain"
               />
               <button
                 onClick={() => setLightbox(null)}
-                className="absolute top-4 right-4 grid place-items-center h-10 w-10 rounded-full bg-background/90 text-foreground hover:bg-background"
+                className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-background/90 text-foreground hover:bg-background"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />
               </button>
-              <button
-                onClick={prevImg}
-                className="absolute left-4 top-1/2 -translate-y-1/2 grid place-items-center h-12 w-12 rounded-full bg-background/90 text-foreground hover:bg-background"
-                aria-label="Previous"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </button>
-              <button
-                onClick={nextImg}
-                className="absolute right-4 top-1/2 -translate-y-1/2 grid place-items-center h-12 w-12 rounded-full bg-background/90 text-foreground hover:bg-background"
-                aria-label="Next"
-              >
-                <ChevronRight className="h-6 w-6" />
-              </button>
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-background/90 text-foreground text-xs uppercase tracking-[0.18em] px-3 py-1.5 rounded-full">
-                {lightbox + 1} / {place.gallery.length}
+              {photos.length > 1 && (
+                <>
+                  <button
+                    onClick={() => step(-1)}
+                    className="absolute left-4 top-1/2 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full bg-background/90 text-foreground hover:bg-background"
+                    aria-label="Previous photo"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                  <button
+                    onClick={() => step(1)}
+                    className="absolute right-4 top-1/2 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full bg-background/90 text-foreground hover:bg-background"
+                    aria-label="Next photo"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                </>
+              )}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-background/90 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-foreground">
+                {lightbox + 1} / {photos.length}
               </div>
             </div>
           )}

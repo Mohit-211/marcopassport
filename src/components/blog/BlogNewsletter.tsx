@@ -20,7 +20,7 @@ export default function BlogNewsletter() {
             type="email"
             placeholder="you@example.com"
             aria-label="Email address"
-            className="h-12 rounded-full border-border bg-background px-5 text-base sm:w-64 md:text-base"
+            className="h-12 rounded-full border-border bg-background px-5 text-base text-foreground sm:w-64 md:text-base"
           />
           <Button type="submit" variant="gold" size="lg">
             Subscribe <ArrowRight className="h-4 w-4" />

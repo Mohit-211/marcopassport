@@ -5,6 +5,8 @@ export type ApiReview = {
   id?: number | string;
   rating: number;
   comment: string;
+  /** GET /explore/listing/:id/reviews returns the author as reviewer.user_profile.name */
+  reviewer?: { user_profile?: { name?: string | null } | null } | null;
   user_name?: string;
   user?: { name?: string };
   created_at?: string;
@@ -33,7 +35,8 @@ export default function ReviewsList({ reviews }: { reviews: ApiReview[] }) {
   return (
     <div className="space-y-4">
       {reviews.map((review, i) => {
-        const name = review.user_name || review.user?.name || "Guest";
+        const name =
+          review.reviewer?.user_profile?.name || review.user_name || review.user?.name || "Guest";
         return (
           <div
             key={review.id ?? i}
@@ -41,7 +44,7 @@ export default function ReviewsList({ reviews }: { reviews: ApiReview[] }) {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
-                <span className="grid place-items-center h-9 w-9 rounded-full bg-sand text-primary shrink-0">
+                <span className="grid place-items-center h-9 w-9 rounded-full bg-cream text-primary shrink-0">
                   <User className="h-4 w-4" />
                 </span>
                 <div>
@@ -67,9 +70,11 @@ export default function ReviewsList({ reviews }: { reviews: ApiReview[] }) {
                 ))}
               </div>
             </div>
-            <p className="mt-3 text-sm text-foreground/85 leading-relaxed">
-              {review.comment}
-            </p>
+            {review.comment && (
+              <p className="mt-3 text-sm text-foreground/85 leading-relaxed">
+                {review.comment}
+              </p>
+            )}
           </div>
         );
       })}

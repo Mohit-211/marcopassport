@@ -4,14 +4,14 @@ import { CtaSection } from "@/components/site/CtaSection";
 
 const cards = [
   {
-    href: "/places",
+    href: "/explore?type=place",
     title: "Places to visit",
     text: "Beaches, parks, and the natural wonders that define Marco.",
     image: "/assets/place-caxambas.jpg",
   },
   {
-    href: "/explore",
-    title: "Explore listings",
+    href: "/explore?type=business",
+    title: "Local businesses",
     text: "Find places to stay, dine, shop, and experience the best of Marco Island.",
     image: "/assets/place-marina.jpg",
   },
@@ -30,14 +30,14 @@ export function ExploreMore() {
       <div className="site-container">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[#EBBD00] font-semibold mb-3">
+            <p className="text-xs uppercase tracking-[0.2em] text-gold font-semibold mb-3">
               Keep exploring
             </p>
-            <h2 className="font-display text-3xl md:text-4xl font-semibold text-[#002E50] leading-tight">
+            <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary leading-tight">
               Go deeper into the island
             </h2>
           </div>
-          <Info className="h-6 w-6 text-[#002E50]/40 hidden md:block" />
+          <Info className="h-6 w-6 text-primary/40 hidden md:block" />
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {cards.map((c) => (
@@ -54,13 +54,13 @@ export function ExploreMore() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="font-display text-xl font-semibold text-[#002E50]">
+                <h3 className="font-display text-xl font-semibold text-primary">
                   {c.title}
                 </h3>
                 <p className="mt-2 text-sm text-foreground/70 leading-relaxed">
                   {c.text}
                 </p>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[#EBBD00]">
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-gold">
                   Explore
                   <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                 </span>

@@ -32,7 +32,7 @@ export async function LocalStats() {
               <p className="text-xs uppercase tracking-wider text-muted-foreground">
                 {stat.k}
               </p>
-              <p className="mt-1 font-display text-xl font-semibold text-[#002E50] md:text-2xl">
+              <p className="mt-1 font-display text-xl font-semibold text-primary md:text-2xl">
                 {stat.v}
               </p>
             </div>
@@ -45,7 +45,7 @@ export async function LocalStats() {
               <p className="text-xs uppercase tracking-wider text-muted-foreground">
                 {fact.k}
               </p>
-              <p className="mt-1 font-display text-lg font-semibold text-[#002E50] md:text-xl">
+              <p className="mt-1 font-display text-lg font-semibold text-primary md:text-xl">
                 {fact.v}
               </p>
             </div>

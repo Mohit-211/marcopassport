@@ -188,8 +188,8 @@ export default function BlogArticleExperience({
         eyebrow="Continue exploring"
         title="Find the places and businesses mentioned in this story."
         actions={[
-          { label: "Browse Directory", href: "/explore" },
-          { label: "See Places", href: "/places" },
+          { label: "Explore Marco Island", href: "/explore" },
+          { label: "Places to visit", href: "/explore?type=place" },
         ]}
       />
       {/* Related */}

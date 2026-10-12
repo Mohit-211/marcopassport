@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { AboutUs } from "@/components/home/AboutUs";
 import { EditorLetter } from "@/components/home/EditorLetter";
-import { Categories } from "@/components/home/Categories";
 import { FeaturedListings } from "@/components/home/FeaturedListings";
 import { MagazineStrip } from "@/components/home/MagazineStrip";
 import { BlogPreview } from "@/components/home/BlogPreview";
@@ -20,15 +19,16 @@ export const metadata: Metadata = {
   },
 };
 
+// Featured listings come from the API at render time; refresh them every 10 minutes.
+export const revalidate = 600;
+
 export default function Home() {
   return (
     <>
       <Hero />
       <AboutUs />
       <EditorLetter />
-      <Categories />
       <FeaturedListings />
-      {/* <TopPlaces /> */}
       <MagazineStrip />
       <BlogPreview />
       <PassportCTA />

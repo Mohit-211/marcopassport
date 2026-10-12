@@ -11,7 +11,7 @@ import {
   Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { HeroBackground } from "@/components/site/HeroBackground";
+import { PageHero } from "@/components/site/PageHero";
 
 export const metadata: Metadata = {
   title: "Advertise With Us | The Marco Passport",
@@ -44,67 +44,51 @@ export default function BusinessPage() {
   return (
     <>
       {/* Hero */}
-      <section className="hero-viewport">
-        <HeroBackground src="/assets/listing-restaurant.jpg" alt="Waterfront restaurant on Marco Island" />
-        {/* Content */}
-        <div className="hero-container">
-          <div className="max-w-2xl">
-            {/* Eyebrow */}
-            <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">
-              <span className="h-px w-8 bg-gold/70" />
-              <Building2 className="h-3.5 w-3.5" />
-              Business Directory
-            </div>
-
-            {/* Heading */}
-            <h1 className="font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
-              Advertise With{" "}
-              <span className="italic text-gold">The Marco Passport</span>
-            </h1>
-
-            {/* Description */}
-            <p className="mt-5 max-w-lg text-sm leading-6 text-primary-foreground/80 sm:mt-6 sm:text-base sm:leading-7">
-              Put your business in front of locals and visitors exploring Marco
-              Island. Rates are published quarterly.
-            </p>
-
-            {/* CTA */}
-            <div className="mt-7 sm:mt-8">
-              <Link href="/business/submit">
-                <Button variant="gold" size="lg">
-                  Get Started
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        image="/assets/listing-restaurant.jpg"
+        imageAlt="Waterfront restaurant on Marco Island"
+        icon={Building2}
+        eyebrow="Business Directory"
+        title={
+          <>
+            Advertise With{" "}
+            <span className="italic text-gold">The Marco Passport</span>
+          </>
+        }
+        description="Put your business in front of locals and visitors exploring Marco Island. Rates are published quarterly."
+      >
+        <Link href="/business/submit">
+          <Button variant="gold" size="lg">
+            Get Started
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </Link>
+      </PageHero>
 
       {/* Rate Sheet — styled after the print rate card */}
       <section className="bg-background">
         <div className="site-container py-14 sm:py-16 max-w-2xl">
-          <div className="rounded-3xl border-2 border-[#EBBD00]/70 bg-[#0F2A3F] shadow-elegant overflow-hidden">
+          <div className="rounded-3xl border-2 border-gold/70 bg-primary shadow-elegant overflow-hidden">
             {/* Card header */}
             <div className="px-6 sm:px-10 pt-10 pb-6 text-center border-b border-white/10">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#EBBD00] mb-2">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-gold mb-2">
                 The The Marco Passport
               </p>
               <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
                 Advertising Rate Sheet
               </h2>
               <div className="mt-3 flex items-center justify-center gap-3">
-                <span className="h-px w-10 bg-[#EBBD00]/50" />
+                <span className="h-px w-10 bg-gold/50" />
                 <span className="text-xs font-medium uppercase tracking-widest text-white/60">
                   Published Quarterly
                 </span>
-                <span className="h-px w-10 bg-[#EBBD00]/50" />
+                <span className="h-px w-10 bg-gold/50" />
               </div>
             </div>
 
             {/* RATES badge */}
             <div className="flex justify-center -mt-4">
-              <span className="rounded-full bg-[#EBBD00] px-5 py-1.5 text-xs font-bold uppercase tracking-widest text-[#0F2A3F] shadow-gold">
+              <span className="rounded-full bg-gold px-5 py-1.5 text-xs font-bold uppercase tracking-widest text-primary shadow-gold">
                 Rates
               </span>
             </div>
@@ -114,16 +98,16 @@ export default function BusinessPage() {
               {rates.map((r) => (
                 <div
                   key={r.id}
-                  className="flex items-center gap-4 rounded-2xl border border-[#EBBD00]/30 bg-white/[0.03] px-4 py-3.5"
+                  className="flex items-center gap-4 rounded-2xl border border-gold/30 bg-white/[0.03] px-4 py-3.5"
                 >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EBBD00] text-[#0F2A3F]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold text-primary">
                     <r.Icon className="h-5 w-5" />
                   </div>
                   <span className="text-sm sm:text-base font-semibold uppercase tracking-wide text-white">
                     {r.name}
                   </span>
                   <span className="flex-1 border-b border-dotted border-white/25 mx-1 mt-3" />
-                  <span className="text-xl sm:text-2xl font-semibold text-[#EBBD00]">
+                  <span className="text-xl sm:text-2xl font-semibold text-gold">
                     {r.price}
                   </span>
                 </div>
@@ -133,7 +117,7 @@ export default function BusinessPage() {
             {/* Divider */}
             <div className="flex items-center justify-center gap-3 px-10">
               <span className="h-px flex-1 bg-white/10" />
-              <span className="text-[#EBBD00] text-xs">✻</span>
+              <span className="text-gold text-xs">✻</span>
               <span className="h-px flex-1 bg-white/10" />
             </div>
 
@@ -145,7 +129,7 @@ export default function BusinessPage() {
               <ul className="space-y-4">
                 {contact.map((c) => (
                   <li key={c.label} className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#EBBD00] text-[#EBBD00]">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold text-gold">
                       <c.Icon className="h-4 w-4" />
                     </span>
                     <span className="text-sm text-white/90">
