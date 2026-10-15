@@ -45,7 +45,7 @@ export function RatingBadge({ rating, reviewCount, className }: { rating: number
   );
 }
 
-/** Card for any listing on Explore and the home page: details link plus a quick "Add to itinerary". */
+/** Card for any listing on Explore and the home page: details link plus a quick "Add to passport". */
 export function ExploreCard({ item }: { item: ExploreItem }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elegant">

@@ -30,7 +30,8 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-cream">
+    <footer className="border-t border-border bg-cream max-[759px]:pb-36">
+      {/* (max-[759px]:pb-36: room on phones so the floating Itinerary button doesn't cover the last links.) */}
       {/* Main Footer */}
       <div className="site-container grid gap-12 py-14 md:grid-cols-2 md:gap-14 md:py-16 lg:grid-cols-4">
         {/* Brand */}

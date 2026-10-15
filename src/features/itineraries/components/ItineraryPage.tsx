@@ -160,7 +160,7 @@ export function ItineraryPage({ id }: { id: string }) {
             href="/passport"
             className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
           >
-            <ArrowLeft className="h-4 w-4" /> All itineraries
+            <ArrowLeft className="h-4 w-4" /> All passports
           </Link>
 
           {loaded && value ? (

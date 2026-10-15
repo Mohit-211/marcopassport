@@ -51,4 +51,4 @@ export interface ItineraryPayload {
 }
 
 export const MAX_ITINERARY_PLACES = 20;
-export const DEFAULT_ITINERARY_NAME = "My itinerary";
+export const DEFAULT_ITINERARY_NAME = "My passport";

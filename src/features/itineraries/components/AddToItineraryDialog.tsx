@@ -32,7 +32,7 @@ import {
 const NEW = "new";
 
 /**
- * "Add to itinerary" popup used from Explore cards and detail pages: pick a
+ * "Add to passport" popup used from Explore cards and detail pages: pick a
  * visit date (optional) and which itinerary to add the place to, without
  * leaving the page. Guests add to their on-device draft instead.
  */
@@ -133,7 +133,7 @@ function AddForm({
     <form onSubmit={submit} noValidate>
       <DialogHeader>
         <DialogTitle className="font-display text-2xl text-primary">
-          Add to itinerary
+          Add to passport
         </DialogTitle>
         <DialogDescription>
           Pick a date if you know it. You can change it later in My Passport.
@@ -237,13 +237,13 @@ function AddForm({
                 onSelect={setTarget}
                 title={
                   <span className="flex items-center gap-1.5">
-                    <Plus className="h-3.5 w-3.5" /> New itinerary
+                    <Plus className="h-3.5 w-3.5" /> New passport
                   </span>
                 }
               />
               {target === NEW && (
                 <Input
-                  aria-label="New itinerary name"
+                  aria-label="New passport name"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   onFocus={(e) => e.target.select()}
@@ -273,7 +273,7 @@ function AddForm({
             ) : (
               <Plus className="h-4 w-4" />
             )}
-            Add to itinerary
+            Add to passport
           </Button>
         )}
       </DialogFooter>

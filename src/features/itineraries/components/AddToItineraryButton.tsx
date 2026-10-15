@@ -15,7 +15,7 @@ const addedClass =
   "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800";
 
 /**
- * "Add to itinerary" on Explore cards and detail pages. Opens a small popup to
+ * "Add to passport" on Explore cards and detail pages. Opens a small popup to
  * pick a visit date and an itinerary. Shows "Added" once the place is in any
  * of the user's itineraries (or the guest draft); it can still be added to
  * another itinerary from there.
@@ -65,7 +65,7 @@ export function AddToItineraryButton({
           ) : (
             <Plus className="h-4 w-4" />
           )}
-          {added ? "Added" : compactLabel ? "Add" : "Add to itinerary"}
+          {added ? "Added" : compactLabel ? "Add" : "Add to passport"}
         </Button>
       </Tooltip>
       <AddToItineraryDialog place={place} open={open} onOpenChange={setOpen} />

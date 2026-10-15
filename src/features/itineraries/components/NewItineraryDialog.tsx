@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DEFAULT_ITINERARY_NAME } from "../types";
 
-/** Names a new itinerary. Dates and places are set on the itinerary page. */
+/** Names a new passport. Dates and places are set on the itinerary page. */
 export function NewItineraryDialog({
   open,
   onOpenChange,
@@ -23,7 +23,7 @@ export function NewItineraryDialog({
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Shown as "… will be added" when creating from an Add to itinerary button */
+  /** Shown as "… will be added" when creating from an Add to passport button */
   placeName?: string;
   /** Resolves true once created, which closes the dialog */
   onCreate: (name: string) => Promise<boolean>;
@@ -69,7 +69,7 @@ function NameForm({
     <form onSubmit={submit} noValidate>
       <DialogHeader>
         <DialogTitle className="font-display text-2xl text-primary">
-          New itinerary
+          New passport
         </DialogTitle>
         <DialogDescription>
           {placeName

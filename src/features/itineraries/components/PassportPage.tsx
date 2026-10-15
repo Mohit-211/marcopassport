@@ -55,7 +55,7 @@ export function PassportPage() {
         eyebrow="My Passport"
         title={
           <>
-            Plan your <span className="italic text-gold">itinerary</span>
+            Plan your <span className="italic text-gold">passport</span>
           </>
         }
         description={
@@ -66,7 +66,7 @@ export function PassportPage() {
       >
         {ready && isAuthenticated && (
           <Button variant="gold" size="lg" onClick={() => setCreating(true)}>
-            <Plus className="h-4 w-4" /> New itinerary
+            <Plus className="h-4 w-4" /> New passport
           </Button>
         )}
       </PageHero>
@@ -96,7 +96,7 @@ function GuestDraft() {
       toast.error(problem);
       return;
     }
-    // After login the provider saves this draft and opens the new itinerary.
+    // After login the provider saves this draft and opens the new passport.
     void requestLogin("Log in or create an account to save your itinerary.");
   };
 
@@ -181,7 +181,7 @@ function ItineraryList({
   return (
     <>
       <h2 className="mb-6 font-display text-2xl font-semibold text-primary md:text-3xl">
-        My itineraries
+        My passports
       </h2>
 
       {draft && draft.items.length > 0 && (
@@ -228,12 +228,12 @@ function ItineraryList({
             No itineraries yet
           </h2>
           <p className="mx-auto mt-2 max-w-md text-muted-foreground">
-            Start one here, or use &ldquo;Add to itinerary&rdquo; on any place
+            Start one here, or use &ldquo;Add to passport&rdquo; on any place
             or business.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button variant="gold" onClick={() => setCreating(true)}>
-              <Plus className="h-4 w-4" /> New itinerary
+              <Plus className="h-4 w-4" /> New passport
             </Button>
             <Link href="/explore">
               <Button variant="outline">Browse Explore</Button>

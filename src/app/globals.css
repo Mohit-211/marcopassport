@@ -154,6 +154,10 @@
   --border: oklch(0.9 0.012 78);
   --input: oklch(0.9 0.012 78);
   --ring: oklch(0.65 0.045 245);
+
+  /* Stacking: fixed page bars use 40, dialogs 50. Floating buttons (the
+     Passport shell) sit between them. */
+  --z-floating: 45;
 }
 
 .dark {
@@ -877,4 +881,10 @@
 [data-sonner-toaster] [data-sonner-toast][data-styled][data-type="error"] [data-close-button]:hover {
   background: color-mix(in oklab, var(--destructive) 10%, transparent);
   color: var(--destructive);
+}
+
+/* PlanTripButton: shine sweeping across the "Tap to plan" pill */
+@keyframes passport-shine {
+  0%, 60% { transform: translateX(0) skewX(-12deg); }
+  100% { transform: translateX(400%) skewX(-12deg); }
 }

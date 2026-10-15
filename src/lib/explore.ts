@@ -38,6 +38,9 @@ export interface ExploreItem {
   /** Neighborhood, else address */
   location: string;
   address: string | null;
+  /** null when the listing has no map position */
+  latitude: number | null;
+  longitude: number | null;
   /** "$" – "$$$$", businesses only */
   price: string | null;
   /** null when the listing has no reviews yet */
@@ -58,6 +61,13 @@ export const PRICE_LEVELS = ["$", "$$", "$$$", "$$$$"];
 export function visibleRating(value: unknown): number | null {
   const n = Number(value);
   return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+/** The API may send coordinates as strings; 0 or blank means "not set". */
+function coordinate(value: unknown): number | null {
+  if (value == null || value === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) && n !== 0 ? n : null;
 }
 
 function listingHref(type: ExploreType, slug: string) {
@@ -84,6 +94,8 @@ export function toExploreItem(raw: ApiPlace | ApiBusiness, type: ExploreType): E
     category: categories[0]?.name ?? (type === "place" ? "Place" : "Business"),
     location: raw.neighborhood || raw.address || "Marco Island",
     address: raw.address ?? null,
+    latitude: coordinate(raw.latitude),
+    longitude: coordinate(raw.longitude),
     price: raw.price_level ?? null,
     rating: visibleRating(raw.rating),
     reviewCount: Number(raw.review_count) || 0,
@@ -103,6 +115,8 @@ export function toItineraryPlace(item: ExploreItem): ItineraryPlace {
     short_description: item.description,
     featured_image: item.imagePath,
     address: item.address,
+    latitude: item.latitude?.toString() ?? null,
+    longitude: item.longitude?.toString() ?? null,
   };
 }
 

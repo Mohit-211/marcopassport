@@ -60,6 +60,7 @@ export function ExploreFilters({
   activeCount,
   onClear,
 }: ExploreFiltersProps) {
+  console.log(categories,"categories")
   const groups = (["place", "business"] as const)
     .map((type) => ({ type, options: categories.filter((c) => c.type === type) }))
     .filter((g) => g.options.length > 0);

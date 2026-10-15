@@ -418,7 +418,7 @@ function EmptyPlaces() {
       <Compass className="mx-auto h-8 w-8 text-gold" />
       <p className="mt-3 font-medium text-primary">No places yet</p>
       <p className="mx-auto mt-1 max-w-sm text-sm text-muted-foreground">
-        Use &ldquo;Add to itinerary&rdquo; on any place or business to add it
+        Use &ldquo;Add to passport&rdquo; on any place or business to add it
         here.
       </p>
       <div className="mt-5 flex flex-wrap justify-center gap-2">

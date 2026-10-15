@@ -71,7 +71,9 @@ export function draftProblem(draft: ItineraryDraft): string | null {
   return null;
 }
 
-/** Only the fields the API accepts: name, dates and items[{ place_id, visit_date }]. */
+/**
+ * Only the fields the API accepts: name, dates and items[{ place_id, visit_date }].
+ */
 export function toPayload(draft: ItineraryDraft): ItineraryPayload {
   return {
     name: draft.name.trim() || DEFAULT_ITINERARY_NAME,
@@ -106,7 +108,8 @@ export function parseDraft(raw: string | null): ItineraryDraft | null {
     const items: ItineraryItem[] = [];
     for (const item of value.items) {
       const id = Number(item?.place_id);
-      if (!Number.isInteger(id) || id <= 0 || seen.has(id) || typeof item?.place?.name !== "string") continue;
+      const validId = Number.isInteger(id) && id > 0;
+      if (!validId || seen.has(id) || typeof item?.place?.name !== "string") continue;
       seen.add(id);
       items.push({ place_id: id, visit_date: date(item.visit_date), place: { ...item.place, id } });
     }
