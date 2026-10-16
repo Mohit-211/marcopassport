@@ -8,7 +8,7 @@
  */
 
 export const MAPS_JS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_JS_KEY ?? "";
-export const MAP_ID = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID || "DEMO_MAP_ID";
+export const MAP_ID = process.env.NEXT_PUBLIC_GOOGLE_MAPS_JS_KEY || "DEMO_MAP_ID";
 
 /* Just the parts of the Maps API the planner uses (no @types dependency). */
 export interface LatLng {
