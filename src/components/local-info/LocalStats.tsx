@@ -40,7 +40,7 @@ export async function LocalStats() {
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-6 border-t border-border pt-6 lg:grid-cols-4">
-          {MARCO_ISLAND_FACTS.map((fact) => (
+          {MARCO_ISLAND_FACTS?.map((fact) => (
             <div key={fact.k}>
               <p className="text-xs uppercase tracking-wider text-muted-foreground">
                 {fact.k}
