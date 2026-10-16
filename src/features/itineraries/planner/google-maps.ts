@@ -7,8 +7,8 @@
  * Advanced markers need a Map ID; "DEMO_MAP_ID" is Google's development one.
  */
 
-export const MAPS_JS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_JS_KEY ?? "";
-export const MAP_ID = process.env.NEXT_PUBLIC_GOOGLE_MAPS_JS_KEY || "DEMO_MAP_ID";
+export const MAPS_JS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY ?? "";
+export const MAP_ID = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY || "DEMO_MAP_ID";
 
 /* Just the parts of the Maps API the planner uses (no @types dependency). */
 export interface LatLng {
