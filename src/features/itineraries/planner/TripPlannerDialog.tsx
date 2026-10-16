@@ -43,8 +43,34 @@ type Load =
   | { status: "ready"; items: ExploreItem[]; partial: boolean };
 
 
+const PANEL_MIN = 300;
+const PANEL_MAX = 720;
+const PANEL_DEFAULT = 400;
+const PANEL_KEY = "planner-panel-width";
+const clampWidth = (w: number) =>
+  Math.round(Math.min(Math.max(w, PANEL_MIN), Math.min(PANEL_MAX, window.innerWidth - 320)));
+
+/** Width of the left panel on desktop, resizable by dragging or arrow keys, remembered per browser. */
+function usePanelWidth() {
+  const [width, setWidth] = useState(PANEL_DEFAULT);
+  useEffect(() => {
+    try {
+      const saved = Number(localStorage.getItem(PANEL_KEY));
+      if (saved) setWidth(clampWidth(saved));
+    } catch {}
+  }, []);
+  const commit = (w: number) => {
+    const next = clampWidth(w);
+    setWidth(next);
+    try {
+      localStorage.setItem(PANEL_KEY, String(next));
+    } catch {}
+  };
+  return [width, setWidth, commit] as const;
+}
+
 const fieldClass =
-  "h-9 rounded-xl border border-input bg-background px-3 text-sm text-primary outline-none focus-visible:ring-3 focus-visible:ring-ring/50";
+  "h-9 rounded-full border border-border bg-background px-3.5 text-sm font-medium text-primary shadow-xs outline-none transition-colors hover:border-primary/40 focus-visible:ring-3 focus-visible:ring-ring/50";
 
 /**
  * "Plan my trip": a full-screen planner over the site's own listings (the
@@ -74,6 +100,38 @@ function Planner() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [tab, setTab] = useState<"places" | "plan">("places");
   const listRef = useRef<HTMLUListElement>(null);
+  const [panelWidth, setPanelWidth, commitPanelWidth] = usePanelWidth();
+  const [resizing, setResizing] = useState(false);
+
+  const startResize = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startW = panelWidth;
+    let last = startW;
+    setResizing(true);
+    const move = (ev: PointerEvent) => {
+      last = clampWidth(startW + ev.clientX - startX);
+      setPanelWidth(last);
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      setResizing(false);
+      commitPanelWidth(last);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+
+  const onResizeKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const step = e.shiftKey ? 64 : 16;
+    if (e.key === "ArrowLeft") commitPanelWidth(panelWidth - step);
+    else if (e.key === "ArrowRight") commitPanelWidth(panelWidth + step);
+    else if (e.key === "Home") commitPanelWidth(PANEL_MIN);
+    else if (e.key === "End") commitPanelWidth(PANEL_MAX);
+    else return;
+    e.preventDefault();
+  };
   const fetchedFor = useRef<number | null>(null);
 
   // Listings load once per reload. Not cancelled on unmount, so Strict Mode's
@@ -112,38 +170,42 @@ function Planner() {
 
   return (
     <>
-      {/* Header: primary brand gradient; follows the light/dark theme */}
-      <header className="relative isolate flex items-center gap-3 overflow-hidden bg-linear-to-br from-primary to-primary-soft px-4 py-3 text-primary-foreground sm:px-6 sm:py-4">
+      {/* Header: solid navy with gold accents; follows the light/dark theme */}
+      <header className="relative isolate flex shrink-0 items-center gap-4 overflow-hidden border-b border-gold/30 bg-primary px-5 py-5 text-primary-foreground sm:gap-5 sm:px-7 sm:py-4 lg:min-h-37">
+        {/* Thin gold accent along the top edge */}
+        <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-gold" />
         {/* Decorative circles, kept faint so the text stays readable */}
         <span
           aria-hidden
-          className="pointer-events-none absolute -top-20 -right-10 -z-10 h-56 w-56 rounded-full bg-primary-foreground/6"
+          className="pointer-events-none absolute -top-24 -right-12 -z-10 h-64 w-64 rounded-full bg-primary-foreground/3"
         />
         <span
           aria-hidden
-          className="pointer-events-none absolute -bottom-24 right-40 -z-10 h-40 w-40 rounded-full border border-primary-foreground/10 max-[759px]:hidden"
+          className="pointer-events-none absolute -bottom-24 right-48 -z-10 h-40 w-40 rounded-full border border-primary-foreground/6 max-[759px]:hidden"
         />
 
         <span
           aria-hidden
-          className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-gold text-gold-foreground max-[759px]:h-9 max-[759px]:w-9"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-gold text-gold-foreground sm:h-12 sm:w-12 lg:h-14 lg:w-14"
         >
           <Plane className="h-5 w-5 -rotate-45" />
         </span>
         <div className="min-w-0 flex-1">
-          <span className="inline-flex items-center rounded-full bg-gold px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-gold-foreground ring-1 ring-primary-foreground/20">
+          {/* Eyebrow styled like PageHero */}
+          <div className="mb-2 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.24em] text-gold sm:mb-3 sm:text-[11px]">
+            <span className="h-px w-8 bg-gold/70" />
             Passport
-          </span>
-          <DialogTitle className="mt-1 truncate font-display text-2xl leading-tight font-semibold text-primary-foreground max-[759px]:text-lg">
+          </div>
+          <DialogTitle className="truncate font-display text-[clamp(1.4rem,2.4vw,2.25rem)] leading-[1.1] font-medium tracking-[-0.02em] text-primary-foreground">
             Plan your passport
           </DialogTitle>
-          <DialogDescription className="mt-0.5 truncate text-sm text-primary-foreground/80 max-[759px]:hidden">
+          <DialogDescription className="mt-2 truncate text-sm leading-6 text-primary-foreground/75 max-[759px]:hidden sm:mt-3">
             Marco Island · Add places and build your trip
           </DialogDescription>
         </div>
         <DialogClose
           aria-label="Close"
-          className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground ring-1 ring-primary-foreground/20 transition-colors hover:bg-primary-foreground/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+          className="grid h-10 w-10 shrink-0 place-items-center self-start rounded-full bg-primary-foreground/10 text-primary-foreground ring-1 ring-primary-foreground/20 transition-colors hover:bg-primary-foreground/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
         >
           <X className="h-5 w-5" aria-hidden />
         </DialogClose>
@@ -152,16 +214,47 @@ function Planner() {
       {/* Category chips */}
       {/* <Chips value={filters.chip} onChange={(chip) => update({ chip })} /> */}
 
-      <div className="flex min-h-0 flex-1 flex-col md:grid md:grid-cols-[minmax(340px,440px)_1fr]">
+      <div
+        className={cn(
+          "flex min-h-0 flex-1 flex-col pt-4 sm:pt-5 md:grid md:grid-cols-[var(--panel-w)_1fr] md:pt-6",
+          resizing && "cursor-col-resize select-none [&_*]:pointer-events-none",
+        )}
+        style={{ "--panel-w": `${panelWidth}px` } as React.CSSProperties}
+      >
         {/* Map: on top on phones, right column on desktop */}
-        <div className="h-[34dvh] shrink-0 border-b border-border md:order-2 md:h-auto md:border-b-0">
+        <div className="mx-4 mb-4 h-[34dvh] min-w-0 shrink-0 overflow-hidden rounded-lg border border-border md:order-2 md:mx-0 md:mr-6 md:mb-6 md:ml-6 md:h-auto md:rounded-[10px]">
           {/* My Plan shows only the plan's stops (A, B, C…); Places shows every result. */}
           <PlannerMap items={tab === "plan" ? NO_ITEMS : results} stops={stops} selectedId={selectedId} onSelect={select} />
         </div>
 
         {/* Left panel */}
-        <section className="flex min-h-0 flex-1 flex-col md:order-1 md:border-r md:border-border" aria-label="Places and plan">
-          <div role="tablist" aria-label="Planner view" className="flex border-b border-border px-4">
+        <section
+          className="relative flex min-h-0 flex-1 flex-col md:order-1 md:border-r md:border-border"
+          aria-label="Places and plan"
+        >
+          {/* Drag handle on the panel's right edge (desktop only) */}
+          <div
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize panel"
+            aria-valuenow={panelWidth}
+            aria-valuemin={PANEL_MIN}
+            aria-valuemax={PANEL_MAX}
+            tabIndex={0}
+            onPointerDown={startResize}
+            onKeyDown={onResizeKey}
+            onDoubleClick={() => commitPanelWidth(PANEL_DEFAULT)}
+            className="group/handle absolute top-0 -right-1.5 z-20 hidden h-full w-3 cursor-col-resize touch-none focus-visible:outline-none md:block"
+          >
+            <span
+              className={cn(
+                "absolute inset-y-0 left-1/2 w-0.5 -translate-x-1/2 transition-colors group-hover/handle:bg-gold group-focus-visible/handle:bg-gold",
+                resizing && "bg-gold",
+              )}
+            />
+            <span className="absolute top-1/2 left-1/2 h-10 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-border shadow-sm transition-colors group-hover/handle:bg-gold group-focus-visible/handle:bg-gold" />
+          </div>
+          <div role="tablist" aria-label="Planner view" className="mx-5 mb-4 flex rounded-full bg-muted p-1">
             {(["places", "plan"] as const).map((t) => (
               <button
                 key={t}
@@ -170,11 +263,25 @@ function Planner() {
                 aria-selected={tab === t}
                 onClick={() => setTab(t)}
                 className={cn(
-                  "-mb-px border-b-2 px-3 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
-                  tab === t ? "border-gold text-primary" : "border-transparent text-muted-foreground hover:text-primary",
+                  "flex-1 rounded-full px-3 py-2 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                  tab === t ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-primary",
                 )}
               >
-                {t === "places" ? "Places" : `My Plan (${plan.value?.items.length ?? 0})`}
+                {t === "places" ? (
+                  "Places"
+                ) : (
+                  <span className="inline-flex items-center gap-1.5">
+                    My Plan
+                    <span
+                      className={cn(
+                        "grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[11px] tabular-nums",
+                        tab === t ? "bg-gold text-gold-foreground" : "bg-background text-primary",
+                      )}
+                    >
+                      {plan.value?.items.length ?? 0}
+                    </span>
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -184,7 +291,7 @@ function Planner() {
           ) : (
             <>
               {/* Toolbar: search and filters */}
-              <div className="space-y-2.5 border-b border-border px-4 py-3">
+              <div className="space-y-3 border-y border-border bg-muted/30 px-5 py-4">
                 <div className="relative">
                   <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
@@ -193,7 +300,7 @@ function Planner() {
                     placeholder="Search places, food, beaches…"
                     value={filters.query}
                     onChange={(e) => update({ query: e.target.value })}
-                    className="h-9 rounded-xl pl-9 text-sm"
+                    className="h-10 rounded-full bg-background pl-9 text-sm shadow-xs"
                   />
                 </div>
 
@@ -226,7 +333,7 @@ function Planner() {
                       <option value={4.5}>4.5+ stars</option>
                     </select>
                   )}
-                  <label className="flex items-center gap-2 text-xs font-medium text-primary">
+                  <label className="ml-auto flex items-center gap-2 text-xs font-semibold text-primary">
                     <Switch checked={filters.featuredOnly} onCheckedChange={(featuredOnly) => update({ featuredOnly })} />
                     Featured
                   </label>
@@ -376,14 +483,17 @@ function Results({
 }) {
   if (load.status === "loading") {
     return (
-      <div className="flex flex-1 items-center justify-center gap-2 text-sm text-muted-foreground" role="status">
-        <Loader2 className="h-4 w-4 animate-spin" /> Loading places…
+      <div className="flex flex-1 flex-col items-center justify-center gap-3 text-sm text-muted-foreground" role="status">
+        <span className="grid h-12 w-12 place-items-center rounded-full bg-primary/10 text-primary">
+          <Loader2 className="h-5 w-5 animate-spin" />
+        </span>
+        Loading places…
       </div>
     );
   }
   if (load.status === "error") {
     return (
-      <div className="m-4 rounded-2xl bg-muted p-4 text-sm text-muted-foreground" role="alert">
+      <div className="m-4 rounded-2xl border border-dashed border-border bg-muted/50 p-5 text-center text-sm text-muted-foreground [&>button]:mx-auto" role="alert">
         We couldn&apos;t load places right now.
         <Button variant="outline" size="sm" className="mt-3 flex" onClick={onRetry}>
           <RefreshCw className="h-3.5 w-3.5" /> Try again
@@ -393,7 +503,7 @@ function Results({
   }
   if (results.length === 0) {
     return (
-      <div className="m-4 rounded-2xl bg-muted p-4 text-sm text-muted-foreground" role="status">
+      <div className="m-4 rounded-2xl border border-dashed border-border bg-muted/50 p-5 text-center text-sm text-muted-foreground [&>button]:mx-auto" role="status">
         Nothing matches these filters yet.
         <Button variant="outline" size="sm" className="mt-3 flex" onClick={onReset}>
           Clear filters
@@ -414,11 +524,11 @@ function Results({
 
   return (
     <>
-      <p className="px-4 pt-3 text-xs text-muted-foreground" role="status">
-        {results.length} {results.length === 1 ? "place" : "places"}
+      <p className="px-5 pt-4 pb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground" role="status">
+        <span className="text-primary">{results.length}</span> {results.length === 1 ? "place" : "places"}
         {load.partial && " · some listings couldn't be loaded"}
       </p>
-      <ul ref={listRef} onKeyDown={onKeyDown} className="min-h-0 flex-1 space-y-2 overflow-y-auto p-3" aria-label="Places">
+      <ul ref={listRef} onKeyDown={onKeyDown} className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 pt-3 pb-6" aria-label="Places">
         {results.map((item) => (
           <PlaceRow key={item.id} item={item} selected={item.id === selectedId} onSelect={() => onSelect(item.id)} />
         ))}
@@ -433,12 +543,21 @@ function PlaceRow({ item, selected, onSelect }: { item: ExploreItem; selected: b
     <li
       data-id={item.id}
       className={cn(
-        "flex gap-3 rounded-2xl border p-2.5 transition-colors",
-        selected ? "border-gold bg-gold/10" : "border-transparent hover:bg-muted/60",
+        "group flex gap-3.5 rounded-2xl border bg-card p-3 shadow-xs transition-all",
+        selected
+          ? "border-gold bg-gold/10 ring-1 ring-gold/40"
+          : "border-border/60 hover:-translate-y-px hover:border-primary/30 hover:shadow-md",
       )}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={item.image} alt="" loading="lazy" className="h-20 w-20 shrink-0 rounded-xl object-cover" />
+      <div className="h-22 w-22 shrink-0 overflow-hidden rounded-xl bg-muted">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={item.image}
+          alt=""
+          loading="lazy"
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
       <div className="min-w-0 flex-1">
         <button
           type="button"
@@ -472,7 +591,7 @@ function PlaceRow({ item, selected, onSelect }: { item: ExploreItem; selected: b
         )}
         <div className="mt-2 flex items-center gap-2">
           <AddToItineraryButton place={toItineraryPlace(item)} size="sm" compactLabel />
-          <Link href={item.href} className="text-xs font-medium text-primary underline-offset-4 hover:underline">
+          <Link href={item.href} className="ml-auto rounded-full px-2.5 py-1 text-xs font-semibold text-primary transition-colors hover:bg-primary/10">
             Details
           </Link>
         </div>
