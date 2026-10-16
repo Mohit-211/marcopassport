@@ -255,7 +255,7 @@ function AddForm({
           ) : (
             <p className="flex items-start gap-2 rounded-2xl bg-muted p-3 text-xs text-muted-foreground">
               <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-              It goes into your itinerary on this device. Log in from My
+              It goes into your passport on this device. Log in from My
               Passport to save it to your account.
             </p>
           )}
