@@ -12,7 +12,7 @@ import type { ItineraryPlace } from "../types";
 // Rebuild the iframe only once edits settle, not on every drag or keystroke.
 const MAP_DEBOUNCE_MS = 800;
 
-function useSettled<T>(value: T, delay: number) {
+export function useSettled<T>(value: T, delay: number) {
   const [settled, setSettled] = useState(value);
   useEffect(() => {
     const timer = setTimeout(() => setSettled(value), delay);
