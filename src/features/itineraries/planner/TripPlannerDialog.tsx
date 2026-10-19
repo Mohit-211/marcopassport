@@ -216,20 +216,20 @@ function Planner() {
 
       <div
         className={cn(
-          "flex min-h-0 flex-1 flex-col pt-4 sm:pt-5 md:grid md:grid-cols-[var(--panel-w)_1fr] md:pt-6",
+          "flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain pt-4 sm:pt-5 md:grid md:overflow-hidden md:grid-cols-[var(--panel-w)_1fr] md:pt-6",
           resizing && "cursor-col-resize select-none [&_*]:pointer-events-none",
         )}
         style={{ "--panel-w": `${panelWidth}px` } as React.CSSProperties}
       >
         {/* Map: on top on phones, right column on desktop */}
-        <div className="mx-4 mb-4 h-[34dvh] min-w-0 shrink-0 overflow-hidden rounded-lg border border-border md:order-2 md:mx-0 md:mr-6 md:mb-6 md:ml-6 md:h-auto md:rounded-[10px]">
+        <div className="mx-4 mb-4 h-[45dvh] min-h-64 min-w-0 shrink-0 overflow-hidden rounded-lg border border-border md:order-2 md:mx-0 md:mr-6 md:mb-6 md:ml-6 md:h-auto md:min-h-0 md:rounded-[10px]">
           {/* My Plan shows only the plan's stops (A, B, C…); Places shows every result. */}
           <PlannerMap items={tab === "plan" ? NO_ITEMS : results} stops={stops} selectedId={selectedId} onSelect={select} />
         </div>
 
         {/* Left panel */}
         <section
-          className="relative flex min-h-0 flex-1 flex-col md:order-1 md:border-r md:border-border"
+          className="relative flex shrink-0 flex-col md:order-1 md:min-h-0 md:flex-1 md:shrink md:border-r md:border-border"
           aria-label="Places and plan"
         >
           {/* Drag handle on the panel's right edge (desktop only) */}

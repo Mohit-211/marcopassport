@@ -47,7 +47,7 @@ export function AddToItineraryDialog({
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[460px]">
+      <DialogContent overlayClassName="bg-black/60 backdrop-blur-sm" className="inset-0 m-auto h-fit max-h-[calc(100dvh-2rem)] translate-x-0 translate-y-0 overflow-y-auto overscroll-contain sm:max-w-[460px]">
         {open && <AddForm place={place} onClose={() => onOpenChange(false)} />}
       </DialogContent>
     </Dialog>
@@ -131,8 +131,8 @@ function AddForm({
 
   return (
     <form onSubmit={submit} noValidate>
-      <DialogHeader>
-        <DialogTitle className="font-display text-2xl text-primary">
+      <DialogHeader className="pr-8">
+        <DialogTitle className="font-display text-xl text-primary sm:text-2xl">
           Add to passport
         </DialogTitle>
         <DialogDescription>
@@ -140,12 +140,12 @@ function AddForm({
         </DialogDescription>
       </DialogHeader>
 
-      <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border bg-muted/50 p-3">
+      <div className="mt-4 flex min-w-0 items-center gap-3 rounded-2xl border border-border bg-muted/50 p-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={placeImage(place.featured_image)}
           alt=""
-          className="h-14 w-14 shrink-0 rounded-xl object-cover"
+          className="h-12 w-12 shrink-0 rounded-xl object-cover sm:h-14 sm:w-14"
         />
         <div className="min-w-0">
           <p className="truncate font-display font-semibold text-primary">
@@ -174,7 +174,7 @@ function AddForm({
           </p>
         </div>
       ) : (
-        <div className="mt-5 space-y-5">
+        <div className="mt-4 space-y-4 sm:mt-5 sm:space-y-5">
           <div className="space-y-1.5">
             <Label
               htmlFor="add-visit-date"
@@ -262,7 +262,7 @@ function AddForm({
         </div>
       )}
 
-      <DialogFooter className="mt-6">
+      <DialogFooter className="sticky -bottom-4 z-10 mt-6 bg-popover [&>button]:w-full sm:[&>button]:w-auto">
         <Button type="button" variant="outline" onClick={onClose}>
           {inDraft ? "Close" : "Cancel"}
         </Button>
@@ -299,7 +299,7 @@ function Choice({
   return (
     <label
       className={cn(
-        "flex cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 transition-colors",
+        "flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 transition-colors",
         checked
           ? "border-primary bg-primary/5"
           : "border-border hover:border-primary/40",
@@ -313,7 +313,7 @@ function Choice({
         checked={checked}
         disabled={disabled}
         onChange={() => onSelect(value)}
-        className="h-4 w-4 accent-primary"
+        className="h-4 w-4 shrink-0 accent-primary"
       />
       <span className="min-w-0 flex-1">
         <span className="block truncate text-sm font-medium text-primary">
