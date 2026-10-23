@@ -30,6 +30,13 @@ export const Itineraries = {
 export const Rating = {
   ADD_TO_RATING: (id: number | string) => `explore/listing/${id}/reviews`,
   GET_ALL_RATING: (id: number | string) => `explore/listing/${id}/reviews`,
+  REVIEW: (id: number | string, reviewId: number | string) => `explore/listing/${id}/reviews/${reviewId}`,
+}
+export const Contact = {
+  SEND_MESSAGE: "/contactUs",
+}
+export const Newsletter = {
+  SUBSCRIBE: "/newsletter",
 }
 export const Place = {
   GET_ALL_PLACES: "/explore/places",

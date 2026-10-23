@@ -9,16 +9,36 @@ import {
   stopParam,
 } from "./maps";
 
-const a = { name: "Rum Point", address: "Rum Point Dr, North Side" };
-const b = { name: "Seven Mile Beach", address: "West Bay Rd" };
-const c = { name: "Starfish Point", address: null };
+const a = { name: "Marco Fun", address: "1001 N Barfield Dr, Marco Island, FL 34145" };
+const b = { name: "Tigertail Beach", address: "480 Hernando Dr" };
+const c = { name: "South Beach", address: null };
 
 describe("stopParam", () => {
   it("URL-encodes name and address", () => {
-    expect(stopParam(a)).toBe("Rum%20Point%2C%20Rum%20Point%20Dr%2C%20North%20Side");
+    expect(stopParam(a)).toBe("Marco%20Fun%2C%201001%20N%20Barfield%20Dr%2C%20Marco%20Island%2C%20FL%2034145");
   });
-  it("uses the name alone when there is no address", () => {
-    expect(stopParam(c)).toBe("Starfish%20Point");
+
+  it("adds the island when the address doesn't say where it is", () => {
+    expect(decodeURIComponent(stopParam(b))).toBe("Tigertail Beach, 480 Hernando Dr, Marco Island, FL");
+    expect(decodeURIComponent(stopParam(c))).toBe("South Beach, Marco Island, FL");
+  });
+
+  it("leaves addresses that name a state, ZIP or the island as they are", () => {
+    for (const address of [
+      "20200 Tamiami Trl E, Naples, FL 34114",
+      "1001 N Barfield Dr Marco Island FL 34145",
+      "Goodland, Florida",
+      "290 S Collier Blvd 34145",
+      "290 S Collier Blvd, Marco Island",
+    ]) {
+      expect(decodeURIComponent(stopParam({ name: "X", address }))).toBe(`X, ${address}`);
+    }
+  });
+
+  it("doesn't mistake a five-digit house number for a ZIP", () => {
+    expect(decodeURIComponent(stopParam({ name: "X", address: "10500 Collier Blvd" }))).toBe(
+      "X, 10500 Collier Blvd, Marco Island, FL",
+    );
   });
 });
 

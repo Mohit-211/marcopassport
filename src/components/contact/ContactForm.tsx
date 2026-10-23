@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { SendContactMessageApi } from "@/api/users/contact.api";
 
 function Field({
   label,
   ...rest
 }: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) {
+  const id = useId();
   return (
     <div>
-      <label className="text-sm font-medium">{label}</label>
+      <label htmlFor={id} className="text-sm font-medium">{label}</label>
       <input
+        id={id}
         {...rest}
         className="mt-1 w-full rounded-xl border border-input bg-background px-4 py-3 outline-none focus:border-primary"
       />
@@ -20,6 +23,7 @@ function Field({
 }
 
 export function ContactForm() {
+  const messageId = useId();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
@@ -29,16 +33,19 @@ export function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name || !email || !message) {
+    if (!name.trim() || !email.trim() || !message.trim()) {
       toast.error("Please fill out your name, email, and message.");
       return;
     }
 
     setSubmitting(true);
     try {
-      // TODO: wire up to a real endpoint once one exists — for now this is
-      // a static UI-only bypass so the flow can be tried end to end.
-      await new Promise((resolve) => setTimeout(resolve, 700));
+      await SendContactMessageApi({
+        name: name.trim(),
+        email: email.trim(),
+        subject: subject.trim() || undefined,
+        message: message.trim(),
+      });
       toast.success("Message sent", {
         description: "Thanks for reaching out — we'll get back to you soon.",
       });
@@ -47,7 +54,7 @@ export function ContactForm() {
       setSubject("");
       setMessage("");
     } catch {
-      toast.error("Something went wrong. Please try again.");
+      // The error popup is shown by the global API error handler.
     } finally {
       setSubmitting(false);
     }
@@ -62,6 +69,8 @@ export function ContactForm() {
         <Field
           label="Name"
           placeholder="Your name"
+          autoComplete="name"
+          maxLength={150}
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -69,6 +78,7 @@ export function ContactForm() {
           label="Email"
           placeholder="you@email.com"
           type="email"
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -76,13 +86,16 @@ export function ContactForm() {
       <Field
         label="Subject"
         placeholder="What's this about?"
+        maxLength={200}
         value={subject}
         onChange={(e) => setSubject(e.target.value)}
       />
       <div>
-        <label className="text-sm font-medium">Message</label>
+        <label htmlFor={messageId} className="text-sm font-medium">Message</label>
         <textarea
+          id={messageId}
           rows={6}
+          maxLength={5000}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className="mt-1 w-full rounded-xl border border-input bg-background px-4 py-3 outline-none focus:border-primary"

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { notFound } from "next/navigation";
 import BlogArticleExperience from "@/components/blog/BlogArticleExperience";
 import { GetBlogDetailsByIdApi } from "@/api/users/blog.api";
+import { isNotFoundError } from "@/errors/apiError";
 import type { Blog } from "@/types/blog";
 
 type Props = {
@@ -12,13 +12,17 @@ type Props = {
   }>;
 };
 
+/**
+ * The story, or null when the API says there's no such post (the page then
+ * answers 404). Any other failure throws, so it reaches the error page.
+ */
 async function getBlogById(id: string): Promise<Blog | null> {
   try {
     const res = await GetBlogDetailsByIdApi(id);
     return res?.data?.data ?? null;
   } catch (error) {
-    console.error("Failed to fetch blog:", error);
-    return null;
+    if (isNotFoundError(error)) return null;
+    throw error;
   }
 }
 
@@ -49,22 +53,6 @@ export async function generateMetadata({
 export default async function BlogDetailPage({ params }: Props) {
   const { id } = await params;
   const post = await getBlogById(id);
-  if (!post) {
-    return (
-      <div className="site-container py-32 text-center">
-        <h1 className="font-display text-4xl text-primary">
-          Story not found
-        </h1>
-        <p className="text-muted-foreground mt-3">
-          The article you&apos;re looking for may have been moved.
-        </p>
-        <Link href="/blog" className="inline-block mt-6">
-          <Button className="rounded-full bg-gold text-gold-foreground hover:bg-gold/90">
-            Back to the blog
-          </Button>
-        </Link>
-      </div>
-    );
-  }
+  if (!post) notFound();
   return <BlogArticleExperience post={post} />;
 }

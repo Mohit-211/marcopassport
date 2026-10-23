@@ -87,10 +87,14 @@ export function position(item: Pick<ExploreItem, "latitude" | "longitude">) {
   return item.latitude != null && item.longitude != null ? { lat: item.latitude, lng: item.longitude } : null;
 }
 
-/** Miles from the island centre, or null without coordinates. */
+/** Listings are on or near the island; coordinates farther out than this were mistyped. */
+const MAX_PLAUSIBLE_MILES = 250;
+
+/** Miles from the island centre, or null without believable coordinates. */
 export function milesFromCentre(item: ExploreItem) {
   const pos = position(item);
-  return pos ? distanceMiles(MARCO_ISLAND, pos) : null;
+  const miles = pos ? distanceMiles(MARCO_ISLAND, pos) : null;
+  return miles !== null && miles <= MAX_PLAUSIBLE_MILES ? miles : null;
 }
 
 export function filterListings(items: ExploreItem[], f: PlannerFilters): ExploreItem[] {

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { LocationCard } from "@/components/site/LocationCard";
 import { parseExpectItems, parseHighlights, parseTips } from "@/lib/place";
+import type { JsonListField } from "@/types/place";
 type ListingInfoContentProps = {
   listing: {
     name: string;
@@ -24,12 +25,12 @@ type ListingInfoContentProps = {
     email?: string;
     hours?: string;
     website_url?: string;
-    highlights?: string | null;
+    highlights?: JsonListField;
     fees?: string | null;
     parking?: string | null;
     best_time_to_visit?: string | null;
-    insider_tips?: string | null;
-    what_to_expect?: string | null;
+    insider_tips?: JsonListField;
+    what_to_expect?: JsonListField;
   };
 };
 export default function ListingInfoContent({
@@ -41,23 +42,38 @@ export default function ListingInfoContent({
   const websiteHost = listing.website_url
     ? listing.website_url.replace(/^https?:\/\//, "").replace(/\/$/, "")
     : undefined;
+  const about = listing.about || listing.description;
+  const address = listing.address || listing.location;
+  // Only what the admin filled in is shown; an empty card is left out entirely.
+  const hasEssentials = Boolean(
+    address ||
+      listing.phone ||
+      listing.email ||
+      listing.hours ||
+      listing.fees ||
+      listing.parking ||
+      listing.best_time_to_visit ||
+      listing.website_url,
+  );
   return (
     <div className="space-y-14">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
-          About
-        </p>
-        <h2 className="mt-2 font-display text-2xl font-semibold text-primary md:text-3xl">
-          {listing.name}
-        </h2>
-        <div className="mt-6 space-y-5 text-foreground/80 leading-relaxed text-[17px]">
-          <p
-            className={
-              "first-letter:font-display first-letter:text-5xl first-letter:font-semibold first-letter:text-primary first-letter:float-left first-letter:mr-2 first-letter:leading-[0.9]"
-            }
-            dangerouslySetInnerHTML={{ __html: listing.about ?? listing.description }} />
+      {about && (
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+            About
+          </p>
+          <h2 className="mt-2 font-display text-2xl font-semibold text-primary md:text-3xl">
+            {listing.name}
+          </h2>
+          <div className="mt-6 space-y-5 text-foreground/80 leading-relaxed text-[17px]">
+            <p
+              className={
+                "first-letter:font-display first-letter:text-5xl first-letter:font-semibold first-letter:text-primary first-letter:float-left first-letter:mr-2 first-letter:leading-[0.9]"
+              }
+              dangerouslySetInnerHTML={{ __html: about }} />
+          </div>
         </div>
-      </div>
+      )}
       {highlights.length > 0 && (
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
@@ -104,7 +120,7 @@ export default function ListingInfoContent({
         </div>
       )}
       {/* Contact details, then where it is */}
-      <div>
+      {hasEssentials && (
         <div className="rounded-3xl border border-border bg-card p-7 shadow-soft">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
             Essentials
@@ -113,9 +129,11 @@ export default function ListingInfoContent({
             Visit & contact
           </h3>
           <ul className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
-            <InfoRow icon={MapPin} label="Address">
-              {listing.address || listing.location || "Marco Island, FL"}
-            </InfoRow>
+            {address && (
+              <InfoRow icon={MapPin} label="Address">
+                {address}
+              </InfoRow>
+            )}
             {listing.phone && (
               <InfoRow icon={Phone} label="Phone">
                 <a
@@ -170,8 +188,8 @@ export default function ListingInfoContent({
             )}
           </ul>
         </div>
-      </div>
-      <LocationCard name={listing.name} address={listing.address || listing.location} />
+      )}
+      <LocationCard name={listing.name} address={address} />
       {tips.length > 0 && (
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">

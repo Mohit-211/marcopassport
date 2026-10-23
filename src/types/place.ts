@@ -5,6 +5,12 @@ export type ApiPlaceCategory = {
   type?: string;
 };
 
+/**
+ * Highlights, insider tips and "what to expect" are JSON columns: the admin
+ * sends arrays, older rows hold a JSON string or plain text (see lib/place.ts).
+ */
+export type JsonListField = string | unknown[] | null;
+
 export type ApiPlace = {
   category_id: number;
   id: number;
@@ -14,9 +20,9 @@ export type ApiPlace = {
   slug_active?: string;
   short_description?: string;
   about?: string;
-  highlights?: string | null;
-  what_to_expect?: string | null;
-  insider_tips?: string | null;
+  highlights?: JsonListField;
+  what_to_expect?: JsonListField;
+  insider_tips?: JsonListField;
   featured_image?: string;
   gallery_images?: string[];
   address?: string;

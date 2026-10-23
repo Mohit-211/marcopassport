@@ -1,3 +1,5 @@
+import type { JsonListField } from "./place";
+
 export type ApiBusinessCategory = {
   id: number;
   name: string;
@@ -26,14 +28,14 @@ export type ApiBusiness = {
   fees?: string | null;
   parking?: string | null;
   best_time_to_visit?: string | null;
-  insider_tips?: string | null;
-  what_to_expect?: string | null;
+  insider_tips?: JsonListField;
+  what_to_expect?: JsonListField;
   price_level?: string | null;
   rating?: number | null;
   review_count?: number;
   featured_image?: string;
   gallery_images?: string[];
-  highlights?: string | null;
+  highlights?: JsonListField;
   latitude?: number | null;
   longitude?: number | null;
   is_featured?: boolean;

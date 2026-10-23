@@ -30,7 +30,7 @@ export function LocationCard({
           title={`Map showing ${name}`}
           loading="lazy"
           allowFullScreen
-          referrerPolicy="no-referrer-when-downgrade"
+          referrerPolicy="strict-origin-when-cross-origin"
           className="aspect-[16/9] w-full border-0 bg-muted"
         />
       ) : (
@@ -45,9 +45,7 @@ export function LocationCard({
           </span>
           <div className="min-w-0">
             <p className="font-medium text-primary">{name}</p>
-            <p className="text-sm text-muted-foreground">
-              {address || "Marco Island, FL"}
-            </p>
+            {address && <p className="text-sm text-muted-foreground">{address}</p>}
           </div>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">

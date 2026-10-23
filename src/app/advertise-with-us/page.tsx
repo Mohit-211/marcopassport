@@ -57,7 +57,7 @@ export default function BusinessPage() {
         }
         description="Put your business in front of locals and visitors exploring Marco Island. Rates are published quarterly."
       >
-        <Link href="/business/submit">
+        <Link href="/advertise-with-us/submit">
           <Button variant="gold" size="lg">
             Get Started
             <ArrowRight className="h-4 w-4" />
@@ -145,7 +145,7 @@ export default function BusinessPage() {
           </div>
 
           <div className="mt-10 text-center">
-            <Link href="/business/submit">
+            <Link href="/advertise-with-us/submit">
               <Button variant="gold" size="lg">
                 Submit Your Business
                 <ArrowRight className="h-4 w-4" />

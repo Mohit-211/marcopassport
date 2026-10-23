@@ -1,6 +1,6 @@
-import { Lightbulb } from "lucide-react";
+import { Check, Lightbulb } from "lucide-react";
 import type { PlaceDetail } from "@/lib/place";
-import { parseExpectItems, parseTips } from "@/lib/place";
+import { parseExpectItems, parseHighlights, parseTips } from "@/lib/place";
 
 export function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
@@ -11,8 +11,9 @@ export function SectionHeading({ eyebrow, title }: { eyebrow: string; title: str
   );
 }
 
-/** The editorial part of a place page: about, what to expect, insider tips. */
+/** The editorial part of a place page: about, highlights, what to expect, insider tips. */
 export default function PlaceStoryContent({ place }: { place: PlaceDetail }) {
+  const highlights = parseHighlights(place.highlights);
   const expectItems = parseExpectItems(place.whatToExpect);
   const tips = parseTips(place.insiderTips);
 
@@ -23,6 +24,22 @@ export default function PlaceStoryContent({ place }: { place: PlaceDetail }) {
           <SectionHeading eyebrow="The story" title={`About ${place.name}`} />
           {/* Rich text from the admin editor; .blog-content styles its tags. */}
           <div className="blog-content" dangerouslySetInnerHTML={{ __html: place.about }} />
+        </section>
+      )}
+
+      {highlights.length > 0 && (
+        <section className="space-y-6">
+          <SectionHeading eyebrow="Highlights" title="Key highlights" />
+          <ul className="grid gap-x-8 gap-y-3.5 sm:grid-cols-2">
+            {highlights.map((highlight) => (
+              <li key={highlight} className="flex items-start gap-3">
+                <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gold/15 text-gold">
+                  <Check className="h-3.5 w-3.5" />
+                </span>
+                <span className="text-[15px] text-foreground/85">{highlight}</span>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 

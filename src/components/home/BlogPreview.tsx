@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { GetAllBlogsApi } from "@/api/users/blog.api";
+import { blogImage } from "@/lib/blog";
 import type { Blog } from "@/types/blog";
 export function BlogPreview() {
   const [posts, setPosts] = useState<Blog[]>([]);
@@ -70,7 +71,7 @@ export function BlogPreview() {
             >
               <div className="relative aspect-[16/9] overflow-hidden rounded-3xl shadow-soft">
                 <img
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.featured_image}`}
+                  src={blogImage(post.featured_image)}
                   alt={post.title}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"

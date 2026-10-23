@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ExplorePage, type ExploreInitialState } from "@/components/explore/ExplorePage";
-import EditorialGuide from "@/components/places/EditorialGuide";
 import { CtaSection } from "@/components/site/CtaSection";
 
 export const metadata: Metadata = {
@@ -32,7 +31,6 @@ export default async function Explore({ searchParams }: { searchParams: SearchPa
   return (
     <>
       <ExplorePage initial={initial} />
-      <EditorialGuide />
       <CtaSection
         eyebrow="Your passport"
         title="Turn what you find into an itinerary"

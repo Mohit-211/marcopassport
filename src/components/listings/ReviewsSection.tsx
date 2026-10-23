@@ -5,8 +5,13 @@ import { GetReviewsApi } from "@/api/users/rating.api";
 import ReviewsList, { type ApiReview } from "@/components/listings/ReviewsList";
 import WriteReviewCard from "@/components/listings/WriteReviewCard";
 import { InfoTip } from "@/components/ui/tooltip";
+import { useAuth } from "@/hooks/useAuth";
+
+/** The review's author: the row's user_id, or the reviewer the API includes with it. */
+const authorId = (review: ApiReview) => Number(review.user_id ?? review.reviewer?.id);
 
 export default function ReviewsSection({ id }: { id: string }) {
+  const { user } = useAuth();
   const [reviews, setReviews] = useState<ApiReview[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,7 +31,7 @@ export default function ReviewsSection({ id }: { id: string }) {
       .finally(() => setLoading(false));
   }, [id]);
 
-  // Refetch after a new review is posted
+  // Refetch after a review is posted, edited or deleted
   const fetchReviews = useCallback(() => {
     setLoading(true);
     loadReviews();
@@ -35,6 +40,10 @@ export default function ReviewsSection({ id }: { id: string }) {
   useEffect(() => {
     loadReviews();
   }, [loadReviews]);
+
+  // One review per person: once they have one, the form becomes "Your review".
+  const myReview =
+    user?.id != null ? reviews.find((review) => authorId(review) === Number(user.id)) : undefined;
 
   return (
     <div className="space-y-8">
@@ -53,12 +62,12 @@ export default function ReviewsSection({ id }: { id: string }) {
           {loading ? (
             <p className="text-sm text-muted-foreground">Loading reviews…</p>
           ) : (
-            <ReviewsList reviews={reviews} />
+            <ReviewsList reviews={reviews} myReviewId={myReview?.id} />
           )}
         </div>
       </div>
 
-      <WriteReviewCard id={id} onSuccess={fetchReviews} />
+      <WriteReviewCard id={id} review={myReview} onChange={fetchReviews} />
     </div>
   );
 }

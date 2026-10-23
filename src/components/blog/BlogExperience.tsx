@@ -1,21 +1,21 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
-  Search,
   ChevronLeft,
   ChevronRight,
   Newspaper,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import BlogGrid from "@/components/blog/BlogGrid";
+import { BlogSearch } from "@/components/blog/BlogSearch";
 import {
   GetAllBlogsApi,
   GetAllBlogsByCategoryApi,
   GetBlogCategoryApi,
 } from "@/api/users/blog.api";
+import { blogImage, matchesBlogQuery } from "@/lib/blog";
 import type { Blog } from "@/types/blog";
 import { PageHero } from "@/components/site/PageHero";
 type ApiCategory = {
@@ -32,12 +32,14 @@ type BlogCategoryOption = {
 const ALL_CATEGORY_SLUG = "all";
 export default function BlogExperience() {
   const [posts, setPosts] = useState<Blog[]>([]);
+  const [loadingPosts, setLoadingPosts] = useState(true);
   const [categories, setCategories] = useState<BlogCategoryOption[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [categoryError, setCategoryError] = useState("");
   const [activeCat, setActiveCat] = useState<string>(ALL_CATEGORY_SLUG);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  const gridRef = useRef<HTMLElement>(null);
   const perPage = 6;
   useEffect(() => {
     const fetchCategories = async () => {
@@ -85,12 +87,14 @@ export default function BlogExperience() {
     fetchCategories();
   }, []);
   useEffect(() => {
+    let cancelled = false;
     const fetchBlogs = async () => {
       try {
         const res =
           activeCat === ALL_CATEGORY_SLUG
             ? await GetAllBlogsApi()
             : await GetAllBlogsByCategoryApi(activeCat);
+        if (cancelled) return;
         const responseData = res?.data?.data;
         if (!Array.isArray(responseData)) {
           console.error("Blogs API did not return an array:", responseData);
@@ -100,10 +104,15 @@ export default function BlogExperience() {
         setPosts(responseData);
       } catch (error) {
         console.error("Failed to fetch blogs:", error);
-        setPosts([]);
+        if (!cancelled) setPosts([]);
+      } finally {
+        if (!cancelled) setLoadingPosts(false);
       }
     };
     fetchBlogs();
+    return () => {
+      cancelled = true;
+    };
   }, [activeCat]);
   const activeCatName = useMemo(() => {
     if (activeCat === ALL_CATEGORY_SLUG) return "All";
@@ -111,23 +120,35 @@ export default function BlogExperience() {
       categories.find((c) => c.slug === activeCat)?.name ?? "All"
     );
   }, [categories, activeCat]);
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return posts;
-    return posts.filter((p) => {
-      return (
-        p.title.toLowerCase().includes(q) ||
-        (p.description ?? "").toLowerCase().includes(q) ||
-        (p.blog_category?.name ?? "").toLowerCase().includes(q)
-      );
-    });
-  }, [posts, query]);
-  const [featured, ...rest] = filtered;
-  const totalPages = Math.max(
-    1,
-    Math.ceil(rest.length / perPage)
+
+  // Searching hides the featured story and lists every match in the grid;
+  // otherwise the newest story is featured and the grid holds the rest.
+  const searching = query.trim().length > 0;
+  const results = useMemo(
+    () => posts.filter((p) => matchesBlogQuery(p, query)),
+    [posts, query]
   );
+  const featured = searching ? undefined : posts[0];
+  const gridPosts = searching ? results : posts.slice(1);
+  const totalPages = Math.max(1, Math.ceil(gridPosts.length / perPage));
   const safePage = Math.min(page, totalPages);
+  const pagePosts = gridPosts.slice(
+    (safePage - 1) * perPage,
+    safePage * perPage
+  );
+  const showGrid =
+    loadingPosts || searching || gridPosts.length > 0 || posts.length === 0;
+
+  const changeCategory = (slug: string) => {
+    if (slug === activeCat) return;
+    setActiveCat(slug);
+    setLoadingPosts(true);
+    setPage(1);
+  };
+  const goToPage = (n: number) => {
+    setPage(n);
+    gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <>
@@ -142,18 +163,14 @@ export default function BlogExperience() {
         }
         description="Stories, tips and guides for exploring Marco Island like an insider, from quiet beaches and stone crab feasts to the kind of sunsets you remember for years."
       >
-        <div className="relative max-w-md">
-          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary-foreground/60" />
-          <Input
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setPage(1);
-            }}
-            placeholder="Search stories, tips and guides..."
-            className="h-12 rounded-full border border-white/15 bg-white/10 pl-11 text-primary-foreground placeholder:text-primary-foreground/55 backdrop-blur-md"
-          />
-        </div>
+        <BlogSearch
+          posts={posts}
+          query={query}
+          onQueryChange={(value) => {
+            setQuery(value);
+            setPage(1);
+          }}
+        />
       </PageHero>
       {/* =====================================================
           CATEGORY PILLS
@@ -197,10 +214,7 @@ export default function BlogExperience() {
                   <button
                     key={cat.slug}
                     type="button"
-                    onClick={() => {
-                      setActiveCat(cat.slug);
-                      setPage(1);
-                    }}
+                    onClick={() => changeCategory(cat.slug)}
                     className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all border ${active
                       ? "bg-gold text-gold-foreground border-gold shadow-gold"
                       : "bg-background text-primary border-border hover:border-gold hover:text-gold-foreground hover:bg-gold/10"
@@ -224,10 +238,10 @@ export default function BlogExperience() {
           >
             <div className="relative overflow-hidden rounded-3xl aspect-[16/9] shadow-elegant">
               <img
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${featured.featured_image}`}
+                src={blogImage(featured.featured_image)}
                 alt={featured.title}
                 loading="lazy"
-                className="h-full w-full transition-transform duration-700 group-hover:scale-110"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <span className="absolute top-5 left-5 bg-gold text-gold-foreground text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-gold">
                 Featured
@@ -245,21 +259,15 @@ export default function BlogExperience() {
               <p className="text-muted-foreground mt-5 text-lg leading-relaxed">
                 {featured.description}
               </p>
-              <div className="mt-6 flex items-center gap-3 text-xs text-muted-foreground">
-                <span>By {featured.written_by}</span>
-                <span className="h-1 w-1 rounded-full bg-muted-foreground" />
-                <span>
-                  {featured.updated_at
-                    ? new Date(featured.updated_at).toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })
-                    : ""}
-                </span>
-                {/* <span className="h-1 w-1 rounded-full bg-muted-foreground" />
-                <span>{featured.read}</span> */}
-              </div>
+              {featured.updated_at && (
+                <p className="mt-6 text-xs text-muted-foreground">
+                  {new Date(featured.updated_at).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </p>
+              )}
               <div className="mt-7 inline-flex items-center gap-2 text-gold-foreground font-semibold border-b-2 border-gold pb-1 group-hover:gap-3 transition-all">
                 Read More
                 <ArrowRight className="h-4 w-4" />
@@ -271,89 +279,113 @@ export default function BlogExperience() {
       {/* =====================================================
           BLOG GRID
       ====================================================== */}
-      <section className="site-container pb-20">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary">
-              Latest Stories
-            </h2>
-            <p className="text-muted-foreground mt-2 text-sm">
-              {filtered.length}{" "}
-              {filtered.length === 1
-                ? "article"
-                : "articles"}
-              {activeCat !== ALL_CATEGORY_SLUG && (
-                <>
-                  {" "}
-                  in{" "}
-                  <span className="text-primary font-medium">
-                    {activeCatName}
-                  </span>
-                </>
+      {showGrid && (
+        <section ref={gridRef} className="site-container pb-20 scroll-mt-40">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary">
+                {searching ? "Search results" : "Latest Stories"}
+              </h2>
+              {!loadingPosts && (
+                <p className="text-muted-foreground mt-2 text-sm">
+                  {searching ? (
+                    <>
+                      {results.length}{" "}
+                      {results.length === 1 ? "story matches" : "stories match"}{" "}
+                      <span className="text-primary font-medium">
+                        &ldquo;{query.trim()}&rdquo;
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      {posts.length} {posts.length === 1 ? "article" : "articles"}
+                    </>
+                  )}
+                  {activeCat !== ALL_CATEGORY_SLUG && (
+                    <>
+                      {" "}
+                      in{" "}
+                      <span className="text-primary font-medium">
+                        {activeCatName}
+                      </span>
+                    </>
+                  )}
+                </p>
               )}
-            </p>
+            </div>
           </div>
-        </div>
-        <BlogGrid posts={posts} />
-        {/* =====================================================
-            PAGINATION
-        ====================================================== */}
-        {totalPages > 1 && (
-          <div className="mt-14 flex items-center justify-center gap-2">
-            {/* Previous */}
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full"
-              onClick={() =>
-                setPage((p) => Math.max(1, p - 1))
+          {loadingPosts ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" aria-busy="true" aria-label="Loading stories">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-[16/9] rounded-3xl bg-muted" />
+                  <div className="mt-5 h-4 w-1/3 rounded bg-muted" />
+                  <div className="mt-3 h-6 w-3/4 rounded bg-muted" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <BlogGrid
+              posts={pagePosts}
+              emptyMessage={
+                searching ? undefined : "No stories here yet. Check back soon."
               }
-              disabled={safePage === 1}
-              aria-label="Previous page"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            {/* Page numbers */}
-            {Array.from(
-              { length: totalPages },
-              (_, i) => i + 1
-            ).map((n) => {
-              const active = n === safePage;
-              return (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setPage(n)}
-                  className={`h-10 w-10 rounded-full text-sm font-semibold transition-all ${active
-                    ? "bg-gold text-gold-foreground shadow-gold"
-                    : "bg-background text-primary border border-border hover:border-gold"
-                    }`}
-                  aria-current={
-                    active ? "page" : undefined
-                  }
-                >
-                  {n}
-                </button>
-              );
-            })}
-            {/* Next */}
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full"
-              onClick={() =>
-                setPage((p) =>
-                  Math.min(totalPages, p + 1)
-                )
-              }
-              disabled={safePage === totalPages}
-              aria-label="Next page"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
-      </section>
+            />
+          )}
+          {/* =====================================================
+              PAGINATION
+          ====================================================== */}
+          {!loadingPosts && totalPages > 1 && (
+            <div className="mt-14 flex items-center justify-center gap-2">
+              {/* Previous */}
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full"
+                onClick={() => goToPage(Math.max(1, safePage - 1))}
+                disabled={safePage === 1}
+                aria-label="Previous page"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              {/* Page numbers */}
+              {Array.from(
+                { length: totalPages },
+                (_, i) => i + 1
+              ).map((n) => {
+                const active = n === safePage;
+                return (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => goToPage(n)}
+                    className={`h-10 w-10 rounded-full text-sm font-semibold transition-all ${active
+                      ? "bg-gold text-gold-foreground shadow-gold"
+                      : "bg-background text-primary border border-border hover:border-gold"
+                      }`}
+                    aria-current={
+                      active ? "page" : undefined
+                    }
+                  >
+                    {n}
+                  </button>
+                );
+              })}
+              {/* Next */}
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full"
+                onClick={() => goToPage(Math.min(totalPages, safePage + 1))}
+                disabled={safePage === totalPages}
+                aria-label="Next page"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </section>
+      )}
     </>
   );
 }

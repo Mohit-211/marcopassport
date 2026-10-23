@@ -1,26 +1,32 @@
 import { getMarcoWeather } from "@/lib/weather";
 import { formatTime } from "@/lib/date";
 import { MARCO_ISLAND_FACTS } from "@/lib/island-facts";
+import { LocalClock } from "@/components/local-info/LocalClock";
 
 export async function LocalStats() {
-  const weather = await getMarcoWeather();
-
-  const marcoTime = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-    timeZone: "America/New_York",
-  }).format(new Date());
+  // A weather outage shouldn't take the page down: its stats are just left out.
+  const weather = await getMarcoWeather().catch((error) => {
+    console.error("Failed to fetch weather:", error);
+    return null;
+  });
 
   const liveStats = [
-    { k: "Current Temperature", v: `${weather.temperature}°F` },
-    { k: "Feels Like", v: `${weather.feelsLike}°F` },
-    { k: "Today's Weather", v: weather.condition },
-    { k: "Wind", v: `${weather.wind} mph` },
-    { k: "Humidity", v: `${weather.humidity}%` },
-    { k: "Local Time", v: marcoTime },
-    { k: "Sunrise", v: formatTime(weather.sunrise) },
-    { k: "Sunset", v: formatTime(weather.sunset) },
+    ...(weather
+      ? [
+          { k: "Current Temperature", v: `${weather.temperature}°F` },
+          { k: "Feels Like", v: `${weather.feelsLike}°F` },
+          { k: "Today's Weather", v: weather.condition },
+          { k: "Wind", v: `${weather.wind} mph` },
+          { k: "Humidity", v: `${weather.humidity}%` },
+        ]
+      : []),
+    { k: "Local Time", v: <LocalClock /> },
+    ...(weather
+      ? [
+          { k: "Sunrise", v: formatTime(weather.sunrise) },
+          { k: "Sunset", v: formatTime(weather.sunset) },
+        ]
+      : []),
   ];
 
   return (

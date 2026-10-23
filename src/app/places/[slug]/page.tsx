@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { notFound } from "next/navigation";
 import PlaceExperience from "@/components/places/PlaceExperience";
 import { GetPlacesDetailsBySlugApi } from "@/api/users/places.api";
+import { isNotFoundError } from "@/errors/apiError";
 import { mapPlaceToDetail } from "@/lib/place";
 import type { ApiPlace } from "@/types/place";
 
@@ -10,13 +10,17 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+/**
+ * The place, or undefined when the API says there's no such place (the page
+ * then answers 404). Any other failure throws, so it reaches the error page.
+ */
 async function getPlace(slug: string) {
   try {
     const res = await GetPlacesDetailsBySlugApi(slug);
-    return res?.data?.data as ApiPlace | undefined;
+    return (res?.data?.data as ApiPlace | undefined) ?? undefined;
   } catch (error) {
-    console.error("Failed to fetch place details:", error);
-    return undefined;
+    if (isNotFoundError(error)) return undefined;
+    throw error;
   }
 }
 
@@ -61,20 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PlaceDetailPage({ params }: Props) {
   const { slug } = await params;
   const item = await getPlace(slug);
-
-  if (!item) {
-    return (
-      <div className="site-container py-32 text-center">
-        <h1 className="font-display text-4xl font-semibold">Place not found</h1>
-        <p className="text-muted-foreground mt-3">
-          It may have moved or been removed.
-        </p>
-        <Link href="/explore?type=place" className="inline-block mt-6">
-          <Button variant="gold">Back to Explore</Button>
-        </Link>
-      </div>
-    );
-  }
+  if (!item) notFound();
 
   const place = mapPlaceToDetail(item);
   return <PlaceExperience place={place} />;

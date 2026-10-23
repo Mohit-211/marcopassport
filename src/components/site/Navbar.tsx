@@ -110,7 +110,7 @@ export function Navbar() {
         {/* Desktop CTA */}
         <div className="hidden items-center gap-3 lg:flex">
           <ProfileDropdown />
-          <Link href="/business">
+          <Link href="/advertise-with-us">
             <Button
               className={cn(
                 "h-10 rounded-full px-5 text-sm font-semibold",
@@ -211,7 +211,7 @@ export function Navbar() {
               </Button>
             ))}
 
-          <Link href="/business" className="mt-2">
+          <Link href="/advertise-with-us" className="mt-2">
             <Button
               className="
                 h-11 w-full rounded-full

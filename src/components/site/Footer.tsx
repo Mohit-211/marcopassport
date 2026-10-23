@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useNewsletterSignup } from "@/hooks/useNewsletterSignup";
 
 const discoverLinks = [
   { href: "/explore", label: "Explore" },
@@ -11,8 +12,8 @@ const discoverLinks = [
 ];
 
 const businessLinks = [
-  { href: "/business", label: "List Your Business" },
-  { href: "/business", label: "Packages & Pricing" },
+  { href: "/advertise-with-us", label: "List Your Business" },
+  { href: "/advertise-with-us", label: "Packages & Pricing" },
   { href: "/passport", label: "My Passport" },
   { href: "/contact", label: "Contact" },
 ];
@@ -22,13 +23,15 @@ const socialLinks = [
   { href: "#", label: "FB", name: "Facebook" },
   { href: "#", label: "X", name: "X (Twitter)" },
   {
-    href: "mailto:hello@marcopassport.com",
+    href: "mailto:sales@themarcopassport.com",
     label: "@",
     name: "Email",
   },
 ];
 
 export function Footer() {
+  const newsletter = useNewsletterSignup("footer");
+
   return (
     <footer className="border-t border-border bg-cream max-[759px]:pb-36">
       {/* (max-[759px]:pb-36: room on phones so the floating Itinerary button doesn't cover the last links.) */}
@@ -135,47 +138,58 @@ export function Footer() {
             month.
           </p>
 
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="
-              flex overflow-hidden rounded-full
-              border border-primary/10
-              bg-primary/5
-              p-1
-              transition-colors
-              focus-within:border-primary/25
-            "
-          >
-            <input
-              type="email"
-              placeholder="you@island.com"
-              aria-label="Email address"
+          {newsletter.status === "done" ? (
+            <p role="status" className="text-sm font-medium text-primary">
+              Thank you for signing up! We&apos;ll be in touch.
+            </p>
+          ) : (
+            <form
+              onSubmit={newsletter.submit}
               className="
-                min-w-0 flex-1
-                bg-transparent
-                px-4 py-2.5
-                text-sm text-primary
-                outline-none
-                placeholder:text-primary/40
-              "
-            />
-
-            <button
-              type="submit"
-              className="
-                shrink-0
-                rounded-full
-                bg-primary
-                px-5 py-2.5
-                text-sm font-semibold
-                text-primary-foreground
-                transition-all duration-200
-                hover:bg-primary/90
+                flex overflow-hidden rounded-full
+                border border-primary/10
+                bg-primary/5
+                p-1
+                transition-colors
+                focus-within:border-primary/25
               "
             >
-              Join
-            </button>
-          </form>
+              <input
+                type="email"
+                required
+                value={newsletter.email}
+                onChange={(e) => newsletter.setEmail(e.target.value)}
+                placeholder="you@island.com"
+                aria-label="Email address"
+                className="
+                  min-w-0 flex-1
+                  bg-transparent
+                  px-4 py-2.5
+                  text-sm text-primary
+                  outline-none
+                  placeholder:text-primary/40
+                "
+              />
+
+              <button
+                type="submit"
+                disabled={newsletter.status === "sending"}
+                className="
+                  shrink-0
+                  rounded-full
+                  bg-primary
+                  px-5 py-2.5
+                  text-sm font-semibold
+                  text-primary-foreground
+                  transition-all duration-200
+                  hover:bg-primary/90
+                  disabled:opacity-60
+                "
+              >
+                {newsletter.status === "sending" ? "Joining…" : "Join"}
+              </button>
+            </form>
+          )}
         </div>
       </div>
 
@@ -211,7 +225,7 @@ export function Footer() {
             </Link>
 
             <Link
-              href="/cookies"
+              href="/privacy#cookies"
               className="transition-colors hover:text-primary"
             >
               Cookies

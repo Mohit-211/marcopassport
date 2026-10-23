@@ -40,7 +40,7 @@ export function PlannerMap({
           title="Map of places"
           loading="lazy"
           allowFullScreen
-          referrerPolicy="no-referrer-when-downgrade"
+          referrerPolicy="strict-origin-when-cross-origin"
           className="absolute inset-0 h-full w-full border-0"
         />
       ) : (

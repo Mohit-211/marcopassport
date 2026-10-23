@@ -97,6 +97,11 @@ export function getApiErrorMessage(error: unknown): string {
   return errorMessages.UNKNOWN;
 }
 
+/** True when the API answered 404: the requested listing, place or story doesn't exist. */
+export function isNotFoundError(error: unknown): boolean {
+  return getStatus(error) === 404;
+}
+
 /** True for 401s and backend "Token Not Found" / "Please authenticate" responses. */
 export function isAuthError(error: unknown): boolean {
   if (getStatus(error) === 401) return true;

@@ -33,9 +33,9 @@ export interface ExploreItem {
   /** The API's relative path, kept for itinerary snapshots */
   imagePath: string | null;
   categories: ExploreCategory[];
-  /** First category's name, or a generic label */
+  /** First category's name; empty when it has none */
   category: string;
-  /** Neighborhood, else address */
+  /** Neighborhood, else address; empty when it has neither */
   location: string;
   address: string | null;
   /** null when the listing has no map position */
@@ -91,8 +91,9 @@ export function toExploreItem(raw: ApiPlace | ApiBusiness, type: ExploreType): E
     image: placeImage(raw.featured_image),
     imagePath: raw.featured_image ?? null,
     categories,
-    category: categories[0]?.name ?? (type === "place" ? "Place" : "Business"),
-    location: raw.neighborhood || raw.address || "Marco Island",
+    // Empty rather than a made-up value when the admin hasn't set one; the UI hides it.
+    category: categories[0]?.name ?? "",
+    location: raw.neighborhood || raw.address || "",
     address: raw.address ?? null,
     latitude: coordinate(raw.latitude),
     longitude: coordinate(raw.longitude),

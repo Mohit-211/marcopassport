@@ -57,12 +57,14 @@ export default function ListingGallery({ listing }: ListingGalleryProps) {
                   ★ Featured
                 </Badge>
               )}
-              <Badge
-                variant="secondary"
-                className="bg-background/90 backdrop-blur text-foreground border-0 uppercase tracking-wider text-[10px]"
-              >
-                {listing.category}
-              </Badge>
+              {listing.category && (
+                <Badge
+                  variant="secondary"
+                  className="bg-background/90 backdrop-blur text-foreground border-0 uppercase tracking-wider text-[10px]"
+                >
+                  {listing.category}
+                </Badge>
+              )}
             </div>
             <div className="absolute bottom-6 left-6 right-6 text-primary-foreground text-left">
               <h1 className="font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
@@ -79,9 +81,11 @@ export default function ListingGallery({ listing }: ListingGalleryProps) {
                     ) : null}
                   </span>
                 )}
-                <span className="inline-flex items-center gap-1.5">
-                  <MapPin className="h-4 w-4" /> {listing.location}
-                </span>
+                {listing.location && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <MapPin className="h-4 w-4" /> {listing.location}
+                  </span>
+                )}
                 {listing.price && <span className="font-medium">{listing.price}</span>}
               </div>
             </div>

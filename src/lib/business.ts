@@ -1,5 +1,7 @@
 import { visibleRating } from "@/lib/explore";
+import { toExternalUrl } from "@/lib/url";
 import type { ApiBusiness, ApiBusinessCategory } from "@/types/business";
+import type { JsonListField } from "@/types/place";
 
 /** A business as the listing detail page shows it. */
 export type Listing = {
@@ -26,9 +28,9 @@ export type Listing = {
   fees?: string | null;
   parking?: string | null;
   best_time_to_visit?: string | null;
-  insider_tips?: string | null;
-  what_to_expect?: string | null;
-  highlights?: string | null;
+  insider_tips?: JsonListField;
+  what_to_expect?: JsonListField;
+  highlights?: JsonListField;
   reviewCount?: number;
   galleryImages?: string[];
 };
@@ -52,7 +54,7 @@ export function mapBusinessToListing(item: ApiBusiness): Listing {
     location: item.neighborhood || item.address || "",
     description: item.short_description || item.tagline || "",
     featured: item.is_featured ?? false,
-    website_url: item.website_url,
+    website_url: toExternalUrl(item.website_url) ?? undefined,
     is_in_itinerary: item.is_in_itinerary ?? false,
     about: item.about,
     address: item.address,

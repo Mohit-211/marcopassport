@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
       { source: "/my-trips/:id", destination: "/passport", permanent: false },
       { source: "/auth/reset-password", destination: "/reset-password", permanent: false },
       { source: "/auth/verify-otp", destination: "/auth/forgot-password", permanent: false },
+      // The advertising pages moved from /business.
+      { source: "/business", destination: "/advertise-with-us", permanent: true },
+      { source: "/business/:path*", destination: "/advertise-with-us/:path*", permanent: true },
     ];
   },
 };

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Button } from "@/components/ui/button";
+import { notFound } from "next/navigation";
 import ListingGallery from "@/components/listings/ListingGallery";
 import ListingInfoContent from "@/components/listings/ListingInfoContent";
 import ListingActionsPanel from "@/components/listings/ListingActionsPanel";
@@ -10,20 +10,25 @@ import { SimilarListings } from "@/components/explore/SimilarListings";
 import { mapBusinessToListing } from "@/lib/business";
 import type { ApiBusiness } from "@/types/business";
 import { GetBusinessDetailsBySlugApi } from "@/api/users/business.api";
+import { isNotFoundError } from "@/errors/apiError";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
+/**
+ * The business, or undefined when the API says there's no such listing (the
+ * page then answers 404). Any other failure throws, so it reaches the error
+ * page instead of claiming the listing doesn't exist.
+ */
 async function getListing(slug: string) {
   try {
     const res = await GetBusinessDetailsBySlugApi(slug);
     const item: ApiBusiness | undefined = res?.data?.data;
-    if (!item) return undefined;
-    return item;
+    return item ?? undefined;
   } catch (error) {
-    console.error("Failed to fetch business details:", error);
-    return undefined;
+    if (isNotFoundError(error)) return undefined;
+    throw error;
   }
 }
 
@@ -52,22 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ListingDetailPage({ params }: Props) {
   const { slug } = await params;
   const item = await getListing(slug);
-
-  if (!item) {
-    return (
-      <div className="site-container py-32 text-center">
-        <h1 className="font-display text-4xl font-semibold">
-          Listing not found
-        </h1>
-        <p className="text-muted-foreground mt-3">
-          It may have moved or been removed.
-        </p>
-        <Link href="/explore" className="inline-block mt-6">
-          <Button variant="gold">Back to Explore</Button>
-        </Link>
-      </div>
-    );
-  }
+  if (!item) notFound();
 
   const listing = mapBusinessToListing(item);
   return (

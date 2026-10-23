@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ArrowRight, MapPin, Sun, Sunrise, Waves } from "lucide-react";
+import { MapPin, Sun, Sunrise, Waves } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 function EditorialRow({
@@ -57,12 +56,6 @@ function EditorialRow({
             <p key={i}>{p}</p>
           ))}
         </div>
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-2 mt-6 text-primary font-semibold story-link"
-        >
-          Read the full guide <ArrowRight className="h-4 w-4" />
-        </Link>
         <div className="mt-6 flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground">
           <MapPin className="h-3.5 w-3.5 text-gold" /> Marco Island, Florida
         </div>
@@ -71,9 +64,10 @@ function EditorialRow({
   );
 }
 
+/** Static for now; the chapters will come from an API later. Shown on Local Info. */
 export default function EditorialGuide() {
   return (
-    <section className="border-t border-border bg-background py-16 md:py-24">
+    <section id="guide" className="scroll-mt-32 border-t border-border bg-background py-16 md:py-24">
       <div className="site-container">
         <div className="mx-auto mb-10 max-w-2xl text-center md:mb-12">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">

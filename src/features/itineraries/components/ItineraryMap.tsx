@@ -116,7 +116,7 @@ export function ItineraryMap({
             title="Map of your itinerary"
             loading="lazy"
             allowFullScreen
-            referrerPolicy="no-referrer-when-downgrade"
+            referrerPolicy="strict-origin-when-cross-origin"
             className="aspect-[4/3] w-full rounded-2xl border-0 bg-muted lg:aspect-auto lg:h-[min(70vh,640px)]"
           />
         )

@@ -71,10 +71,10 @@ export default function SubmitForm() {
         phone,
         website: website || undefined,
         plan,
-        message: message || undefined,
+        additional_details: message || undefined,
       });
       toast.success("Your submission has been received!");
-      router.push("/business/thank-you");
+      router.push("/advertise-with-us/thank-you");
     } catch {
       // The error popup is shown by the global API error handler.
     } finally {
@@ -88,7 +88,7 @@ export default function SubmitForm() {
       <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
         <div className="site-container pt-28 pb-14 md:pt-36 md:pb-16 max-w-2xl">
           <Link
-            href="/business"
+            href="/advertise-with-us"
             className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary-foreground/80 hover:text-gold transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />

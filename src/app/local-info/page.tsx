@@ -7,7 +7,14 @@ import {
 } from "@/components/local-info/ContentSections";
 import { ExploreMore } from "@/components/local-info/ExploreMore";
 import { QuickTips } from "@/components/local-info/QuickTips";
+import EditorialGuide from "@/components/places/EditorialGuide";
 import { PageHero } from "@/components/site/PageHero";
+
+// The content sections, then the editorial guide below them.
+const navItems = [
+  ...sections.map(({ id, title }) => ({ id, title })),
+  { id: "guide", title: "The Guide" },
+];
 
 export const metadata: Metadata = {
   title: "Local Info | The Marco Passport",
@@ -43,7 +50,7 @@ export default async function LocalInfoPage() {
       <section className="sticky top-[72px] z-30 border-y border-border bg-background/90 shadow-sm backdrop-blur-md">
         <div className="site-container">
           <div className="flex items-center justify-center gap-1 overflow-x-auto py-3">
-            {sections.map((section) => (
+            {navItems.map((section) => (
               <a
                 key={section.id}
                 href={`#${section.id}`}
@@ -57,6 +64,7 @@ export default async function LocalInfoPage() {
       </section>
 
       <ContentSections />
+      <EditorialGuide />
       <QuickTips />
       <ExploreMore />
     </>

@@ -11,8 +11,7 @@ export type Blog = {
   slug: string;
   description: string;
   content?: string;
-  featured_image?: string;
-  written_by?: string;
+  featured_image?: string | null;
   read_time_minutes?: number;
   is_featured?: boolean;
   published_at?: string;

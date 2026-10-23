@@ -9,6 +9,7 @@ import {
   encodeSharedTrip,
   filterListings,
   MARCO_ISLAND,
+  milesFromCentre,
 } from "./logic";
 
 function item(id: number, patch: Partial<ExploreItem> = {}): ExploreItem {
@@ -69,6 +70,15 @@ describe("distanceMiles", () => {
   it("is zero at the same point and about 69 miles per degree of latitude", () => {
     expect(distanceMiles(MARCO_ISLAND, MARCO_ISLAND)).toBe(0);
     expect(distanceMiles({ lat: 0, lng: 0 }, { lat: 1, lng: 0 })).toBeCloseTo(69.1, 0);
+  });
+});
+
+describe("milesFromCentre", () => {
+  it("measures from the island and ignores coordinates that can't be right", () => {
+    expect(milesFromCentre(item(1, { latitude: 25.95, longitude: -81.74 }))).toBeLessThan(2);
+    // A listing saved at 23.76, 120.69 (Taiwan) shouldn't read "8,600 mi".
+    expect(milesFromCentre(item(2, { latitude: 23.76, longitude: 120.69 }))).toBeNull();
+    expect(milesFromCentre(item(3))).toBeNull();
   });
 });
 

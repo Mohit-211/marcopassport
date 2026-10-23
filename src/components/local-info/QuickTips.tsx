@@ -1,5 +1,7 @@
 import {
+  ArrowUpRight,
   Lightbulb,
+  Landmark,
   MapPin,
   Sun,
   Calendar,
@@ -21,6 +23,12 @@ const quickTips = [
   },
   { icon: MapPin, label: "Getting here", value: "RSW · 50 min · APF · 30 min" },
   { icon: Sun, label: "Average temp", value: "75°F winter · 88°F summer" },
+  {
+    icon: Landmark,
+    label: "Official city info",
+    value: "cityofmarcoisland.com",
+    href: "https://www.cityofmarcoisland.com/",
+  },
 ];
 
 export function QuickTips() {
@@ -39,11 +47,8 @@ export function QuickTips() {
         <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/10 rounded-2xl overflow-hidden">
           {quickTips.map((t) => {
             const Icon = t.icon;
-            return (
-              <div
-                key={t.label}
-                className="bg-primary p-6 flex items-start gap-4"
-              >
+            const content = (
+              <>
                 <span className="grid place-items-center h-10 w-10 rounded-full bg-gold/15 text-gold shrink-0">
                   <Icon className="h-5 w-5" />
                 </span>
@@ -51,8 +56,32 @@ export function QuickTips() {
                   <p className="text-xs uppercase tracking-wider text-white/60">
                     {t.label}
                   </p>
-                  <p className="mt-1 font-medium text-white">{t.value}</p>
+                  <p className="mt-1 font-medium text-white">
+                    {t.value}
+                    {t.href && (
+                      <ArrowUpRight className="ml-1 inline-block h-4 w-4 align-middle text-gold transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    )}
+                  </p>
                 </div>
+              </>
+            );
+            // A tip with a link opens it in a new tab, and the whole tile is clickable.
+            return t.href ? (
+              <a
+                key={t.label}
+                href={t.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group bg-primary p-6 flex items-start gap-4 transition-colors hover:bg-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gold"
+              >
+                {content}
+              </a>
+            ) : (
+              <div
+                key={t.label}
+                className="bg-primary p-6 flex items-start gap-4"
+              >
+                {content}
               </div>
             );
           })}

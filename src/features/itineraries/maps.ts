@@ -14,9 +14,20 @@ export type TravelMode = "driving" | "walking";
 
 type Stop = Pick<ItineraryPlace, "name" | "address">;
 
-/** URL-encoded "name, address" for one stop. */
+/**
+ * Admins don't always type the town ("480 Hernando drive"), and Google then
+ * matches a street of that name anywhere, or a same-named place such as Miami's
+ * South Beach. Listings are on or around Marco Island, so an address that names
+ * no state, ZIP or the island gets it added. Still free: Google resolves the text.
+ */
+const DEFAULT_LOCALITY = "Marco Island, FL";
+const HAS_LOCALITY = /\b(fl|florida)\b|marco island|\b\d{5}(-\d{4})?\s*$/i;
+
+/** URL-encoded "name, address" for one stop, with the town added when the address has none. */
 export function stopParam(place: Stop) {
-  const label = [place.name, place.address].map((part) => part?.trim()).filter(Boolean).join(", ");
+  const address = place.address?.trim() ?? "";
+  const town = HAS_LOCALITY.test(address) ? null : DEFAULT_LOCALITY;
+  const label = [place.name, address, town].map((part) => part?.trim()).filter(Boolean).join(", ");
   return encodeURIComponent(label);
 }
 

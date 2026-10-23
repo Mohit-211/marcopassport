@@ -1,18 +1,19 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { blogImage } from "@/lib/blog";
 import type { Blog } from "@/types/blog";
 
 export default function BlogGrid({
   posts,
+  emptyMessage = "No stories match your search yet. Try a different keyword or category.",
 }: {
   posts: Blog[];
+  emptyMessage?: string;
 }) {
   if (posts.length === 0) {
     return (
       <div className="text-center py-20 border border-dashed border-border rounded-3xl">
-        <p className="text-muted-foreground">
-          No stories match your search yet. Try a different keyword or category.
-        </p>
+        <p className="text-muted-foreground">{emptyMessage}</p>
       </div>
     );
   }
@@ -27,7 +28,7 @@ export default function BlogGrid({
         >
           <div className="relative overflow-hidden aspect-[16/9]">
             <img
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${p.featured_image}`}
+              src={blogImage(p.featured_image)}
               alt={p.title}
               loading="lazy"
               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"

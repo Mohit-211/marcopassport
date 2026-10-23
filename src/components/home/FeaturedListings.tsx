@@ -6,22 +6,15 @@ import { interleave, type ExploreItem } from "@/lib/explore";
 
 const LIMIT = 6;
 
+/** Only listings the admin marked as featured; the section hides when there are none. */
 async function getFeatured(): Promise<ExploreItem[]> {
   try {
     const { items } = await fetchExploreItems({ featured: true, limit: LIMIT });
-    const featured = interleave(
-      items.filter((i) => i.type === "place"),
-      items.filter((i) => i.type === "business"),
-    );
-    if (featured.length >= 3) return featured.slice(0, LIMIT);
-    // Too few featured listings yet: top them up with the best of the rest.
-    const { items: rest } = await fetchExploreItems({ limit: LIMIT });
-    const seen = new Set(featured.map((i) => `${i.type}:${i.id}`));
-    const extra = interleave(
-      rest.filter((i) => i.type === "place"),
-      rest.filter((i) => i.type === "business"),
-    ).filter((i) => !seen.has(`${i.type}:${i.id}`));
-    return [...featured, ...extra].slice(0, LIMIT);
+    const featured = items.filter((i) => i.featured);
+    return interleave(
+      featured.filter((i) => i.type === "place"),
+      featured.filter((i) => i.type === "business"),
+    ).slice(0, LIMIT);
   } catch (error) {
     console.error("Failed to fetch featured listings:", error);
     return [];

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { toast } from "sonner";
 import {
   CalendarDays,
   ChevronLeft,
@@ -10,6 +9,7 @@ import {
   Clock,
   CreditCard,
   Globe,
+  Mail,
   MapPin,
   ParkingCircle,
   Phone,
@@ -28,6 +28,7 @@ import PlaceStoryContent, { SectionHeading } from "@/components/places/PlaceStor
 import { AddToItineraryButton } from "@/features/itineraries/components/AddToItineraryButton";
 import type { ItineraryPlace } from "@/features/itineraries/types";
 import type { PlaceDetail } from "@/lib/place";
+import { shareLink } from "@/lib/share";
 
 const PHOTOS_SHOWN = 6;
 
@@ -57,19 +58,12 @@ export default function PlaceExperience({ place }: { place: PlaceDetail }) {
     { icon: CalendarDays, label: "Best time to visit", value: place.bestTimeToVisit },
   ].filter((f) => f.value);
 
-  const share = async () => {
-    const url = window.location.href;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: place.name, text: place.blurb, url });
-      } catch {
-        /* dismissed */
-      }
-    } else if (navigator.clipboard) {
-      await navigator.clipboard.writeText(url);
-      toast.success("Link copied to clipboard");
-    }
-  };
+  const share = () =>
+    shareLink({
+      title: place.name,
+      text: place.blurb || undefined,
+      url: `${window.location.origin}/places/${place.slug}`,
+    });
 
   const step = (by: number) =>
     setLightbox((i) => (i === null ? 0 : (i + by + photos.length) % photos.length));
@@ -199,11 +193,16 @@ export default function PlaceExperience({ place }: { place: PlaceDetail }) {
               </dl>
             )}
 
-            {(place.phone || place.websiteUrl) && (
+            {(place.phone || place.email || place.websiteUrl) && (
               <div className="mt-6 flex flex-wrap gap-2 border-t border-border pt-6">
                 {place.phone && (
                   <Button variant="outline" size="sm" nativeButton={false} render={<a href={`tel:${place.phone}`} />}>
                     <Phone className="h-3.5 w-3.5" /> Call
+                  </Button>
+                )}
+                {place.email && (
+                  <Button variant="outline" size="sm" nativeButton={false} render={<a href={`mailto:${place.email}`} />}>
+                    <Mail className="h-3.5 w-3.5" /> Email
                   </Button>
                 )}
                 {place.websiteUrl && (

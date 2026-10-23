@@ -71,25 +71,29 @@ export function ExploreCard({ item }: { item: ExploreItem }) {
       </Link>
 
       <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-center justify-between gap-3">
-          <p className="truncate text-xs font-semibold uppercase tracking-[0.14em] text-gold">{item.category}</p>
-          <RatingBadge rating={item.rating} reviewCount={item.reviewCount} className="shrink-0" />
-        </div>
+        {(item.category || item.rating !== null) && (
+          <div className="flex items-center justify-between gap-3">
+            <p className="truncate text-xs font-semibold uppercase tracking-[0.14em] text-gold">{item.category}</p>
+            <RatingBadge rating={item.rating} reviewCount={item.reviewCount} className="shrink-0" />
+          </div>
+        )}
         <h3 className="mt-1.5 font-display text-xl font-semibold leading-snug text-primary">
           <Link href={item.href} className="outline-none hover:underline focus-visible:underline">
             {item.name}
           </Link>
         </h3>
-        <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
-          <MapPin className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">{item.location}</span>
-          {item.price && (
-            <>
-              <span aria-hidden className="opacity-40">·</span>
-              <span className="font-medium">{item.price}</span>
-            </>
-          )}
-        </p>
+        {(item.location || item.price) && (
+          <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+            {item.location && (
+              <>
+                <MapPin className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{item.location}</span>
+              </>
+            )}
+            {item.location && item.price && <span aria-hidden className="opacity-40">·</span>}
+            {item.price && <span className="font-medium">{item.price}</span>}
+          </p>
+        )}
         {item.description && (
           <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">{item.description}</p>
         )}

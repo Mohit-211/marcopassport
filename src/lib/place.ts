@@ -1,5 +1,6 @@
 import { visibleRating } from "@/lib/explore";
-import type { ApiPlace } from "@/types/place";
+import { toExternalUrl } from "@/lib/url";
+import type { ApiPlace, JsonListField } from "@/types/place";
 
 export type PlaceDetail = {
   id: string;
@@ -31,9 +32,9 @@ export type PlaceDetail = {
   reviewCount: number;
 
   // Details
-  highlights: string | null;
-  whatToExpect: string | null;
-  insiderTips: string | null;
+  highlights: JsonListField;
+  whatToExpect: JsonListField;
+  insiderTips: JsonListField;
 
   // Location / contact
   address: string | null;
@@ -96,7 +97,7 @@ export function mapPlaceToDetail(item: ApiPlace): PlaceDetail {
 
     phone: item.phone ?? null,
     email: item.email ?? null,
-    websiteUrl: item.website_url ?? null,
+    websiteUrl: toExternalUrl(item.website_url),
     priceLevel: item.price_level ?? null,
   };
 }
@@ -114,50 +115,52 @@ function splitTextField(
     .filter(Boolean);
 }
 
-/** Admin "highlights": a JSON array, or newline/comma separated text. */
-export function parseHighlights(highlights?: string | null): string[] {
-  if (!highlights) return [];
+/**
+ * The list in a JSON list field: the array the API sends for a JSON column,
+ * or one encoded in a string (older rows). null for plain text.
+ */
+function jsonList(value: JsonListField | undefined): unknown[] | null {
+  if (Array.isArray(value)) return value;
+  if (typeof value !== "string") return null;
   try {
-    const parsed = JSON.parse(highlights);
-    if (Array.isArray(parsed)) {
-      return parsed.map((h) => String(h).trim()).filter(Boolean);
-    }
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : null;
   } catch {
-    // Not JSON — fall back to plain text splitting.
+    return null; // Not JSON: plain text.
   }
+}
+
+function nonEmptyStrings(list: unknown[]): string[] {
+  return list
+    .filter((item) => typeof item === "string" || typeof item === "number")
+    .map((item) => String(item).trim())
+    .filter(Boolean);
+}
+
+/** Admin "highlights": an array, or newline/comma separated text. */
+export function parseHighlights(highlights?: JsonListField): string[] {
+  const list = jsonList(highlights);
+  if (list) return nonEmptyStrings(list);
+  if (typeof highlights !== "string") return [];
   return highlights
     .split(/\r?\n|,/)
     .map((h) => h.trim())
     .filter(Boolean);
 }
-/** Admin "insider tips": a JSON array, or one tip per line. */
-export function parseTips(tips?: string | null): string[] {
-  if (!tips) return [];
-  try {
-    const parsed = JSON.parse(tips);
-    if (Array.isArray(parsed)) {
-      return parsed.map((t) => String(t).trim()).filter(Boolean);
-    }
-  } catch {
-    // Not JSON — fall back to plain text splitting.
-  }
-  return splitTextField(tips);
+/** Admin "insider tips": an array, or one tip per line. */
+export function parseTips(tips?: JsonListField): string[] {
+  const list = jsonList(tips);
+  if (list) return nonEmptyStrings(list);
+  return typeof tips === "string" ? splitTextField(tips) : [];
 }
-/** Admin "what to expect": a JSON array of { title, description }; anything else is ignored. */
+/** Admin "what to expect": an array of { title, description }; anything else is ignored. */
 export function parseExpectItems(
-  value?: string | null
+  value?: JsonListField
 ): { title: string; description: string }[] {
-  if (!value) return [];
-  try {
-    const parsed = JSON.parse(value);
-    if (Array.isArray(parsed)) {
-      return parsed.filter(
-        (item): item is { title: string; description: string } =>
-          !!item && typeof item === "object" && typeof item.title === "string",
-      );
-    }
-  } catch {
-    // Not JSON — ignore.
-  }
-  return [];
+  return (jsonList(value) ?? []).flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const { title, description } = item as { title?: unknown; description?: unknown };
+    if (typeof title !== "string" || !title.trim()) return [];
+    return [{ title: title.trim(), description: typeof description === "string" ? description.trim() : "" }];
+  });
 }

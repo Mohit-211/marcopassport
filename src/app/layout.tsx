@@ -6,6 +6,8 @@ import { PlanTripButton } from "@/features/itineraries/planner/PlanTripButton";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { CookieBanner } from "@/components/site/CookieBanner";
+import { AuthProvider } from "@/hooks/useAuth";
 import { ItinerariesProvider } from "@/features/itineraries/ItinerariesProvider";
 
 const inter = Inter({
@@ -104,12 +106,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${fraunces.variable} antialiased`}>
         <TooltipProvider>
-          <ItinerariesProvider>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-            <PlanTripButton />
-          </ItinerariesProvider>
+          <AuthProvider>
+            <ItinerariesProvider>
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+              <PlanTripButton />
+            </ItinerariesProvider>
+          </AuthProvider>
+          <CookieBanner />
         </TooltipProvider>
         <Toaster
           richColors

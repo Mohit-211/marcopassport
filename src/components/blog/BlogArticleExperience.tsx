@@ -7,7 +7,6 @@ import {
   Calendar,
   Clock,
   Link2,
-  User,
 } from "lucide-react";
 import { toast } from "sonner";
 import { CtaSection } from "@/components/site/CtaSection";
@@ -18,10 +17,10 @@ import {
   FacebookGlyph,
 } from "@/components/blog/ShareControls";
 import { GetAllBlogsByCategoryApi } from "@/api/users/blog.api";
+import { blogImage as imageUrl } from "@/lib/blog";
 import type { Blog } from "@/types/blog";
 import { HeroBackground } from "@/components/site/HeroBackground";
-const imageUrl = (image?: string) =>
-  image ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${image}` : "/assets/blog-1.jpg";
+const RELATED_SHOWN = 3;
 const formatDate = (date?: string) =>
   date
     ? new Date(date).toLocaleDateString("en-US", {
@@ -39,7 +38,10 @@ export default function BlogArticleExperience({
 }) {
   const categorySlug = post.blog_category?.slug;
   const [relatedState, setRelated] = useState<Blog[]>(relatedProp ?? []);
-  const related = categorySlug ? relatedState : [];
+  // Other stories in the same category, never the one being read.
+  const related = (categorySlug ? relatedState : [])
+    .filter((r) => r.id !== post.id)
+    .slice(0, RELATED_SHOWN);
   useEffect(() => {
     if (!categorySlug) return;
     const fetchRelated = async () => {
@@ -91,11 +93,6 @@ export default function BlogArticleExperience({
                 {post.title}
               </h1>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-primary-foreground/85">
-                {post.written_by && (
-                  <span className="inline-flex items-center gap-2">
-                    <User className="h-4 w-4" /> {post.written_by}
-                  </span>
-                )}
                 <span className="inline-flex items-center gap-2">
                   <Calendar className="h-4 w-4" /> {formatDate(post.updated_at || post.published_at)}
                 </span>
@@ -110,7 +107,7 @@ export default function BlogArticleExperience({
       </section>
       {/* Featured image */}
       {post.featured_image && (
-        <section className="mt-20">
+        <section className="site-container mt-20">
           <div className="max-w-2xl mx-auto">
             <img
               src={imageUrl(post.featured_image)}
@@ -142,19 +139,8 @@ export default function BlogArticleExperience({
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
             )}
-            {/* Author + share */}
+            {/* Share */}
             <div className="mt-16 pt-10 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-              {post.written_by && (
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-display text-lg">
-                    {post.written_by.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Written by</p>
-                    <p className="font-semibold text-primary">{post.written_by}</p>
-                  </div>
-                </div>
-              )}
               <div className="flex items-center gap-2">
                 <span className="text-xs uppercase tracking-widest text-muted-foreground mr-2">
                   Share

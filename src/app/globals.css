@@ -156,8 +156,9 @@
   --ring: oklch(0.65 0.045 245);
 
   /* Stacking: fixed page bars use 40, dialogs 50. Floating buttons (the
-     Passport shell) sit between them. */
+     Passport shell) sit between them, and the cookie banner above those. */
   --z-floating: 45;
+  --z-banner: 48;
 }
 
 .dark {

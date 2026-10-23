@@ -9,7 +9,8 @@ export interface CreateBusinessPayload {
     phone: string;
     website?: string;
     plan: string;
-    message?: string;
+    /** The form's free-text message; the backend stores it as additional_details. */
+    additional_details?: string;
 }
 
 export const CreateBusinesssApi = (payload: CreateBusinessPayload) =>

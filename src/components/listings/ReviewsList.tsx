@@ -5,11 +5,14 @@ export type ApiReview = {
   id?: number | string;
   rating: number;
   comment: string;
+  /** The author's account id */
+  user_id?: number | string;
   /** GET /explore/listing/:id/reviews returns the author as reviewer.user_profile.name */
-  reviewer?: { user_profile?: { name?: string | null } | null } | null;
+  reviewer?: { id?: number | string; user_profile?: { name?: string | null } | null } | null;
   user_name?: string;
   user?: { name?: string };
   created_at?: string;
+  updated_at?: string;
 };
 
 function formatDate(value?: string) {
@@ -23,7 +26,14 @@ function formatDate(value?: string) {
   });
 }
 
-export default function ReviewsList({ reviews }: { reviews: ApiReview[] }) {
+export default function ReviewsList({
+  reviews,
+  myReviewId,
+}: {
+  reviews: ApiReview[];
+  /** The signed-in visitor's own review, marked "You" */
+  myReviewId?: number | string;
+}) {
   if (reviews.length === 0) {
     return (
       <div className="rounded-3xl border border-dashed border-border p-7 text-center text-sm text-muted-foreground">
@@ -48,7 +58,14 @@ export default function ReviewsList({ reviews }: { reviews: ApiReview[] }) {
                   <User className="h-4 w-4" />
                 </span>
                 <div>
-                  <p className="font-semibold text-foreground text-sm">{name}</p>
+                  <p className="font-semibold text-foreground text-sm">
+                    {name}
+                    {myReviewId != null && review.id === myReviewId && (
+                      <span className="ml-2 rounded-full bg-gold/15 px-2 py-0.5 text-xs font-medium text-primary">
+                        You
+                      </span>
+                    )}
+                  </p>
                   {review.created_at && (
                     <p className="text-xs text-muted-foreground">
                       {formatDate(review.created_at)}

@@ -1,21 +1,15 @@
+import { STORAGE_KEYS, siteStorage as storage } from "@/lib/consent";
 import { parseDraft } from "./logic";
 import type { ItineraryDraft } from "./types";
 
 /**
- * The guest's itinerary draft in localStorage. It survives the login popup and
- * the email-verification round trip (the verify link opens in the same
- * browser), and is saved to the account right after login.
+ * The guest's itinerary draft in localStorage (sessionStorage if the visitor
+ * rejected cookies). It survives the login popup and the email-verification
+ * round trip (the verify link opens in the same browser), and is saved to the
+ * account right after login.
  */
-const DRAFT_STORAGE_KEY = "mp_itinerary_draft";
+const DRAFT_STORAGE_KEY = STORAGE_KEYS.draft;
 const DRAFT_CHANGE_EVENT = "marcopassport:draft-change";
-
-function storage(): Storage | null {
-  try {
-    return typeof window === "undefined" ? null : window.localStorage;
-  } catch {
-    return null;
-  }
-}
 
 // useSyncExternalStore needs the same object back while nothing changed.
 let cachedRaw: string | null = null;
