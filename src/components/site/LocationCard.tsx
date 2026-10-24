@@ -8,18 +8,23 @@ import {
 } from "@/features/passport/maps";
 
 /**
- * Where a place is: a free Google Maps Embed of its name + address, and
- * plain Maps links for directions. Same no-cost approach as the passport
- * map (see features/passport/maps.ts).
+ * Where a place is: a free Google Maps Embed pinned at its coordinates (or
+ * its name + address when it has none), and plain Maps links for
+ * directions. Same no-cost approach as the passport map (see
+ * features/passport/maps.ts).
  */
 export function LocationCard({
   name,
   address,
+  latitude,
+  longitude,
 }: {
   name: string;
   address: string | null | undefined;
+  latitude?: number | null;
+  longitude?: number | null;
 }) {
-  const stop = { name, address };
+  const stop = { name, address, latitude, longitude };
   const src = embedMapSrc([stop]);
 
   return (

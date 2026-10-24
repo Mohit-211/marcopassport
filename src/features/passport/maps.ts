@@ -1,18 +1,28 @@
+import { toCoordinate } from "@/lib/explore";
+import { milesFromCentre } from "./planner/logic";
 import type { PassportPlace } from "./types";
 
 /**
- * Google Maps URLs for passports, kept to the two free options (backend
- * docs/frontend-handoff.md §4): the Maps Embed API iframe and plain Maps URLs.
- * Never use the Maps JavaScript, Directions, Places or Geocoding APIs here:
- * they're billed per call. Each stop is "name, address", which both the embed
- * and Maps URLs resolve themselves, so nothing is geocoded on our side.
+ * Google Maps URLs for passports and place pages, kept to the two free options
+ * (backend docs/frontend-handoff.md §4): the Maps Embed API iframe and plain
+ * Maps URLs. Never use the Maps JavaScript, Directions, Places or Geocoding
+ * APIs here: they're billed per call. Nothing is geocoded on our side.
+ *
+ * A stop is located by its coordinates ("lat,lng"), which the admin sets on a
+ * map, so the pin lands exactly there and Google shows that point, not its own
+ * listing for the business. A place without believable coordinates (older
+ * listings) falls back to "name, address", which Google resolves itself.
  */
 
 const MAPS_EMBED_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY ?? "";
 
 export type TravelMode = "driving" | "walking";
 
-type Stop = Pick<PassportPlace, "name" | "address">;
+type Stop = Pick<PassportPlace, "name" | "address"> & {
+  /** Numbers from Explore, DECIMAL strings from the passport API */
+  latitude?: number | string | null;
+  longitude?: number | string | null;
+};
 
 /**
  * Admins don't always type the town ("480 Hernando drive"), and Google then
@@ -23,12 +33,28 @@ type Stop = Pick<PassportPlace, "name" | "address">;
 const DEFAULT_LOCALITY = "Marco Island, FL";
 const HAS_LOCALITY = /\b(fl|florida)\b|marco island|\b\d{5}(-\d{4})?\s*$/i;
 
-/** URL-encoded "name, address" for one stop, with the town added when the address has none. */
-export function stopParam(place: Stop) {
+/**
+ * "lat,lng" for a stop with believable coordinates, else null. Coordinates far
+ * from the island were mistyped (see milesFromCentre), so those stops fall
+ * back to their address like stops without any.
+ */
+function coordinates(place: Stop) {
+  const latitude = toCoordinate(place.latitude);
+  const longitude = toCoordinate(place.longitude);
+  if (latitude === null || longitude === null) return null;
+  return milesFromCentre({ latitude, longitude }) === null ? null : `${latitude},${longitude}`;
+}
+
+/** "name, address", with the town added when the address has none. */
+function addressText(place: Stop) {
   const address = place.address?.trim() ?? "";
   const town = HAS_LOCALITY.test(address) ? null : DEFAULT_LOCALITY;
-  const label = [place.name, address, town].map((part) => part?.trim()).filter(Boolean).join(", ");
-  return encodeURIComponent(label);
+  return [place.name, address, town].map((part) => part?.trim()).filter(Boolean).join(", ");
+}
+
+/** URL-encoded location of one stop: its coordinates, else "name, address". */
+export function stopParam(place: Stop) {
+  return encodeURIComponent(coordinates(place) ?? addressText(place));
 }
 
 /** Lettered pins on the embed map: A, B, C… in visiting order. */

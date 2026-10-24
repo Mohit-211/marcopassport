@@ -89,6 +89,45 @@ describe("Maps URLs", () => {
     expect(routeUrl([a, b, c])).toContain(`&waypoints=${stopParam(b)}&travelmode=driving`);
     expect(routeUrl([a])).toBeNull();
   });
+
+});
+
+describe("coordinates", () => {
+  // Tigertail Beach as the admin pinned it: DECIMAL strings from the passport API...
+  const pinned = { ...b, latitude: "25.95850000", longitude: "-81.74440000" };
+  const at = encodeURIComponent("25.9585,-81.7444");
+
+  it("locate a stop instead of its name and address", () => {
+    expect(stopParam(pinned)).toBe(at);
+    // ...or numbers from Explore.
+    expect(stopParam({ ...b, latitude: 25.9585, longitude: -81.7444 })).toBe(at);
+  });
+
+  it("are used by the embed and by every link", () => {
+    expect(embedMapSrc([pinned], "driving", "KEY")).toBe(`https://www.google.com/maps/embed/v1/place?key=KEY&q=${at}`);
+    expect(embedMapSrc([pinned, a], "driving", "KEY")).toContain(`&origin=${at}&destination=${stopParam(a)}&`);
+    expect(directionsUrl(a, pinned)).toContain(`&destination=${at}&`);
+    expect(directionsToUrl(pinned)).toContain(`&destination=${at}&`);
+    expect(placeSearchUrl(pinned)).toBe(`https://www.google.com/maps/search/?api=1&query=${at}`);
+    expect(routeUrl([a, pinned, c])).toContain(`&waypoints=${at}&`);
+  });
+
+  it("fall back to name and address when missing, zero or blank", () => {
+    for (const place of [
+      { ...b, latitude: null, longitude: null },
+      { ...b, latitude: 0, longitude: 0 },
+      { ...b, latitude: "", longitude: "" },
+      { ...b, latitude: "25.9585", longitude: null },
+    ]) {
+      expect(stopParam(place)).toBe(stopParam(b));
+    }
+  });
+
+  it("fall back to name and address when too far from the island to be right", () => {
+    expect(stopParam({ ...b, latitude: 23.76, longitude: 120.69 })).toBe(stopParam(b));
+    // Latitude and longitude swapped.
+    expect(stopParam({ ...b, latitude: -81.7444, longitude: 25.9585 })).toBe(stopParam(b));
+  });
 });
 
 describe("stopLetter", () => {

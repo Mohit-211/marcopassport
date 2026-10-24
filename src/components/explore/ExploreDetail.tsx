@@ -170,7 +170,12 @@ export default function ExploreDetail({ place }: { place: Place }) {
 
           <section className="space-y-6">
             <SectionHeading eyebrow="Getting there" title="Location" />
-            <LocationCard name={place.name} address={place.address} />
+            <LocationCard
+              name={place.name}
+              address={place.address}
+              latitude={place.latitude}
+              longitude={place.longitude}
+            />
           </section>
 
           <ReviewsSection id={String(place.id)} />

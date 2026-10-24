@@ -39,7 +39,7 @@ export function position(item: Pick<ExploreItem, "latitude" | "longitude">) {
 const MAX_PLAUSIBLE_MILES = 250;
 
 /** Miles from the island centre, or null without believable coordinates. */
-export function milesFromCentre(item: ExploreItem) {
+export function milesFromCentre(item: Pick<ExploreItem, "latitude" | "longitude">) {
   const pos = position(item);
   const miles = pos ? distanceMiles(MARCO_ISLAND, pos) : null;
   return miles !== null && miles <= MAX_PLAUSIBLE_MILES ? miles : null;
