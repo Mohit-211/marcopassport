@@ -38,7 +38,7 @@ const iconClass =
   "pointer-events-none absolute left-3.5 top-1/2 size-4.5 -translate-y-1/2 text-muted-foreground/70";
 
 const toggleClass =
-  "absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-lg text-muted-foreground/60 transition-colors hover:text-muted-foreground";
+  "absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-muted-foreground/60 transition-colors hover:text-muted-foreground";
 
 // Fields that appear on mode switch fade in; the initial form renders without animation.
 const revealClass = "animate-in fade-in-0 slide-in-from-top-1 duration-200";
@@ -67,7 +67,7 @@ export function AuthFields({
 
   const inputClass = (fieldName: keyof FieldErrors) =>
     cn(
-      "h-12 rounded-xl border bg-background pl-11 pr-4 text-base transition-colors sm:text-sm",
+      "h-12 rounded-tile border bg-background pl-11 pr-4 text-base transition-colors sm:text-sm",
       hasError(fieldName)
         ? "border-destructive/60 bg-destructive/5 focus-visible:ring-destructive/30"
         : "border-input focus-visible:border-gold focus-visible:ring-gold/30"

@@ -1,8 +1,8 @@
-import { GetAllBusinessApi } from "./business.api";
-import { GetAllPlacesApi, type ListParams } from "./places.api";
-import type { ApiBusiness } from "@/types/business";
-import type { ApiPlace } from "@/types/place";
+import { GetAllBusinessApi, GetBusinessDetailsBySlugApi } from "./business.api";
+import { GetAllPlacesApi, GetPlacesDetailsBySlugApi, type ListParams } from "./places.api";
+import { isNotFoundError } from "@/errors/apiError";
 import { toExploreItem, type ExploreItem, type ExploreType } from "@/lib/explore";
+import type { ApiExploreItem } from "@/types/explore";
 
 // The list endpoints page at 15 by default. Explore filters on the client, so
 // it asks for everything in one go (see the backend note about a combined,
@@ -11,30 +11,42 @@ const ALL = 500;
 
 export interface ExploreResult {
   items: ExploreItem[];
-  /** Which list failed to load; the other one is still shown */
-  failed: ExploreType[];
+  /** One of the API's two lists failed to load; the rest is still shown */
+  partial: boolean;
 }
 
-/** Places to visit and businesses from their two endpoints, in one list. */
+/**
+ * Everything Explore shows, in one list. The API still serves places to visit
+ * and businesses from separate endpoints, so this asks both.
+ */
 export async function fetchExploreItems(params: ListParams = { limit: ALL }): Promise<ExploreResult> {
-  const [places, businesses] = await Promise.allSettled([
-    GetAllPlacesApi(params),
-    GetAllBusinessApi(params),
-  ]);
+  const lists = await Promise.allSettled([GetAllPlacesApi(params), GetAllBusinessApi(params)]);
+  const types: ExploreType[] = ["place", "business"];
   const items: ExploreItem[] = [];
-  const failed: ExploreType[] = [];
-  if (places.status === "fulfilled") {
-    items.push(...((places.value?.data?.data?.places ?? []) as ApiPlace[]).map((p) => toExploreItem(p, "place")));
-  } else {
-    failed.push("place");
+  lists.forEach((list, i) => {
+    if (list.status !== "fulfilled") return;
+    const rows: ApiExploreItem[] = list.value?.data?.data?.places ?? [];
+    items.push(...rows.map((row) => toExploreItem(row, types[i])));
+  });
+  const failures = lists.filter((list) => list.status === "rejected").length;
+  if (failures === lists.length) throw new Error("Couldn't load places");
+  return { items, partial: failures > 0 };
+}
+
+/**
+ * One place by its slug, or undefined when there's none. Slugs are unique
+ * across places to visit and businesses, but the API looks each type up on
+ * its own endpoint, so both are asked at once. Failures other than "not
+ * found" throw, so the page shows its error state instead of a 404.
+ */
+export async function fetchExploreDetail(slug: string): Promise<{ item: ApiExploreItem; type: ExploreType } | undefined> {
+  const lookups = await Promise.allSettled([GetPlacesDetailsBySlugApi(slug), GetBusinessDetailsBySlugApi(slug)]);
+  const types: ExploreType[] = ["place", "business"];
+  for (const [i, lookup] of lookups.entries()) {
+    const item: ApiExploreItem | undefined = lookup.status === "fulfilled" ? lookup.value?.data?.data : undefined;
+    if (item) return { item, type: types[i] };
   }
-  if (businesses.status === "fulfilled") {
-    items.push(...((businesses.value?.data?.data?.places ?? []) as ApiBusiness[]).map((b) =>
-      toExploreItem(b, "business"),
-    ));
-  } else {
-    failed.push("business");
-  }
-  if (failed.length === 2) throw new Error("Couldn't load listings");
-  return { items, failed };
+  const failure = lookups.find((lookup) => lookup.status === "rejected" && !isNotFoundError(lookup.reason));
+  if (failure?.status === "rejected") throw failure.reason;
+  return undefined;
 }

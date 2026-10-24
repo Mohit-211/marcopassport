@@ -11,13 +11,13 @@ export function Hero() {
       <div className="hero-container">
         <div className="max-w-2xl">
           {/* Eyebrow */}
-          <div className="mb-5 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-6 sm:text-[11px]">
+          <div className="eyebrow mb-5 flex items-center gap-3 text-gold sm:mb-6">
             <span className="h-px w-8 bg-gold/70" />
             The Marco Passport
           </div>
 
           {/* Heading */}
-          <h1 className="max-w-xl font-display text-[3.15rem] font-medium leading-[0.98] tracking-[-0.035em] sm:text-6xl lg:text-[4.75rem]">
+          <h1 className="max-w-xl font-display text-display-xl font-medium">
             Your <span className="italic text-gold">passport</span>
             <br />
             to the island.
@@ -26,7 +26,7 @@ export function Hero() {
           {/* Description */}
           <p className="mt-6 max-w-lg text-sm leading-6 text-primary-foreground/80 sm:mt-7 sm:text-base sm:leading-7">
             A thoughtful guide to Marco Island — the places worth discovering,
-            the stories worth knowing, and the little things that make the
+            the history worth knowing, and the little things that make the
             island special.
           </p>
 

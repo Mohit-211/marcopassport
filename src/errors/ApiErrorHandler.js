@@ -12,7 +12,7 @@ const PUBLIC_AUTH_ROUTE =
 export const handleApiError = (error) => {
   // A 401 on a user route means the token expired or was revoked: sign out
   // locally and open the login popup on top of the current page, so whatever
-  // the user was doing (e.g. editing an itinerary) is still there afterwards.
+  // the user was doing (e.g. editing a passport) is still there afterwards.
   const config = error?.config ?? {};
   if (
     isAuthError(error) &&

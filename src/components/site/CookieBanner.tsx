@@ -27,7 +27,7 @@ export function CookieBanner() {
   return (
     <section
       aria-label="Cookie choice"
-      className="fixed inset-x-4 bottom-4 z-(--z-banner) rounded-2xl border border-border bg-card p-5 text-card-foreground shadow-elegant sm:inset-x-auto sm:bottom-5 sm:left-5 sm:max-w-md"
+      className="fixed inset-x-4 bottom-4 z-(--z-banner) rounded-card border border-border bg-card p-5 text-card-foreground shadow-elegant sm:inset-x-auto sm:bottom-5 sm:left-5 sm:max-w-md"
     >
       <p className="flex items-center gap-2 font-display text-lg font-semibold text-primary">
         <Cookie className="h-4 w-4 text-gold" aria-hidden />

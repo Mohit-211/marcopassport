@@ -36,11 +36,11 @@ export function BlogPreview() {
     <section className="site-container py-16 md:py-24">
       <div className="mb-10 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
-            Stories &amp; Guides
+          <p className="eyebrow text-gold">
+            Local know-how
           </p>
           <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
-            From the Journal
+            From the blog
           </h2>
         </div>
         <Link
@@ -57,10 +57,10 @@ export function BlogPreview() {
               key={i}
               className="animate-pulse"
             >
-              <div className="aspect-[16/9] rounded-3xl bg-muted" />
-              <div className="mt-5 h-4 w-1/3 rounded bg-muted" />
-              <div className="mt-3 h-6 w-3/4 rounded bg-muted" />
-              <div className="mt-3 h-4 w-full rounded bg-muted" />
+              <div className="aspect-[16/9] rounded-card bg-muted" />
+              <div className="mt-5 h-4 w-1/3 rounded-full bg-muted" />
+              <div className="mt-3 h-6 w-3/4 rounded-full bg-muted" />
+              <div className="mt-3 h-4 w-full rounded-full bg-muted" />
             </div>
           ))
           : posts.map((post) => (
@@ -69,7 +69,7 @@ export function BlogPreview() {
               href={`/blog/${post.slug}/${post.id}`}
               className="group block"
             >
-              <div className="relative aspect-[16/9] overflow-hidden rounded-3xl shadow-soft">
+              <div className="relative aspect-[16/9] overflow-hidden rounded-card shadow-soft">
                 <img
                   src={blogImage(post.featured_image)}
                   alt={post.title}

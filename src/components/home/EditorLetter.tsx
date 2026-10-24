@@ -2,29 +2,29 @@ export function EditorLetter() {
   return (
     <section className="bg-background">
       <div className="site-container max-w-4xl py-16 md:py-24">
-        <div className="relative rounded-3xl border border-border bg-card p-8 shadow-elegant md:p-14">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Letter from the editor</p>
+        <div className="relative rounded-card border border-border bg-card p-8 shadow-elegant md:p-14">
+          <p className="eyebrow text-gold">Letter from the editor</p>
           <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
             Welcome to Paradise!
           </h2>
 
           <div className="mt-8 space-y-5 text-muted-foreground leading-relaxed">
             <div className="float-right mb-4 ml-6 w-40 shrink-0 sm:w-52 md:w-60">
-              <div className="overflow-hidden rounded-2xl border border-border shadow-soft">
+              <div className="overflow-hidden rounded-tile border border-border shadow-soft">
                 <img
-                  src="/assets/editor.png"
+                  src="/assets/editor.jpg"
                   alt="A quiet beach inlet on Marco Island, Florida"
                   loading="lazy"
                   className="h-32 w-full object-cover sm:h-40 md:h-44"
                 />
               </div>
-              <p className="mt-2 text-center text-[11px] tracking-[0.15em] text-muted-foreground uppercase">
+              <p className="caps mt-2 text-center text-muted-foreground">
                 Marco Island, FL
               </p>
             </div>
 
             <p>
-              <span className="font-display float-left mr-3 mt-1 text-6xl leading-[0.8] text-gold">
+              <span className="font-display float-left mr-3 mt-1 text-6xl leading-none text-gold">
                 A
               </span>
               s the Editor-in-Chief of the Marco Passport, it is my absolute
@@ -61,7 +61,7 @@ export function EditorLetter() {
               <p className="font-display mt-1 text-3xl italic text-primary">
                 The Editor
               </p>
-              <p className="mt-1 text-xs tracking-[0.15em] text-muted-foreground uppercase">
+              <p className="eyebrow mt-1 text-muted-foreground">
                 The Marco Passport Magazine
               </p>
             </div>

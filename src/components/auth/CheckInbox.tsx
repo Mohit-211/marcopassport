@@ -45,18 +45,18 @@ export function CheckInbox({ email, onBack }: { email: string; onBack?: () => vo
       <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-gold/15 text-gold">
         <MailCheck className="h-6 w-6" />
       </span>
-      <h2 className="mt-4 text-[1.5rem] font-semibold leading-tight text-primary">Check your inbox</h2>
+      <h2 className="mt-4 text-2xl font-semibold leading-tight text-primary">Check your inbox</h2>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
         We sent a verification link to <span className="font-medium text-primary">{email}</span>. Open it
         to activate your account. The link expires in 24 hours.
       </p>
       {notice && (
-        <p role="status" className="mt-4 rounded-xl bg-muted px-4 py-2.5 text-sm text-primary">
+        <p role="status" className="mt-4 rounded-tile bg-muted px-4 py-2.5 text-sm text-primary">
           {notice}
         </p>
       )}
       {error && (
-        <p role="alert" className="mt-4 rounded-xl bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
+        <p role="alert" className="mt-4 rounded-tile bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
           {error}
         </p>
       )}

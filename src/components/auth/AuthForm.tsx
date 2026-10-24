@@ -157,16 +157,16 @@ export function AuthForm({ initialMode = "login", initialEmail, message, onLogge
     <div>
       <AuthTabs mode={mode} onSwitch={switchMode} />
       <div className="px-6 pb-6 pt-1 sm:px-8">
-        <h2 className="text-[1.65rem] font-semibold leading-tight text-primary sm:text-3xl">
+        <h2 className="text-2xl font-semibold leading-tight text-primary sm:text-3xl">
           {isLogin ? "Welcome back" : "Create your Passport"}
         </h2>
         <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
           {isLogin
-            ? "Log in to save your itineraries and see them on any device."
-            : "Save places, plan visits, and build your Marco Island itinerary."}
+            ? "Log in to save your passports and see them on any device."
+            : "Save places, plan visits, and build your Marco Island passport."}
         </p>
         {message && (
-          <p role="status" className="mt-4 rounded-xl bg-gold/15 px-4 py-2.5 text-sm text-primary">
+          <p role="status" className="mt-4 rounded-tile bg-gold/15 px-4 py-2.5 text-sm text-primary">
             {message}
           </p>
         )}
@@ -218,7 +218,7 @@ export function AuthForm({ initialMode = "login", initialEmail, message, onLogge
             onForgotPassword={onForgotPassword && (() => onForgotPassword(email.trim()))}
           />
           {formError && (
-            <p role="alert" className="rounded-xl bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
+            <p role="alert" className="rounded-tile bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
               {formError}
             </p>
           )}
@@ -248,7 +248,7 @@ export function AuthForm({ initialMode = "login", initialEmail, message, onLogge
         <button
           type="button"
           onClick={() => switchMode(isLogin ? "signup" : "login")}
-          className="font-medium text-primary underline underline-offset-4 transition-colors hover:text-gold focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="font-medium text-primary underline underline-offset-4 transition-colors hover:text-gold focus-visible:rounded-mark focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           {isLogin ? "Create account" : "Log in"}
         </button>

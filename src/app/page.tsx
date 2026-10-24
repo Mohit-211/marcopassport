@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { AboutUs } from "@/components/home/AboutUs";
 import { EditorLetter } from "@/components/home/EditorLetter";
-import { FeaturedListings } from "@/components/home/FeaturedListings";
+import { FeaturedPlaces } from "@/components/home/FeaturedPlaces";
 import { MagazineStrip } from "@/components/home/MagazineStrip";
 import { BlogPreview } from "@/components/home/BlogPreview";
 import { PassportCTA } from "@/components/home/PassportCTA";
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
 };
 
-// Featured listings come from the API at render time; refresh them every 10 minutes.
+// Featured places come from the API at render time; refresh them every 10 minutes.
 export const revalidate = 600;
 
 export default function Home() {
@@ -28,7 +28,7 @@ export default function Home() {
       <Hero />
       <AboutUs />
       <EditorLetter />
-      <FeaturedListings />
+      <FeaturedPlaces />
       <MagazineStrip />
       <BlogPreview />
       <PassportCTA />

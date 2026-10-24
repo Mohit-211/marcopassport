@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Share2 } from "lucide-react";
 import { fetchExploreItems } from "@/api/users/explore.api";
 import { PageHero } from "@/components/site/PageHero";
-import { toItineraryPlace } from "@/lib/explore";
-import { decodeSharedTrip } from "@/features/itineraries/planner/logic";
-import { SharedTrip } from "@/features/itineraries/planner/SharedTrip";
-import type { ItineraryItem } from "@/features/itineraries/types";
+import { toPassportPlace } from "@/lib/explore";
+import { decodeSharedTrip } from "@/features/passport/planner/logic";
+import { SharedTrip } from "@/features/passport/planner/SharedTrip";
+import type { PassportItem } from "@/features/passport/types";
 
 export const metadata: Metadata = {
   title: "Shared trip — The Marco Passport",
@@ -19,15 +19,15 @@ export default async function SharedTripPage({ searchParams }: { searchParams: S
   const { t } = await searchParams;
   const trip = decodeSharedTrip(Array.isArray(t) ? t[0] : t);
 
-  let items: ItineraryItem[] = [];
+  let items: PassportItem[] = [];
   let failed = false;
   if (trip) {
     try {
-      const { items: listings } = await fetchExploreItems();
-      const byId = new Map(listings.map((l) => [l.id, l]));
+      const { items: places } = await fetchExploreItems();
+      const byId = new Map(places.map((place) => [place.id, place]));
       items = trip.stops.flatMap((stop) => {
-        const listing = byId.get(stop.id);
-        return listing ? [{ place_id: stop.id, visit_date: stop.date, place: toItineraryPlace(listing) }] : [];
+        const place = byId.get(stop.id);
+        return place ? [{ place_id: stop.id, visit_date: stop.date, place: toPassportPlace(place) }] : [];
       });
     } catch {
       failed = true;
@@ -47,11 +47,11 @@ export default async function SharedTripPage({ searchParams }: { searchParams: S
       <section className="bg-background py-12 md:py-16">
         <div className="site-container">
           {!trip ? (
-            <p className="rounded-2xl bg-muted p-6 text-sm text-muted-foreground">
+            <p className="rounded-card bg-muted p-6 text-sm text-muted-foreground">
               This share link isn&apos;t valid. Ask whoever sent it for a new one.
             </p>
           ) : failed ? (
-            <p className="rounded-2xl bg-muted p-6 text-sm text-muted-foreground">
+            <p className="rounded-card bg-muted p-6 text-sm text-muted-foreground">
               We couldn&apos;t load this trip right now. Please refresh to try again.
             </p>
           ) : (

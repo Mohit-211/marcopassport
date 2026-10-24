@@ -54,7 +54,7 @@ export function AuthDialog({ onLoggedIn }: { onLoggedIn: () => void | Promise<vo
   const completeLogin = useCallback(
     async (welcome: string) => {
       toast.success(welcome);
-      // Resolve waiting callers (e.g. an itinerary save retrying after a 401) first.
+      // Resolve waiting callers (e.g. a passport save retrying after a 401) first.
       finishLogin(true);
       await onLoggedIn();
     },

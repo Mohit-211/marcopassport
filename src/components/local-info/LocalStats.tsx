@@ -35,7 +35,7 @@ export async function LocalStats() {
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
           {liveStats.map((stat) => (
             <div key={stat.k}>
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              <p className="eyebrow text-muted-foreground">
                 {stat.k}
               </p>
               <p className="mt-1 font-display text-xl font-semibold text-primary md:text-2xl">
@@ -48,7 +48,7 @@ export async function LocalStats() {
         <div className="mt-6 grid grid-cols-2 gap-6 border-t border-border pt-6 lg:grid-cols-4">
           {MARCO_ISLAND_FACTS?.map((fact) => (
             <div key={fact.k}>
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              <p className="eyebrow text-muted-foreground">
                 {fact.k}
               </p>
               <p className="mt-1 font-display text-lg font-semibold text-primary md:text-xl">

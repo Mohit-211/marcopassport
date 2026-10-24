@@ -52,13 +52,13 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 border-b border-primary/8",
+        "fixed inset-x-0 top-0 z-40 border-b border-primary/8",
         "bg-cream/50 backdrop-blur-xl",
         "transition-all duration-300",
         scrolled ? "shadow-soft" : "shadow-none",
       )}
     >
-      <div className="site-container flex h-20 items-center justify-between">
+      <div className="site-container flex h-(--header-height) items-center justify-between">
         {/* Logo */}
         <Link
           href="/"
@@ -90,7 +90,7 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative rounded-lg px-3 py-2 text-[13px] font-medium tracking-[-0.01em]",
+                  "relative rounded-full px-3 py-2 text-sm font-medium",
                   "transition-colors duration-200",
                   active
                     ? "text-primary"
@@ -115,8 +115,8 @@ export function Navbar() {
               className={cn(
                 "h-10 rounded-full px-5 text-sm font-semibold",
                 "bg-primary text-primary-foreground",
-                "shadow-sm transition-all duration-200",
-                "hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md",
+                "shadow-soft transition-all duration-200",
+                "hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-elegant",
               )}
             >
               Advertise With Us
@@ -133,11 +133,11 @@ export function Navbar() {
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
           className="
-            grid h-11 w-11 place-items-center rounded-xl
+            grid h-11 w-11 place-items-center rounded-full
             border border-primary/10
             bg-primary/5
             text-primary
-            shadow-sm
+            shadow-soft
             transition-all duration-200
             hover:bg-primary/10
             lg:hidden
@@ -167,7 +167,7 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "rounded-xl px-4 py-3 text-[15px] font-medium",
+                  "rounded-tile px-4 py-3 text-base font-medium",
                   "transition-colors duration-200",
                   active
                     ? "bg-primary text-primary-foreground"
@@ -188,7 +188,7 @@ export function Navbar() {
                     setOpen(false);
                     openAuthDialog("change-password");
                   }}
-                  className="mt-3 flex items-center gap-2 rounded-xl px-4 py-3 text-left text-[15px] font-medium text-primary/80 transition-colors duration-200 hover:bg-primary/10 hover:text-primary"
+                  className="mt-3 flex items-center gap-2 rounded-tile px-4 py-3 text-left text-base font-medium text-primary/80 transition-colors duration-200 hover:bg-primary/10 hover:text-primary"
                 >
                   <KeyRound className="h-4 w-4" /> Change Password
                 </button>

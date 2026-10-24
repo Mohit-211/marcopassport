@@ -14,7 +14,7 @@ declare module "axios" {
      */
     skipGlobalError?: boolean;
     /**
-     * For background requests (profile, itinerary list on page load): a 401
+     * For background requests (profile, passport list on page load): a 401
      * still signs the user out, but doesn't pop the login dialog up unasked.
      */
     skipLoginPopup?: boolean;
@@ -97,7 +97,7 @@ export function getApiErrorMessage(error: unknown): string {
   return errorMessages.UNKNOWN;
 }
 
-/** True when the API answered 404: the requested listing, place or story doesn't exist. */
+/** True when the API answered 404: the requested place or blog doesn't exist. */
 export function isNotFoundError(error: unknown): boolean {
   return getStatus(error) === 404;
 }

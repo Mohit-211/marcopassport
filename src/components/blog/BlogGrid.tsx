@@ -5,14 +5,14 @@ import type { Blog } from "@/types/blog";
 
 export default function BlogGrid({
   posts,
-  emptyMessage = "No stories match your search yet. Try a different keyword or category.",
+  emptyMessage = "No blogs match your search yet. Try a different keyword or category.",
 }: {
   posts: Blog[];
   emptyMessage?: string;
 }) {
   if (posts.length === 0) {
     return (
-      <div className="text-center py-20 border border-dashed border-border rounded-3xl">
+      <div className="text-center py-20 border border-dashed border-border rounded-card">
         <p className="text-muted-foreground">{emptyMessage}</p>
       </div>
     );
@@ -24,7 +24,7 @@ export default function BlogGrid({
         <Link
           key={`${p.slug}-${p.id?? ""}`}
           href={`/blog/${p.slug}/${p.id}`}
-          className="group flex flex-col h-full rounded-3xl bg-card border border-border shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+          className="group flex flex-col h-full rounded-card bg-card border border-border shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-300 overflow-hidden"
         >
           <div className="relative overflow-hidden aspect-[16/9]">
             <img
@@ -35,7 +35,7 @@ export default function BlogGrid({
             />
 
             {p.blog_category?.name && (
-              <span className="absolute top-4 left-4 bg-background/90 backdrop-blur text-primary text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
+              <span className="caps absolute top-4 left-4 bg-background/90 backdrop-blur text-primary px-3 py-1.5 rounded-full">
                 {p.blog_category.name}
               </span>
             )}
@@ -56,7 +56,7 @@ export default function BlogGrid({
               <span>{p.read || ""}</span> */}
             </div>
 
-            <h3 className="font-display text-xl font-semibold mt-3 text-primary group-hover:text-gold-foreground transition-colors text-balance">
+            <h3 className="font-display text-xl font-semibold mt-3 text-primary group-hover:text-gold transition-colors text-balance">
               {p.title}
             </h3>
 
@@ -64,7 +64,7 @@ export default function BlogGrid({
               {p.description || ""}
             </p>
 
-            <div className="mt-auto pt-5 self-start inline-flex items-center gap-1.5 text-sm font-semibold text-gold-foreground border-b border-gold pb-0.5 group-hover:gap-2.5 transition-all">
+            <div className="mt-auto pt-5 self-start inline-flex items-center gap-1.5 blog-link text-sm font-semibold group-hover:gap-2.5 transition-all">
               Read More
 
               <ArrowRight className="h-3.5 w-3.5" />

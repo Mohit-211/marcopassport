@@ -1,147 +1,204 @@
 .
-├── .DS_Store
+├── api
+│   ├── auth
+│   │   └── auth.api.ts
+│   ├── client.ts
+│   ├── endpoints.ts
+│   └── users
+│       ├── blog.api.ts
+│       ├── business.api.ts
+│       ├── contact.api.ts
+│       ├── explore.api.ts
+│       ├── newsletter.api.ts
+│       ├── passports.api.ts
+│       ├── places.api.ts
+│       ├── rating.api.ts
+│       └── users.api.ts
 ├── app
-│   ├── .DS_Store
-│   ├── auth
-│   │   └── page.tsx
-│   ├── blog
-│   │   ├── [slug]
-│   │   │   └── page.tsx
-│   │   └── page.tsx
-│   ├── business
-│   │   ├── .DS_Store
-│   │   ├── page.tsx
-│   │   ├── submit
-│   │   │   ├── SubmitForm.tsx
-│   │   │   └── page.tsx
-│   │   └── thank-you
-│   │       └── page.tsx
-│   ├── contact
-│   │   └── page.tsx
-│   ├── error.tsx
-│   ├── explore
-│   │   └── page.tsx
-│   ├── globals.css
-│   ├── layout.tsx
-│   ├── listings
-│   │   └── [id]
-│   │       └── page.tsx
-│   ├── local-info
-│   │   └── page.tsx
-│   ├── magazine
-│   │   ├── [slug]
-│   │   │   └── page.tsx
-│   │   └── page.tsx
-│   ├── not-found.tsx
-│   ├── page.tsx
-│   ├── passport
-│   │   └── page.tsx
-│   └── places
-│       ├── [id]
-│       │   └── page.tsx
-│       └── page.tsx
+│   ├── advertise-with-us
+│   │   ├── page.tsx
+│   │   ├── submit
+│   │   │   ├── SubmitForm.tsx
+│   │   │   └── page.tsx
+│   │   └── thank-you
+│   │       └── page.tsx
+│   ├── blog
+│   │   ├── [slug]
+│   │   │   └── [id]
+│   │   │       ├── not-found.tsx
+│   │   │       └── page.tsx
+│   │   └── page.tsx
+│   ├── contact
+│   │   └── page.tsx
+│   ├── error.tsx
+│   ├── explore
+│   │   ├── [slug]
+│   │   │   ├── not-found.tsx
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── local-info
+│   │   └── page.tsx
+│   ├── magazine
+│   │   ├── [slug]
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   ├── not-found.tsx
+│   ├── page.tsx
+│   ├── passport
+│   │   ├── [id]
+│   │   │   └── page.tsx
+│   │   ├── page.tsx
+│   │   └── shared
+│   │       └── page.tsx
+│   ├── privacy
+│   │   └── page.tsx
+│   └── terms
+│       └── page.tsx
 ├── components
-│   ├── .DS_Store
-│   ├── auth
-│   │   ├── AuthFields.tsx
-│   │   ├── AuthForm.tsx
-│   │   ├── AuthTabs.tsx
-│   │   └── GoogleIcon.tsx
-│   ├── blog
-│   │   ├── BlogArticleExperience.tsx
-│   │   ├── BlogExperience.tsx
-│   │   ├── BlogGrid.tsx
-│   │   ├── BlogNewsletter.tsx
-│   │   ├── BlogToc.tsx
-│   │   ├── ShareControls.tsx
-│   │   └── [slug]
-│   │       └── error.tsx
-│   ├── contact
-│   │   ├── ContactForm.tsx
-│   │   └── ContactInfo.tsx
-│   ├── explore
-│   │   ├── ExploreHelpers.tsx
-│   │   ├── ExplorePage.tsx
-│   │   ├── FilterPanel.tsx
-│   │   └── ListingCard.tsx
-│   ├── home
-│   │   ├── AboutUs.tsx
-│   │   ├── BlogPreview.tsx
-│   │   ├── Categories.tsx
-│   │   ├── EditorLetter.tsx
-│   │   ├── FeaturedListings.tsx
-│   │   ├── Hero.tsx
-│   │   ├── MagazineStrip.tsx
-│   │   ├── PassportCTA.tsx
-│   │   └── TopPlaces.tsx
-│   ├── listings
-│   │   ├── ListingActionsPanel.tsx
-│   │   ├── ListingGallery.tsx
-│   │   ├── ListingInfoContent.tsx
-│   │   └── SimilarAndRelated.tsx
-│   ├── local-info
-│   │   ├── ContentSections.tsx
-│   │   ├── ExploreMore.tsx
-│   │   ├── LocalStats.tsx
-│   │   └── QuickTips.tsx
-│   ├── magazine
-│   │   ├── ArchiveSection.tsx
-│   │   ├── CoverArt.tsx
-│   │   ├── CoverMockup.tsx
-│   │   ├── FeaturedEdition.tsx
-│   │   ├── Flipbook.tsx
-│   │   ├── MagazineExperience.tsx
-│   │   ├── MagazineGrid.tsx
-│   │   └── MagazineHero.tsx
-│   ├── passport
-│   │   ├── AddToPassportModal.tsx
-│   │   ├── PassportEmptyState.tsx
-│   │   ├── PassportItemCard.tsx
-│   │   └── PassportPage.tsx
-│   ├── places
-│   │   ├── EditorialGuide.tsx
-│   │   ├── NearbyAndRelated.tsx
-│   │   ├── PlaceExperience.tsx
-│   │   ├── PlaceStoryContent.tsx
-│   │   ├── PlacesGrid.tsx
-│   │   ├── PlacesHero.tsx
-│   │   └── TopPicksScroll.tsx
-│   ├── site
-│   │   ├── Footer.tsx
-│   │   └── Navbar.tsx
-│   └── ui
-│       ├── alert-dialog.tsx
-│       ├── alert.tsx
-│       ├── badge.tsx
-│       ├── button.tsx
-│       ├── calendar.tsx
-│       ├── checkbox.tsx
-│       ├── dialog.tsx
-│       ├── input.tsx
-│       ├── label.tsx
-│       ├── popover.tsx
-│       ├── select.tsx
-│       ├── separator.tsx
-│       ├── sheet.tsx
-│       ├── skeleton.tsx
-│       ├── slider.tsx
-│       ├── sonner.tsx
-│       ├── switch.tsx
-│       ├── textarea.tsx
-│       ├── toggle.tsx
-│       └── tooltip.tsx
+│   ├── auth
+│   │   ├── AuthDialog.tsx
+│   │   ├── AuthFields.tsx
+│   │   ├── AuthForm.tsx
+│   │   ├── AuthTabs.tsx
+│   │   ├── ChangePasswordForm.tsx
+│   │   ├── CheckInbox.tsx
+│   │   ├── ForgotPasswordForm.tsx
+│   │   ├── PasswordField.tsx
+│   │   ├── ResetPasswordForm.tsx
+│   │   └── VerifyEmail.tsx
+│   ├── blog
+│   │   ├── BlogArticleExperience.tsx
+│   │   ├── BlogExperience.tsx
+│   │   ├── BlogGrid.tsx
+│   │   ├── BlogNewsletter.tsx
+│   │   ├── BlogSearch.tsx
+│   │   └── ShareControls.tsx
+│   ├── contact
+│   │   ├── ContactForm.tsx
+│   │   └── ContactInfo.tsx
+│   ├── explore
+│   │   ├── ExploreCard.tsx
+│   │   ├── ExploreDetail.tsx
+│   │   ├── ExploreDetailContent.tsx
+│   │   ├── ExploreHelpers.tsx
+│   │   ├── ExplorePage.tsx
+│   │   ├── MoreToExplore.tsx
+│   │   ├── ReviewsList.tsx
+│   │   ├── ReviewsSection.tsx
+│   │   └── WriteReviewCard.tsx
+│   ├── home
+│   │   ├── AboutUs.tsx
+│   │   ├── BlogPreview.tsx
+│   │   ├── EditorLetter.tsx
+│   │   ├── FeaturedPlaces.tsx
+│   │   ├── Hero.tsx
+│   │   ├── MagazineStrip.tsx
+│   │   └── PassportCTA.tsx
+│   ├── local-info
+│   │   ├── ContentSections.tsx
+│   │   ├── EditorialGuide.tsx
+│   │   ├── ExploreMore.tsx
+│   │   ├── LocalClock.tsx
+│   │   ├── LocalStats.tsx
+│   │   └── QuickTips.tsx
+│   ├── magazine
+│   │   ├── ArchiveSection.tsx
+│   │   ├── CoverMockup.tsx
+│   │   ├── FeaturedEdition.tsx
+│   │   ├── Flipbook.tsx
+│   │   ├── MagazineExperience.tsx
+│   │   ├── MagazineGrid.tsx
+│   │   └── MagazineHero.tsx
+│   ├── site
+│   │   ├── CookieBanner.tsx
+│   │   ├── CookieSettingsButton.tsx
+│   │   ├── CtaSection.tsx
+│   │   ├── Footer.tsx
+│   │   ├── HeroBackground.tsx
+│   │   ├── LocationCard.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── PageHero.tsx
+│   │   └── ProfileDropdown.tsx
+│   └── ui
+│       ├── alert-dialog.tsx
+│       ├── badge.tsx
+│       ├── button.tsx
+│       ├── checkbox.tsx
+│       ├── dialog.tsx
+│       ├── dropdown-menu.tsx
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── select.tsx
+│       ├── sheet.tsx
+│       ├── skeleton.tsx
+│       ├── slider.tsx
+│       ├── sonner.tsx
+│       ├── switch.tsx
+│       ├── textarea.tsx
+│       └── tooltip.tsx
+├── constants
+│   └── config.js
 ├── data
-│   ├── blogs.ts
-│   ├── content.ts
-│   ├── magazines.ts
-│   └── places.ts
-├── folder_structure.txt
+│   └── magazines.ts
+├── errors
+│   ├── ApiErrorHandler.js
+│   ├── apiError.ts
+│   └── errorMessages.js
+├── features
+│   └── passport
+│       ├── PassportsProvider.tsx
+│       ├── components
+│       │   ├── AddToPassportButton.tsx
+│       │   ├── AddToPassportDialog.tsx
+│       │   ├── NewPassportDialog.tsx
+│       │   ├── PassportDetailPage.tsx
+│       │   ├── PassportEditor.tsx
+│       │   ├── PassportMap.tsx
+│       │   └── PassportPage.tsx
+│       ├── draft-store.ts
+│       ├── format.ts
+│       ├── logic.test.ts
+│       ├── logic.ts
+│       ├── maps.test.ts
+│       ├── maps.ts
+│       ├── place.ts
+│       ├── planner
+│       │   ├── MyPlanPanel.tsx
+│       │   ├── PlanTripButton.tsx
+│       │   ├── PlannerMap.tsx
+│       │   ├── SharedTrip.tsx
+│       │   ├── TripPlannerDialog.tsx
+│       │   ├── logic.test.ts
+│       │   ├── logic.ts
+│       │   └── use-active-plan.ts
+│       ├── save-draft.ts
+│       └── types.ts
 ├── hooks
-│   └── use-mobile.tsx
-└── lib
-    ├── date.ts
-    ├── island-facts.ts
-    ├── utils.ts
-    └── weather.ts
+│   ├── use-mobile.tsx
+│   ├── useAuth.tsx
+│   └── useNewsletterSignup.ts
+├── lib
+│   ├── auth.ts
+│   ├── blog.ts
+│   ├── consent.ts
+│   ├── date.test.ts
+│   ├── date.ts
+│   ├── explore-detail.test.ts
+│   ├── explore-detail.ts
+│   ├── explore.test.ts
+│   ├── explore.ts
+│   ├── island-facts.ts
+│   ├── login-popup.ts
+│   ├── password.ts
+│   ├── share.ts
+│   ├── url.test.ts
+│   ├── url.ts
+│   ├── utils.ts
+│   └── weather.ts
+└── types
+    ├── blog.ts
+    └── explore.ts
 
-35 directories, 110 files
+41 directories, 160 files

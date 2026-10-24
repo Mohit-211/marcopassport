@@ -1,7 +1,7 @@
 /**
  * The visitor's cookie choice, and where the site keeps its own data on their
  * device. Nothing here is for ads or tracking: the only things stored are
- * the sign-in token, a guest's itinerary draft, the planner's panel width and
+ * the sign-in token, a guest's passport draft, the planner's panel width and
  * the choice itself (listed on /privacy#cookies).
  *
  * "essential" (or no choice yet) keeps them in localStorage, so they survive
@@ -14,7 +14,7 @@ export type CookieChoice = "essential" | "rejected";
 /** Every key the site stores itself. */
 export const STORAGE_KEYS = {
   token: "MarcoPassport",
-  draft: "mp_itinerary_draft",
+  draft: "mp_passport_draft",
   plannerWidth: "planner-panel-width",
 } as const;
 

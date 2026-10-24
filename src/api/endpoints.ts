@@ -22,10 +22,10 @@ export const Business = {
   GET_ALL_BUSINESS: "explore",
   GET_BUSINESS_DETAILS_BY_SLUG: (slug: string) => `explore/listing/${slug}`,
 }
-export const Itineraries = {
-  LIST: "/user/itineraries",
-  DETAIL: (id: number | string) => `/user/itineraries/${id}`,
-  ITEMS: (id: number | string) => `/user/itineraries/${id}/items`,
+export const Passports = {
+  LIST: "/user/passports",
+  DETAIL: (id: number | string) => `/user/passports/${id}`,
+  ITEMS: (id: number | string) => `/user/passports/${id}/items`,
 }
 export const Rating = {
   ADD_TO_RATING: (id: number | string) => `explore/listing/${id}/reviews`,

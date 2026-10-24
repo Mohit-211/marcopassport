@@ -48,7 +48,7 @@ export default function PrivacyPage() {
               time, your time zone and your IP address, to keep accounts secure.
             </li>
             <li>
-              <strong>What you add.</strong> The itineraries you save (names,
+              <strong>What you add.</strong> The passports you save (names,
               dates and places) and the reviews you post. Reviews are public and
               show your name.
             </li>
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
 
           <h2>How we use it</h2>
           <ul>
-            <li>To run your account: signing you in, saving your itineraries and publishing your reviews.</li>
+            <li>To run your account: signing you in, saving your passports and publishing your reviews.</li>
             <li>To send account emails, such as email verification and password reset links.</li>
             <li>To answer your messages and business submissions.</li>
             <li>To send the newsletter once it starts. Every newsletter will include a way to unsubscribe.</li>
@@ -76,7 +76,7 @@ export default function PrivacyPage() {
           </ul>
           <p>We don&apos;t sell your personal information or use it for advertising.</p>
 
-          <h2 id="cookies" className="scroll-mt-28">
+          <h2 id="cookies" className="scroll-mt-(--header-offset)">
             Cookies and storage on your device
           </h2>
           <p>
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
               you signed in.
             </li>
             <li>
-              <strong>Saved places</strong> (<code>mp_itinerary_draft</code>):
+              <strong>Saved places</strong> (<code>mp_passport_draft</code>):
               remembers the places you add before signing in, so they can be
               saved to your account when you do.
             </li>
@@ -109,7 +109,7 @@ export default function PrivacyPage() {
             choice itself is remembered.
           </p>
           <p>
-            Maps on place and business pages, and in your itineraries, are
+            Maps on place and business pages, and in your passports, are
             embedded from Google Maps. Google may set its own cookies when a map
             loads; see{" "}
             <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
@@ -131,8 +131,8 @@ export default function PrivacyPage() {
           <ul>
             <li>Accounts that are never verified are deleted automatically after 24 hours.</li>
             <li>
-              Your account, itineraries and reviews are kept until you delete
-              them or ask us to. You can delete your itineraries and reviews
+              Your account, passports and reviews are kept until you delete
+              them or ask us to. You can delete your passports and reviews
               yourself at any time.
             </li>
             <li>Messages and business submissions are kept as long as we need them to respond and keep business records.</li>

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 type Side = "top" | "bottom" | "left" | "right";
 
 const popupClass =
-  "z-50 max-w-64 origin-(--transform-origin) rounded-xl bg-primary px-3 py-2 text-xs leading-relaxed text-primary-foreground shadow-elegant outline-hidden duration-100 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95";
+  "z-50 max-w-64 origin-(--transform-origin) rounded-tile bg-primary px-3 py-2 text-xs leading-relaxed text-primary-foreground shadow-elegant outline-hidden duration-100 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95";
 
 /** Wrap the app once so neighbouring tooltips open instantly after the first. */
 function TooltipProvider({ delay = 250, ...props }: TooltipPrimitive.Provider.Props) {

@@ -18,13 +18,13 @@ export function ContactInfo() {
       {contactDetails.map(({ Icon, label, value, href }) => (
         <div
           key={label}
-          className="bg-sand rounded-2xl p-6 border border-border flex gap-4"
+          className="bg-sand rounded-card p-6 border border-border flex gap-4"
         >
           <span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-gold shrink-0">
             <Icon className="h-5 w-5" />
           </span>
           <div className="min-w-0">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">
+            <p className="eyebrow text-muted-foreground">
               {label}
             </p>
             <p className="font-display text-lg mt-1 wrap-break-word">

@@ -1,0 +1,69 @@
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { fetchExploreItems } from "@/api/users/explore.api";
+import { ExploreCard } from "@/components/explore/ExploreCard";
+import { interleave, type ExploreItem } from "@/lib/explore";
+
+const LIMIT = 6;
+
+/** Only places the admin marked as featured; the section hides when there are none. */
+async function getFeatured(): Promise<ExploreItem[]> {
+  try {
+    const { items } = await fetchExploreItems({ featured: true, limit: LIMIT });
+    const featured = items.filter((i) => i.featured);
+    return interleave(
+      featured.filter((i) => i.type === "place"),
+      featured.filter((i) => i.type === "business"),
+    ).slice(0, LIMIT);
+  } catch (error) {
+    console.error("Failed to fetch featured places:", error);
+    return [];
+  }
+}
+
+/**
+ * The home page's one featured section: places to visit and businesses
+ * together, the same cards as Explore.
+ */
+export async function FeaturedPlaces() {
+  const items = await getFeatured();
+  if (items.length === 0) return null;
+
+  return (
+    <section className="py-16 md:py-24">
+      <div className="site-container">
+        <div className="mb-10 flex items-end justify-between gap-6 md:mb-14">
+          <div>
+            <p className="eyebrow text-gold">Hand-picked</p>
+            <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
+              Featured on Marco Island
+            </h2>
+            <p className="mt-4 max-w-lg text-sm leading-6 text-muted-foreground sm:text-base">
+              The beaches, landmarks and local businesses we think are worth your time.
+            </p>
+          </div>
+          <Link
+            href="/explore"
+            className="group hidden shrink-0 items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-gold sm:inline-flex"
+          >
+            View all
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item) => (
+            <ExploreCard key={`${item.type}:${item.id}`} item={item} />
+          ))}
+        </div>
+
+        <Link
+          href="/explore"
+          className="mt-8 flex items-center justify-center gap-2 text-sm font-semibold text-primary sm:hidden"
+        >
+          View all <ArrowUpRight className="h-4 w-4" />
+        </Link>
+      </div>
+    </section>
+  );
+}

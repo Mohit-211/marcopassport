@@ -31,7 +31,7 @@ function verifyOnce(token: string) {
  * Inside the account dialog, opened from the sign-up email
  * (`?auth=verify-email&token=…`). Verifying is a POST made here (not a plain
  * GET link) so email link scanners can't verify accounts on their own.
- * Success logs the user in; `onVerified` then saves any guest itinerary draft.
+ * Success logs the user in; `onVerified` then saves any guest passport draft.
  */
 export function VerifyEmail({
   token,
@@ -82,7 +82,7 @@ export function VerifyEmail({
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-destructive/10 text-destructive">
           <AlertTriangle className="h-6 w-6" />
         </span>
-        <h2 className="mt-4 text-[1.5rem] font-semibold leading-tight text-primary">We couldn&apos;t verify your email</h2>
+        <h2 className="mt-4 text-2xl font-semibold leading-tight text-primary">We couldn&apos;t verify your email</h2>
         <p role="alert" className="mt-2 text-sm leading-relaxed text-muted-foreground">
           {error}
         </p>
@@ -136,7 +136,7 @@ function ResendForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@example.com"
-          className="h-12 rounded-xl pl-11"
+          className="h-12 rounded-tile pl-11"
         />
       </div>
       {notice && <p role="status" className="text-sm text-primary">{notice}</p>}

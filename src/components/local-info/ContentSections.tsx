@@ -86,7 +86,7 @@ export function ContentSections() {
               }`}
             >
               <div>
-                <div className="overflow-hidden rounded-2xl shadow-soft">
+                <div className="overflow-hidden rounded-card shadow-soft">
                   <img
                     src={section.image}
                     alt={section.title}
@@ -95,7 +95,7 @@ export function ContentSections() {
                 </div>
               </div>
               <div>
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                <p className="eyebrow mb-3 text-gold">
                   {section.eyebrow}
                 </p>
                 <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary leading-tight flex items-center gap-3">
@@ -104,7 +104,7 @@ export function ContentSections() {
                   </span>
                   {section.title}
                 </h2>
-                <div className="mt-5 space-y-4 text-foreground/80 leading-relaxed text-[15px] md:text-base">
+                <div className="mt-5 space-y-4 text-foreground/80 leading-relaxed text-base">
                   {section.body.map((p, i) => (
                     <p key={i}>{p}</p>
                   ))}

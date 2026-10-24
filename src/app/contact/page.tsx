@@ -6,7 +6,7 @@ import { PageHero } from "@/components/site/PageHero";
 export const metadata: Metadata = {
   title: "Contact — The Marco Passport",
   description:
-    "Get in touch with the The Marco Passport team — for press, partnerships and visitor questions.",
+    "Get in touch with The Marco Passport team — for press, partnerships and visitor questions.",
 };
 
 export default function ContactPage() {
@@ -17,7 +17,7 @@ export default function ContactPage() {
         imageAlt="Marco Island marina at sunset"
         eyebrow="Say hello"
         title="Let's talk Marco Island."
-        description="Questions, partnership ideas, or a story to share? We'd love to hear from you."
+        description="Questions, partnership ideas, or a tip to share? We'd love to hear from you."
       />
 
       <section className="site-container py-16 grid md:grid-cols-[1.5fr_1fr] gap-10">

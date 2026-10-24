@@ -24,8 +24,8 @@ export function PassportCTA() {
   return (
     <CtaSection
       eyebrow="Your Marco Passport"
-      title="Build your island itinerary, one place at a time."
-      description="Save the places you love, plan when to visit them, and turn everything into one beautiful itinerary you can share."
+      title="Build your island passport, one place at a time."
+      description="Save the places you love, plan when to visit them, and turn everything into one beautiful passport you can share."
       actions={[{ label: "Start my Passport", href: "/passport" }]}
     >
       {/* Features */}

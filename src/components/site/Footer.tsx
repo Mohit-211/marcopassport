@@ -6,9 +6,8 @@ import { useNewsletterSignup } from "@/hooks/useNewsletterSignup";
 
 const discoverLinks = [
   { href: "/explore", label: "Explore" },
-  { href: "/explore?type=place", label: "Places to Visit" },
   { href: "/magazine", label: "Magazine" },
-  { href: "/blog", label: "Stories" },
+  { href: "/blog", label: "Blog" },
 ];
 
 const businessLinks = [
@@ -34,7 +33,7 @@ export function Footer() {
 
   return (
     <footer className="border-t border-border bg-cream max-[759px]:pb-36">
-      {/* (max-[759px]:pb-36: room on phones so the floating Itinerary button doesn't cover the last links.) */}
+      {/* (max-[759px]:pb-36: room on phones so the floating Passport button doesn't cover the last links.) */}
       {/* Main Footer */}
       <div className="site-container grid gap-12 py-14 md:grid-cols-2 md:gap-14 md:py-16 lg:grid-cols-4">
         {/* Brand */}
@@ -67,7 +66,7 @@ export function Footer() {
                   grid h-9 w-9 place-items-center rounded-full
                   border border-primary/10
                   bg-primary/5
-                  text-[11px] font-semibold text-primary
+                  text-caption font-semibold text-primary
                   transition-all duration-200
                   hover:-translate-y-0.5
                   hover:border-primary/20
@@ -134,7 +133,7 @@ export function Footer() {
           </h4>
 
           <p className="mb-5 max-w-sm text-sm leading-relaxed text-cream-foreground/65">
-            Island gems, new listings, and travel inspiration delivered once a
+            Island gems, new places, and travel inspiration delivered once a
             month.
           </p>
 

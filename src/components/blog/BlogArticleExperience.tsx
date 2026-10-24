@@ -38,7 +38,7 @@ export default function BlogArticleExperience({
 }) {
   const categorySlug = post.blog_category?.slug;
   const [relatedState, setRelated] = useState<Blog[]>(relatedProp ?? []);
-  // Other stories in the same category, never the one being read.
+  // Other blogs in the same category, never the one being read.
   const related = (categorySlug ? relatedState : [])
     .filter((r) => r.id !== post.id)
     .slice(0, RELATED_SHOWN);
@@ -82,14 +82,14 @@ export default function BlogArticleExperience({
                 href="/blog"
                 className="inline-flex items-center gap-2 text-sm text-primary-foreground/80 hover:text-gold transition-colors mb-8"
               >
-                <ArrowLeft className="h-4 w-4" /> All Stories
+                <ArrowLeft className="h-4 w-4" /> All blogs
               </Link>
               {post.blog_category?.name && (
-                <span className="inline-block text-[11px] uppercase tracking-[0.25em] text-gold font-semibold mx-4 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/10 backdrop-blur-sm">
+                <span className="caps inline-block text-gold mx-4 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/10 backdrop-blur-sm">
                   {post.blog_category.name}
                 </span>
               )}
-              <h1 className="font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] mt-4 text-balance">
+              <h1 className="text-display font-medium mt-4 text-balance">
                 {post.title}
               </h1>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-primary-foreground/85">
@@ -112,7 +112,7 @@ export default function BlogArticleExperience({
             <img
               src={imageUrl(post.featured_image)}
               alt={post.title}
-              className="w-full aspect-[16/9] object-cover rounded-xl shadow-elegant"
+              className="w-full aspect-[16/9] object-cover rounded-card shadow-elegant"
             />
           </div>
         </section>
@@ -122,14 +122,14 @@ export default function BlogArticleExperience({
         <div className="grid lg:grid-cols-[1fr_minmax(0,680px)_1fr] gap-10">
           {/* Left: floating share */}
           <aside className="hidden lg:block">
-            <div className="sticky top-28 space-y-10">
+            <div className="sticky top-(--header-offset) space-y-10">
               <ShareRail onShare={handleShare} />
             </div>
           </aside>
           {/* Center: article */}
           <article className="min-w-0">
             {post.description && (
-              <p className="font-display text-2xl md:text-[26px] leading-relaxed text-primary first-letter:float-left first-letter:text-6xl first-letter:font-semibold first-letter:mr-3 first-letter:mt-1 first-letter:text-gold-foreground first-letter:leading-none">
+              <p className="font-display text-2xl leading-relaxed text-primary first-letter:float-left first-letter:text-6xl first-letter:font-semibold first-letter:mr-3 first-letter:mt-1 first-letter:text-gold first-letter:leading-none">
                 {post.description}
               </p>
             )}
@@ -142,7 +142,7 @@ export default function BlogArticleExperience({
             {/* Share */}
             <div className="mt-16 pt-10 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
               <div className="flex items-center gap-2">
-                <span className="text-xs uppercase tracking-widest text-muted-foreground mr-2">
+                <span className="eyebrow text-muted-foreground mr-2">
                   Share
                 </span>
                 <ShareButton
@@ -172,10 +172,10 @@ export default function BlogArticleExperience({
       {/* Inline CTA back into the platform */}
       <CtaSection
         eyebrow="Continue exploring"
-        title="Find the places and businesses mentioned in this story."
+        title="Find the places mentioned in this blog."
         actions={[
           { label: "Explore Marco Island", href: "/explore" },
-          { label: "Places to visit", href: "/explore?type=place" },
+          { label: "Plan your passport", href: "/passport" },
         ]}
       />
       {/* Related */}
@@ -183,18 +183,18 @@ export default function BlogArticleExperience({
         <section className="site-container py-20">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+              <p className="eyebrow text-gold">
                 Keep reading
               </p>
               <h2 className="font-display text-3xl md:text-4xl font-semibold mt-2 text-primary">
-                Related Stories
+                Related blogs
               </h2>
             </div>
             <Link
               href="/blog"
-              className="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-gold-foreground border-b-2 border-gold pb-0.5"
+              className="hidden sm:inline-flex items-center gap-2 blog-link text-sm font-semibold"
             >
-              All Stories <ArrowRight className="h-4 w-4" />
+              All blogs <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -202,7 +202,7 @@ export default function BlogArticleExperience({
               <Link
                 key={r.slug}
                 href={`/blog/${r.slug}/${r.id}`}
-                className="group block rounded-3xl bg-card border border-border shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                className="group block rounded-card bg-card border border-border shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-300 overflow-hidden"
               >
                 <div className="relative overflow-hidden aspect-[16/9]">
                   <img
@@ -212,7 +212,7 @@ export default function BlogArticleExperience({
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   {r.blog_category?.name && (
-                    <span className="absolute top-4 left-4 bg-background/90 backdrop-blur text-primary text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
+                    <span className="caps absolute top-4 left-4 bg-background/90 backdrop-blur text-primary px-3 py-1.5 rounded-full">
                       {r.blog_category.name}
                     </span>
                   )}
@@ -221,7 +221,7 @@ export default function BlogArticleExperience({
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <span>{formatDate(r.updated_at)}</span>
                   </div>
-                  <h3 className="font-display text-xl font-semibold mt-3 text-primary group-hover:text-gold-foreground transition-colors text-balance">
+                  <h3 className="font-display text-xl font-semibold mt-3 text-primary group-hover:text-gold transition-colors text-balance">
                     {r.title}
                   </h3>
                   <p className="text-muted-foreground mt-2 line-clamp-2 text-sm">

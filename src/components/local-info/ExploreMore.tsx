@@ -4,22 +4,22 @@ import { CtaSection } from "@/components/site/CtaSection";
 
 const cards = [
   {
-    href: "/explore?type=place",
-    title: "Places to visit",
-    text: "Beaches, parks, and the natural wonders that define Marco.",
+    href: "/explore",
+    title: "Explore Marco Island",
+    text: "Beaches, parks and nature spots, plus places to stay, dine and shop.",
     image: "/assets/place-caxambas.jpg",
   },
   {
-    href: "/explore?type=business",
-    title: "Local businesses",
-    text: "Find places to stay, dine, shop, and experience the best of Marco Island.",
-    image: "/assets/place-marina.jpg",
-  },
-  {
     href: "/blog",
-    title: "Stories & guides",
+    title: "Blogs & guides",
     text: "Long-form reads on culture, food, and island life.",
     image: "/assets/place-museum.jpg",
+  },
+  {
+    href: "/magazine",
+    title: "The magazine",
+    text: "The Marco Passport in print: features, guides and local faces.",
+    image: "/assets/place-marina.jpg",
   },
 ];
 
@@ -30,7 +30,7 @@ export function ExploreMore() {
       <div className="site-container">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+            <p className="eyebrow mb-3 text-gold">
               Keep exploring
             </p>
             <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary leading-tight">
@@ -44,7 +44,7 @@ export function ExploreMore() {
             <Link
               key={c.href}
               href={c.href}
-              className="group block rounded-2xl overflow-hidden border border-border bg-card hover:shadow-soft transition-all"
+              className="group block rounded-card overflow-hidden border border-border bg-card hover:shadow-soft transition-all"
             >
               <div className="relative h-48 overflow-hidden">
                 <img
@@ -74,7 +74,7 @@ export function ExploreMore() {
     {/* CTA */}
     <CtaSection
       title="Plan your trip in your Passport"
-      description="Save places, set dates, and build a simple itinerary you can take with you."
+      description="Save places, set dates, and build a simple passport you can take with you."
       actions={[{ label: "Open your Passport", href: "/passport" }]}
     />
     </>

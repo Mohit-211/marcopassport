@@ -11,8 +11,10 @@ import {
   CreditCard,
   Check,
   Loader2,
+  Store,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageHero } from "@/components/site/PageHero";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -84,24 +86,22 @@ export default function SubmitForm() {
 
   return (
     <>
-      {/* Header */}
-      <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
-        <div className="site-container pt-28 pb-14 md:pt-36 md:pb-16 max-w-2xl">
-          <Link
-            href="/advertise-with-us"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary-foreground/80 hover:text-gold transition-colors"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Back to Advertising
-          </Link>
-          <h1 className="mt-6 font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
-            Submit Your <span className="italic text-gold">Business</span>
-          </h1>
-          <p className="mt-5 text-base md:text-lg text-primary-foreground/80 max-w-xl">
-            Fill out the form below and choose the plan that fits your business.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        size="compact"
+        image="/assets/restaurant.jpg"
+        icon={Store}
+        eyebrow="Advertise with us"
+        title={
+          <>
+            Submit your <span className="italic text-gold">business</span>
+          </>
+        }
+        description="Fill out the form below and choose the plan that fits your business."
+      >
+        <Button variant="ghostLight" size="sm" nativeButton={false} render={<Link href="/advertise-with-us" />}>
+          <ArrowLeft className="h-3.5 w-3.5" /> Back to advertising
+        </Button>
+      </PageHero>
 
       {/* Form */}
       <section className="bg-background">
@@ -180,9 +180,9 @@ export default function SubmitForm() {
                       type="button"
                       onClick={() => setPlan(p.id)}
                       className={cn(
-                        "relative text-left rounded-2xl border-2 bg-card p-4 transition-all",
+                        "relative text-left rounded-card border-2 bg-card p-4 transition-all",
                         isSelected
-                          ? "border-gold shadow-md"
+                          ? "border-gold shadow-soft"
                           : "border-border hover:border-primary/30"
                       )}
                     >
@@ -193,7 +193,7 @@ export default function SubmitForm() {
                       )}
                       <div
                         className={cn(
-                          "flex h-9 w-9 items-center justify-center rounded-lg mb-3",
+                          "flex h-9 w-9 items-center justify-center rounded-tile mb-3",
                           isSelected
                             ? "bg-primary text-gold"
                             : "bg-primary/5 text-primary"

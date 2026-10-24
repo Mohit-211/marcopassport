@@ -9,16 +9,16 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary-soft",
+          "bg-primary text-primary-foreground shadow-soft hover:bg-primary-soft",
 
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground shadow-soft hover:bg-destructive/90",
 
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background shadow-soft hover:bg-accent hover:text-accent-foreground",
 
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+          "bg-secondary text-secondary-foreground shadow-soft hover:bg-secondary/80",
 
         ghost: "hover:bg-accent hover:text-accent-foreground",
 
@@ -30,6 +30,9 @@ const buttonVariants = cva(
 
         ghostLight:
           "text-primary-foreground border border-primary-foreground/30 hover:bg-primary-foreground/10",
+
+        // An action already taken, such as a place that is in your passport
+        added: "border border-gold/60 bg-gold/10 text-primary font-semibold hover:bg-gold/20",
       },
 
       size: {

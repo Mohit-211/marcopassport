@@ -20,12 +20,9 @@ const one = (value: string | string[] | undefined) => (Array.isArray(value) ? va
 
 export default async function Explore({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
-  const type = one(params.type);
   const initial: ExploreInitialState = {
-    type: type === "place" || type === "business" ? type : "all",
     query: one(params.q) ?? "",
     category: one(params.category),
-    featured: one(params.featured) === "true",
   };
 
   return (
@@ -33,7 +30,7 @@ export default async function Explore({ searchParams }: { searchParams: SearchPa
       <ExplorePage initial={initial} />
       <CtaSection
         eyebrow="Your passport"
-        title="Turn what you find into an itinerary"
+        title="Turn what you find into a passport"
         description="Add places with a visit date as you browse, put them in order and see the whole route on one map."
         actions={[{ label: "Open My Passport", href: "/passport" }]}
       />

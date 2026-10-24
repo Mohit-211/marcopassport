@@ -12,8 +12,12 @@ const nextConfig: NextConfig = {
   // Old URLs that may still be bookmarked or sitting in emails.
   async redirects() {
     return [
-      // Places and businesses share one Explore page now.
-      { source: "/places", destination: "/explore?type=place", permanent: true },
+      // Places to visit and businesses are one kind of thing on Explore now,
+      // each with its page at /explore/:slug.
+      { source: "/places", destination: "/explore", permanent: true },
+      { source: "/places/:slug", destination: "/explore/:slug", permanent: true },
+      { source: "/listings", destination: "/explore", permanent: true },
+      { source: "/listings/:slug", destination: "/explore/:slug", permanent: true },
       { source: "/my-trips", destination: "/passport", permanent: false },
       { source: "/my-trips/:id", destination: "/passport", permanent: false },
       // Sign-in and every account step are dialogs now (AuthDialog): old pages

@@ -5,14 +5,23 @@
 
 @theme inline {
   --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
 
-  --radius-sm: calc(var(--radius) - 6px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 6px);
-  --radius-2xl: calc(var(--radius) + 14px);
-  --radius-3xl: calc(var(--radius) + 1px);
+  /* Type roles. Running text uses Tailwind's named sizes (xs–7xl); these name
+     the special roles, so no component needs a one-off size. Pair caption and
+     xs labels with the .caps and .eyebrow utilities below. */
+  --text-caption: 0.6875rem; /* 11px: badges, field labels, counters */
+  --text-caption--line-height: 1.35;
+  --text-display: clamp(1.6rem, 4vw, 3.75rem); /* page titles */
+  --text-display--line-height: 1.05;
+  --text-display-xl: clamp(3rem, 1.9rem + 4.4vw, 4.75rem); /* the home hero title */
+  --text-display-xl--line-height: 1;
+
+  /* Corner radius by role, so the same kind of thing has the same shape
+     everywhere. Buttons, chips and search fields are pills: rounded-full. */
+  --radius-card: 1.25rem; /* cards, panels, dialogs, photos, callouts */
+  --radius-tile: 0.75rem; /* inside a card: thumbnails, icon tiles, fields, menu items */
+  --radius-mark: 0.375rem; /* small marks: checkboxes, highlighted text, inline code */
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -52,6 +61,11 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  /* Behind dialogs and sheets */
+  --color-overlay: var(--overlay);
+
+  /* Depth: soft for resting cards and controls, elegant for raised panels
+     and hover, gold for the gold call-to-action. */
   --shadow-soft: 0 4px 14px -4px
     color-mix(in oklab, var(--primary) 14%, transparent);
 
@@ -60,10 +74,19 @@
 
   --shadow-gold: 0 10px 30px -10px
     color-mix(in oklab, var(--gold) 35%, transparent);
+
+  /* The same depths for shapes that aren't boxes (the Passport starfish) */
+  --drop-shadow-elegant: 0 8px 16px color-mix(in oklab, var(--primary) 40%, transparent);
+  --drop-shadow-gold: 0 10px 22px color-mix(in oklab, var(--gold) 45%, transparent);
 }
 
 :root {
-  --radius: 0.875rem;
+  /* The fixed navbar's height; sticky bars sit right under it. */
+  --header-height: 5rem;
+  /* For sticky panels and scroll targets: under the navbar, with a gap. */
+  --header-offset: calc(var(--header-height) + 1rem);
+
+  --overlay: color-mix(in oklab, var(--primary) 40%, transparent);
 
   /* --------------------------------
      Core Brand
@@ -301,7 +324,6 @@
    -------------------------------- */
 @layer components {
   .hero-viewport {
-    --header-height: 5rem;
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -320,7 +342,7 @@
     }
   }
 
-  /* Same treatment, shorter: for working screens like the itinerary editor. */
+  /* Same treatment, shorter: for working screens like the passport editor. */
   .hero-viewport.hero-viewport--compact {
     min-height: min(62svh, 560px);
   }
@@ -498,7 +520,7 @@
     background: color-mix(in oklab, var(--color-gold) 55%, transparent);
     color: inherit;
     padding: 0.05em 0.25em;
-    border-radius: 0.25rem;
+    border-radius: var(--radius-mark);
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
   }
@@ -518,7 +540,9 @@
     bottom: -0.25em;
   }
 
-  .blog-content a {
+  /* Gold-underlined link: in CMS text, and as .blog-link anywhere else */
+  .blog-content a,
+  .blog-link {
     color: var(--color-primary);
     font-weight: 500;
     text-decoration: underline;
@@ -531,7 +555,8 @@
       text-decoration-color 0.2s ease;
   }
 
-  .blog-content a:hover {
+  .blog-content a:hover,
+  .blog-link:hover {
     color: var(--color-primary-soft);
     text-decoration-color: currentColor;
   }
@@ -628,7 +653,7 @@
     color: var(--color-primary);
     background: var(--color-muted);
     border: 1px solid var(--color-border);
-    border-radius: 0.375rem;
+    border-radius: var(--radius-mark);
     padding: 0.1em 0.4em;
     overflow-wrap: anywhere;
   }
@@ -637,7 +662,7 @@
     max-width: 100%;
     overflow-x: auto;
     padding: 1.25rem 1.5rem;
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-card);
     background: var(--color-primary);
     color: var(--color-primary-foreground);
     font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
@@ -670,7 +695,7 @@
     height: auto;
     margin-inline: auto;
     object-fit: cover;
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-card);
     box-shadow: var(--shadow-elegant);
   }
 
@@ -715,7 +740,7 @@
     width: 100%;
     max-width: 100%;
     border: 0;
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-card);
   }
 
   .blog-content iframe {
@@ -766,7 +791,7 @@
   /* ---------- Insider tip callout ---------- */
   .blog-content .insider-tip {
     position: relative;
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-card);
     background: color-mix(in oklab, var(--color-gold) 10%, transparent);
     border: 1px solid color-mix(in oklab, var(--color-gold) 25%, transparent);
     padding: 3.5rem 1.5rem 1.5rem;
@@ -788,13 +813,13 @@
     left: 3.5rem;
     background: var(--color-gold);
     color: var(--color-gold-foreground);
-    font-size: 11px;
+    font-size: var(--text-caption);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     line-height: 1;
     padding: 0.25rem 0.625rem;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-mark);
   }
 
   .blog-content .insider-tip p {
@@ -809,36 +834,48 @@
   }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* --------------------------------
+   Small uppercase labels. .eyebrow is the overline above a section title;
+   .caps is for badges, field labels and counters. Colour comes from context.
+   -------------------------------- */
+@utility eyebrow {
+  font-size: 0.75rem; /* text-xs */
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
 
-  .shadow-soft {
-    box-shadow: var(--shadow-soft);
-  }
+@utility caps {
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
 
-  .shadow-elegant {
-    box-shadow: var(--shadow-elegant);
-  }
+/* Rows of chips that scroll sideways by swipe or trackpad, without a bar */
+@utility scrollbar-none {
+  scrollbar-width: none;
 
-  .shadow-gold {
-    box-shadow: var(--shadow-gold);
+  &::-webkit-scrollbar {
+    display: none;
   }
-
 }
 
 /* --------------------------------
-   API error popup (sonner)
-   Kept outside @layer so it wins over sonner's injected, unlayered styles.
-   Light card surface with a destructive accent rail and icon.
+   Toasts (sonner)
+   Kept outside @layer so they win over sonner's injected, unlayered styles.
+   Every toast is a light card; the rail and icon colour say what kind it is:
+   gold for success, the destructive red for errors, navy otherwise.
    -------------------------------- */
-[data-sonner-toaster] [data-sonner-toast][data-styled][data-type="error"] {
+[data-sonner-toaster] [data-sonner-toast][data-styled] {
+  --toast-accent: var(--primary);
   background: var(--popover);
   color: var(--popover-foreground);
-  border: 1px solid color-mix(in oklab, var(--destructive) 28%, var(--border));
-  border-left: 4px solid var(--destructive);
-  border-radius: var(--radius);
+  border: 1px solid color-mix(in oklab, var(--toast-accent) 28%, var(--border));
+  border-left: 4px solid var(--toast-accent);
+  border-radius: var(--radius-tile);
   box-shadow: var(--shadow-elegant);
   font-family: var(--font-sans);
   padding: 0.875rem 2.5rem 0.875rem 1rem;
@@ -846,19 +883,41 @@
   overflow-wrap: anywhere;
 }
 
-[data-sonner-toaster] [data-sonner-toast][data-styled][data-type="error"] [data-icon] {
-  color: var(--destructive);
+[data-sonner-toaster] [data-sonner-toast][data-styled]:is([data-type="success"], [data-type="warning"]) {
+  --toast-accent: var(--gold);
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-styled][data-type="error"] {
+  --toast-accent: var(--destructive);
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-styled] [data-icon] {
+  color: var(--toast-accent);
   align-self: flex-start;
   margin-top: 0.125rem;
 }
 
-[data-sonner-toaster] [data-sonner-toast][data-styled][data-type="error"] [data-title] {
+[data-sonner-toaster] [data-sonner-toast][data-styled] [data-title] {
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.4;
 }
 
-[data-sonner-toaster] [data-sonner-toast][data-styled][data-type="error"] [data-close-button] {
+[data-sonner-toaster] [data-sonner-toast][data-styled] [data-description] {
+  color: var(--muted-foreground);
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-styled] [data-button] {
+  height: auto;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-styled] [data-close-button] {
   left: auto;
   right: 0.5rem;
   top: 50%;
@@ -868,9 +927,9 @@
   color: var(--muted-foreground);
 }
 
-[data-sonner-toaster] [data-sonner-toast][data-styled][data-type="error"] [data-close-button]:hover {
-  background: color-mix(in oklab, var(--destructive) 10%, transparent);
-  color: var(--destructive);
+[data-sonner-toaster] [data-sonner-toast][data-styled] [data-close-button]:hover {
+  background: color-mix(in oklab, var(--toast-accent) 10%, transparent);
+  color: var(--toast-accent);
 }
 
 /* PlanTripButton: shine sweeping across the "Tap to plan" pill */

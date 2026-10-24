@@ -18,12 +18,12 @@ export function ShareButton({
 // so these render as short text glyphs instead — sized and weighted to sit
 // visually alongside the Link2 icon in the same row of buttons.
 function TwitterGlyph() {
-  return <span className="text-[13px] font-bold leading-none">X</span>;
+  return <span className="text-sm font-bold leading-none">X</span>;
 }
 
 function FacebookGlyph() {
   return (
-    <span className="text-[11px] font-bold uppercase leading-none">Fb</span>
+    <span className="text-caption font-bold uppercase leading-none">Fb</span>
   );
 }
 
@@ -34,7 +34,7 @@ export function ShareRail({
 }) {
   return (
     <div className="flex flex-col gap-2 items-start">
-      <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold-foreground">
+      <p className="caps text-gold">
         Share
       </p>
       <div className="flex flex-col gap-2">

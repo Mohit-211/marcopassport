@@ -4,31 +4,9 @@ import Link from "next/link";
 import { MapPin, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
-import { AddToItineraryButton } from "@/features/itineraries/components/AddToItineraryButton";
-import { toItineraryPlace, type ExploreItem } from "@/lib/explore";
+import { AddToPassportButton } from "@/features/passport/components/AddToPassportButton";
+import { toPassportPlace, type ExploreItem } from "@/lib/explore";
 import { cn } from "@/lib/utils";
-
-/** Navy for places to visit, gold for businesses — the same everywhere they appear. */
-const TYPE_HINTS: Record<ExploreItem["type"], string> = {
-  place: "Beaches, parks, landmarks and nature spots to visit.",
-  business: "Restaurants, stays, shops, tours and local services.",
-};
-
-function TypeBadge({ type, className }: { type: ExploreItem["type"]; className?: string }) {
-  return (
-    <Tooltip content={TYPE_HINTS[type]}>
-      <span
-        className={cn(
-          "inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] shadow-sm",
-          type === "place" ? "bg-primary text-primary-foreground" : "bg-gold text-gold-foreground",
-          className,
-        )}
-      >
-        {type === "place" ? "Place to visit" : "Business"}
-      </span>
-    </Tooltip>
-  );
-}
 
 export function RatingBadge({ rating, reviewCount, className }: { rating: number | null; reviewCount?: number; className?: string }) {
   if (rating === null) return null;
@@ -45,10 +23,10 @@ export function RatingBadge({ rating, reviewCount, className }: { rating: number
   );
 }
 
-/** Card for any listing on Explore and the home page: details link plus a quick "Add to passport". */
+/** A place on Explore and the home page: details link plus "Add to passport". */
 export function ExploreCard({ item }: { item: ExploreItem }) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elegant">
+    <article className="group flex flex-col overflow-hidden rounded-card border border-border bg-card shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elegant">
       <Link href={item.href} className="relative block aspect-[16/10] overflow-hidden bg-muted" tabIndex={-1} aria-hidden>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -58,26 +36,23 @@ export function ExploreCard({ item }: { item: ExploreItem }) {
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-primary/45 to-transparent" />
-        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-          <TypeBadge type={item.type} />
-          {item.featured && (
-            <Tooltip content="Hand-picked by the Marco Passport team.">
-              <span className="rounded-full bg-background/95 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary shadow-sm">
-                ★ Featured
-              </span>
-            </Tooltip>
-          )}
-        </div>
+        {item.featured && (
+          <Tooltip content="Hand-picked by the Marco Passport team.">
+            <span className="caps absolute top-4 left-4 rounded-full bg-background/95 px-2.5 py-1 text-primary shadow-soft">
+              ★ Featured
+            </span>
+          </Tooltip>
+        )}
       </Link>
 
       <div className="flex flex-1 flex-col p-5">
         {(item.category || item.rating !== null) && (
           <div className="flex items-center justify-between gap-3">
-            <p className="truncate text-xs font-semibold uppercase tracking-[0.14em] text-gold">{item.category}</p>
+            <p className="caps truncate text-gold">{item.category}</p>
             <RatingBadge rating={item.rating} reviewCount={item.reviewCount} className="shrink-0" />
           </div>
         )}
-        <h3 className="mt-1.5 font-display text-xl font-semibold leading-snug text-primary">
+        <h3 className="mt-1.5 text-xl leading-snug font-semibold text-primary">
           <Link href={item.href} className="outline-none hover:underline focus-visible:underline">
             {item.name}
           </Link>
@@ -101,7 +76,7 @@ export function ExploreCard({ item }: { item: ExploreItem }) {
           <Button variant="outline" size="sm" nativeButton={false} render={<Link href={item.href} />}>
             View details
           </Button>
-          <AddToItineraryButton place={toItineraryPlace(item)} size="sm" />
+          <AddToPassportButton place={toPassportPlace(item)} size="sm" />
         </div>
       </div>
     </article>

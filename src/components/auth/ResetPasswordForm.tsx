@@ -65,7 +65,7 @@ export function ResetPasswordForm({
   if (!token) {
     return (
       <div className="p-6 text-center sm:p-8">
-        <h2 className="text-[1.65rem] font-semibold leading-tight text-primary">
+        <h2 className="text-2xl font-semibold leading-tight text-primary">
           This link isn&apos;t valid
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -80,7 +80,7 @@ export function ResetPasswordForm({
 
   return (
     <div className="p-6 sm:p-8">
-      <h2 className="text-[1.65rem] font-semibold text-primary leading-tight">
+      <h2 className="text-2xl font-semibold text-primary leading-tight">
         Set a new password
       </h2>
       <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
@@ -107,7 +107,7 @@ export function ResetPasswordForm({
         />
 
         {formError && (
-          <div role="alert" className="rounded-xl bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
+          <div role="alert" className="rounded-tile bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
             {formError}
             {EXPIRED_PATTERN.test(formError) && (
               <>

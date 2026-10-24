@@ -48,7 +48,7 @@ export function PasswordField({
           aria-invalid={error ? true : undefined}
           aria-describedby={error || hint ? `${id}-note` : undefined}
           className={cn(
-            "h-12 rounded-xl border pl-11 pr-12 text-sm transition-all",
+            "h-12 rounded-tile border pl-11 pr-12 text-sm transition-all",
             error
               ? "border-destructive/60 bg-destructive/5 focus-visible:ring-destructive/30"
               : "border-input focus-visible:ring-gold/30",
@@ -60,7 +60,7 @@ export function PasswordField({
           aria-label={visible ? "Hide password" : "Show password"}
           aria-pressed={visible}
           tabIndex={-1}
-          className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-lg text-muted-foreground/60 transition-colors hover:text-muted-foreground"
+          className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-muted-foreground/60 transition-colors hover:text-muted-foreground"
         >
           {visible ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
         </button>

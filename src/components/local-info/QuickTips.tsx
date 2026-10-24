@@ -33,18 +33,18 @@ const quickTips = [
 
 export function QuickTips() {
   return (
-    <section className="bg-primary text-white py-16 md:py-24">
+    <section className="bg-primary text-primary-foreground py-16 md:py-24">
       <div className="site-container">
         <div className="flex items-center gap-2 mb-3">
           <Lightbulb className="h-4 w-4 text-gold" />
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+          <p className="eyebrow text-gold">
             Things to know
           </p>
         </div>
         <h2 className="font-display text-3xl md:text-4xl font-semibold max-w-2xl leading-tight">
           Quick tips before you go
         </h2>
-        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/10 rounded-2xl overflow-hidden">
+        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-primary-foreground/10 rounded-card overflow-hidden">
           {quickTips.map((t) => {
             const Icon = t.icon;
             const content = (
@@ -53,10 +53,10 @@ export function QuickTips() {
                   <Icon className="h-5 w-5" />
                 </span>
                 <div>
-                  <p className="text-xs uppercase tracking-wider text-white/60">
+                  <p className="eyebrow text-primary-foreground/60">
                     {t.label}
                   </p>
-                  <p className="mt-1 font-medium text-white">
+                  <p className="mt-1 font-medium text-primary-foreground">
                     {t.value}
                     {t.href && (
                       <ArrowUpRight className="ml-1 inline-block h-4 w-4 align-middle text-gold transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

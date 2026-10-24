@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { ItineraryPage } from "@/features/itineraries/components/ItineraryPage";
+import { PassportDetailPage } from "@/features/passport/components/PassportDetailPage";
 
 export const metadata: Metadata = {
-  title: "Itinerary — The Marco Passport",
+  title: "Passport — The Marco Passport",
   robots: { index: false },
 };
 
-export default async function Itinerary({ params }: { params: Promise<{ id: string }> }) {
+export default async function Passport({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <ItineraryPage id={id} />;
+  return <PassportDetailPage id={id} />;
 }

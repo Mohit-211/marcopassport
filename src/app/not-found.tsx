@@ -1,23 +1,18 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="site-container flex min-h-screen items-center justify-center py-32">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold">404</h1>
-
-        <h2 className="mt-4 text-xl font-semibold">Page not found</h2>
-
-        <p className="mt-2 text-muted-foreground">
+        <p className="eyebrow text-gold">Error 404</p>
+        <h1 className="mt-3 text-4xl font-semibold text-primary md:text-5xl">Page not found</h1>
+        <p className="mt-3 text-muted-foreground">
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
-
-        <Link
-          href="/"
-          className="mt-6 inline-flex rounded-md bg-primary px-4 py-2 text-primary-foreground"
-        >
-          Go Home
-        </Link>
+        <Button variant="gold" size="lg" className="mt-8" nativeButton={false} render={<Link href="/" />}>
+          Go home
+        </Button>
       </div>
     </div>
   );

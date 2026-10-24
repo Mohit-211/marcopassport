@@ -16,7 +16,7 @@ import { PageHero } from "@/components/site/PageHero";
 export const metadata: Metadata = {
   title: "Advertise With Us | The Marco Passport",
   description:
-    "Reach locals and visitors across Marco Island. View our advertising rates and submit your business for the The Marco Passport Magazine.",
+    "Reach locals and visitors across Marco Island. View our advertising rates and submit your business for The Marco Passport Magazine.",
 };
 
 const rates = [
@@ -45,7 +45,7 @@ export default function BusinessPage() {
     <>
       {/* Hero */}
       <PageHero
-        image="/assets/listing-restaurant.jpg"
+        image="/assets/restaurant.jpg"
         imageAlt="Waterfront restaurant on Marco Island"
         icon={Building2}
         eyebrow="Business Directory"
@@ -68,18 +68,18 @@ export default function BusinessPage() {
       {/* Rate Sheet — styled after the print rate card */}
       <section className="bg-background">
         <div className="site-container py-14 sm:py-16 max-w-2xl">
-          <div className="rounded-3xl border-2 border-gold/70 bg-primary shadow-elegant overflow-hidden">
+          <div className="rounded-card border-2 border-gold/70 bg-primary shadow-elegant overflow-hidden">
             {/* Card header */}
-            <div className="px-6 sm:px-10 pt-10 pb-6 text-center border-b border-white/10">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-gold mb-2">
-                The The Marco Passport
+            <div className="px-6 sm:px-10 pt-10 pb-6 text-center border-b border-primary-foreground/10">
+              <p className="eyebrow text-gold mb-2">
+                The Marco Passport
               </p>
-              <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-semibold text-primary-foreground tracking-tight">
                 Advertising Rate Sheet
               </h2>
               <div className="mt-3 flex items-center justify-center gap-3">
                 <span className="h-px w-10 bg-gold/50" />
-                <span className="text-xs font-medium uppercase tracking-widest text-white/60">
+                <span className="eyebrow text-primary-foreground/60">
                   Published Quarterly
                 </span>
                 <span className="h-px w-10 bg-gold/50" />
@@ -88,7 +88,7 @@ export default function BusinessPage() {
 
             {/* RATES badge */}
             <div className="flex justify-center -mt-4">
-              <span className="rounded-full bg-gold px-5 py-1.5 text-xs font-bold uppercase tracking-widest text-primary shadow-gold">
+              <span className="eyebrow rounded-full bg-gold px-5 py-1.5 text-primary shadow-gold">
                 Rates
               </span>
             </div>
@@ -98,15 +98,15 @@ export default function BusinessPage() {
               {rates.map((r) => (
                 <div
                   key={r.id}
-                  className="flex items-center gap-4 rounded-2xl border border-gold/30 bg-white/[0.03] px-4 py-3.5"
+                  className="flex items-center gap-4 rounded-tile border border-gold/30 bg-primary-foreground/5 px-4 py-3.5"
                 >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold text-primary">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-tile bg-gold text-primary">
                     <r.Icon className="h-5 w-5" />
                   </div>
-                  <span className="text-sm sm:text-base font-semibold uppercase tracking-wide text-white">
+                  <span className="text-sm sm:text-base font-semibold uppercase tracking-wide text-primary-foreground">
                     {r.name}
                   </span>
-                  <span className="flex-1 border-b border-dotted border-white/25 mx-1 mt-3" />
+                  <span className="flex-1 border-b border-dotted border-primary-foreground/25 mx-1 mt-3" />
                   <span className="text-xl sm:text-2xl font-semibold text-gold">
                     {r.price}
                   </span>
@@ -116,14 +116,14 @@ export default function BusinessPage() {
 
             {/* Divider */}
             <div className="flex items-center justify-center gap-3 px-10">
-              <span className="h-px flex-1 bg-white/10" />
+              <span className="h-px flex-1 bg-primary-foreground/10" />
               <span className="text-gold text-xs">✻</span>
-              <span className="h-px flex-1 bg-white/10" />
+              <span className="h-px flex-1 bg-primary-foreground/10" />
             </div>
 
             {/* Contact info */}
             <div className="px-6 sm:px-10 py-8">
-              <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-white/70 mb-5">
+              <p className="eyebrow text-center text-primary-foreground/70 mb-5">
                 Contact Information
               </p>
               <ul className="space-y-4">
@@ -132,8 +132,8 @@ export default function BusinessPage() {
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold text-gold">
                       <c.Icon className="h-4 w-4" />
                     </span>
-                    <span className="text-sm text-white/90">
-                      <span className="font-semibold text-white">
+                    <span className="text-sm text-primary-foreground/90">
+                      <span className="font-semibold text-primary-foreground">
                         {c.label}:
                       </span>{" "}
                       {c.value}

@@ -13,7 +13,7 @@ type Props = {
 };
 
 /**
- * The story, or null when the API says there's no such post (the page then
+ * The blog, or null when the API says there's no such post (the page then
  * answers 404). Any other failure throws, so it reaches the error page.
  */
 async function getBlogById(id: string): Promise<Blog | null> {
@@ -33,7 +33,7 @@ export async function generateMetadata({
   const post = await getBlogById(id);
   if (!post) {
     return {
-      title: "Story — The Marco Passport",
+      title: "Blog — The Marco Passport",
     };
   }
   const imageUrl = post.featured_image

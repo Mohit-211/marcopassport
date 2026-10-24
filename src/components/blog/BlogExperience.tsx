@@ -121,8 +121,8 @@ export default function BlogExperience() {
     );
   }, [categories, activeCat]);
 
-  // Searching hides the featured story and lists every match in the grid;
-  // otherwise the newest story is featured and the grid holds the rest.
+  // Searching hides the featured blog and lists every match in the grid;
+  // otherwise the newest blog is featured and the grid holds the rest.
   const searching = query.trim().length > 0;
   const results = useMemo(
     () => posts.filter((p) => matchesBlogQuery(p, query)),
@@ -153,7 +153,7 @@ export default function BlogExperience() {
   return (
     <>
       <PageHero
-        image="/assets/listing-yacht.jpg"
+        image="/assets/yacht.jpg"
         icon={Newspaper}
         eyebrow="The Journal"
         title={
@@ -161,7 +161,7 @@ export default function BlogExperience() {
             From <span className="italic text-gold">Our Blog</span>
           </>
         }
-        description="Stories, tips and guides for exploring Marco Island like an insider, from quiet beaches and stone crab feasts to the kind of sunsets you remember for years."
+        description="Blogs, tips and guides for exploring Marco Island like an insider, from quiet beaches and stone crab feasts to the kind of sunsets you remember for years."
       >
         <BlogSearch
           posts={posts}
@@ -175,7 +175,7 @@ export default function BlogExperience() {
       {/* =====================================================
           CATEGORY PILLS
       ====================================================== */}
-      <section className="border-b border-border bg-background sticky top-16 z-10 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+      <section className="border-b border-border bg-background sticky top-(--header-height) z-30 backdrop-blur supports-[backdrop-filter]:bg-background/80">
         <div className="site-container py-4 flex gap-2 overflow-x-auto scrollbar-none">
           {/* Loading */}
           {loadingCategories && (
@@ -192,13 +192,13 @@ export default function BlogExperience() {
           {/* Error */}
           {!loadingCategories && categoryError && (
             <div className="flex items-center gap-3">
-              <span className="text-sm text-red-500">
+              <span className="text-sm text-destructive">
                 {categoryError}
               </span>
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="text-sm font-medium text-gold-foreground underline"
+                className="text-sm font-medium text-primary underline"
               >
                 Retry
               </button>
@@ -217,7 +217,7 @@ export default function BlogExperience() {
                     onClick={() => changeCategory(cat.slug)}
                     className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all border ${active
                       ? "bg-gold text-gold-foreground border-gold shadow-gold"
-                      : "bg-background text-primary border-border hover:border-gold hover:text-gold-foreground hover:bg-gold/10"
+                      : "bg-background text-primary border-border hover:border-gold hover:bg-gold/10"
                       }`}
                   >
                     {cat.name}
@@ -236,24 +236,24 @@ export default function BlogExperience() {
             href={`/blog/${featured.slug}/${featured?.id}`}
             className="group grid md:grid-cols-2 gap-8 md:gap-12 items-center"
           >
-            <div className="relative overflow-hidden rounded-3xl aspect-[16/9] shadow-elegant">
+            <div className="relative overflow-hidden rounded-card aspect-[16/9] shadow-elegant">
               <img
                 src={blogImage(featured.featured_image)}
                 alt={featured.title}
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <span className="absolute top-5 left-5 bg-gold text-gold-foreground text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-gold">
+              <span className="caps absolute top-5 left-5 bg-gold text-gold-foreground px-3 py-1.5 rounded-full shadow-gold">
                 Featured
               </span>
             </div>
             <div>
               {featured.blog_category?.name && (
-                <span className="inline-block text-[11px] uppercase tracking-[0.2em] text-gold font-semibold">
+                <span className="caps inline-block text-gold">
                   {featured.blog_category.name}
                 </span>
               )}
-              <h2 className="font-display text-3xl md:text-5xl font-semibold mt-3 text-primary text-balance group-hover:text-gold-foreground transition-colors">
+              <h2 className="font-display text-3xl md:text-5xl font-semibold mt-3 text-primary text-balance group-hover:text-gold transition-colors">
                 {featured.title}
               </h2>
               <p className="text-muted-foreground mt-5 text-lg leading-relaxed">
@@ -268,7 +268,7 @@ export default function BlogExperience() {
                   })}
                 </p>
               )}
-              <div className="mt-7 inline-flex items-center gap-2 text-gold-foreground font-semibold border-b-2 border-gold pb-1 group-hover:gap-3 transition-all">
+              <div className="mt-7 inline-flex items-center gap-2 blog-link font-semibold group-hover:gap-3 transition-all">
                 Read More
                 <ArrowRight className="h-4 w-4" />
               </div>
@@ -284,14 +284,14 @@ export default function BlogExperience() {
           <div className="flex items-end justify-between mb-8">
             <div>
               <h2 className="font-display text-3xl md:text-4xl font-semibold text-primary">
-                {searching ? "Search results" : "Latest Stories"}
+                {searching ? "Search results" : "Latest blogs"}
               </h2>
               {!loadingPosts && (
                 <p className="text-muted-foreground mt-2 text-sm">
                   {searching ? (
                     <>
                       {results.length}{" "}
-                      {results.length === 1 ? "story matches" : "stories match"}{" "}
+                      {results.length === 1 ? "blog matches" : "blogs match"}{" "}
                       <span className="text-primary font-medium">
                         &ldquo;{query.trim()}&rdquo;
                       </span>
@@ -315,12 +315,12 @@ export default function BlogExperience() {
             </div>
           </div>
           {loadingPosts ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" aria-busy="true" aria-label="Loading stories">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" aria-busy="true" aria-label="Loading blogs">
               {Array.from({ length: 3 }).map((_, i) => (
                 <div key={i} className="animate-pulse">
-                  <div className="aspect-[16/9] rounded-3xl bg-muted" />
-                  <div className="mt-5 h-4 w-1/3 rounded bg-muted" />
-                  <div className="mt-3 h-6 w-3/4 rounded bg-muted" />
+                  <div className="aspect-[16/9] rounded-card bg-muted" />
+                  <div className="mt-5 h-4 w-1/3 rounded-full bg-muted" />
+                  <div className="mt-3 h-6 w-3/4 rounded-full bg-muted" />
                 </div>
               ))}
             </div>
@@ -328,7 +328,7 @@ export default function BlogExperience() {
             <BlogGrid
               posts={pagePosts}
               emptyMessage={
-                searching ? undefined : "No stories here yet. Check back soon."
+                searching ? undefined : "No blogs here yet. Check back soon."
               }
             />
           )}

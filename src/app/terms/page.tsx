@@ -6,7 +6,7 @@ import { PageHero } from "@/components/site/PageHero";
 export const metadata: Metadata = {
   title: "Terms of Use",
   description:
-    "The rules for using The Marco Passport: accounts, reviews, listings, advertising and the limits of what we can promise.",
+    "The rules for using The Marco Passport: accounts, reviews, the places we feature, advertising and the limits of what we can promise.",
 };
 
 const CONTACT_EMAIL = "sales@themarcopassport.com";
@@ -36,7 +36,7 @@ export default function TermsPage() {
 
           <h2>Your account</h2>
           <p>
-            You need an account to save itineraries and post reviews, and you
+            You need an account to save passports and post reviews, and you
             must be at least 13 to create one. Keep your password to yourself:
             you&apos;re responsible for what happens under your account. We may
             suspend or remove accounts that break these terms.
@@ -51,9 +51,9 @@ export default function TermsPage() {
             remove reviews that break these rules.
           </p>
 
-          <h2>Listings and information</h2>
+          <h2>Places and information</h2>
           <p>
-            We work to keep listings, hours, prices and other details accurate,
+            We work to keep the places we feature, their hours, prices and other details accurate,
             but they can change without notice. Check with the business before
             you go.
           </p>

@@ -13,7 +13,7 @@ type PageHeroProps = {
   description?: ReactNode;
   /** Search box, buttons or a meta line under the description. */
   children?: ReactNode;
-  /** "full" fills the viewport (default); "compact" is for working screens such as the itinerary editor. */
+  /** "full" fills the viewport (default); "compact" is for working screens such as the passport editor. */
   size?: "full" | "compact";
   className?: string;
 };
@@ -39,12 +39,12 @@ export function PageHero({
       <HeroBackground src={image} alt={imageAlt} />
       <div className="hero-container">
         <div className="min-w-0 max-w-3xl">
-          <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.28em] text-gold sm:mb-5 sm:text-[11px]">
+          <div className="eyebrow mb-4 flex items-center gap-3 text-gold sm:mb-5">
             <span className="h-px w-8 bg-gold/70" />
             {Icon && <Icon className="h-3.5 w-3.5" />}
             {eyebrow}
           </div>
-          <h1 className="wrap-break-word font-display text-[clamp(1.6rem,4vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-balance">
+          <h1 className="text-display wrap-break-word font-medium text-balance">
             {title}
           </h1>
           {description && (
@@ -62,7 +62,7 @@ export function PageHero({
 /** Gold "·"-separated meta line, e.g. "24 places · Beaches · Nature". */
 export function HeroMeta({ items }: { items: ReactNode[] }) {
   return (
-    <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.18em] text-primary-foreground/70">
+    <div className="eyebrow flex flex-wrap items-center gap-3 text-primary-foreground/70">
       {items.map((item, i) => (
         <span key={i} className="flex items-center gap-3">
           {i > 0 && <span className="h-1 w-1 rounded-full bg-gold" />}

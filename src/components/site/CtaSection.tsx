@@ -36,12 +36,12 @@ export function CtaSection({
 }: CtaSectionProps) {
   return (
     <section className="site-container py-16 md:py-24">
-      <div className="rounded-[2rem] bg-sand p-10 md:p-16 grid md:grid-cols-[1fr_auto] items-center gap-8 relative overflow-hidden">
+      <div className="rounded-card bg-sand p-10 md:p-16 grid md:grid-cols-[1fr_auto] items-center gap-8 relative overflow-hidden">
         <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
 
         <div className="relative">
           {eyebrow && (
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+            <p className="eyebrow text-gold">
               {eyebrow}
             </p>
           )}

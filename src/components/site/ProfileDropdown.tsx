@@ -40,7 +40,7 @@ export function ProfileDropdown({ className }: { className?: string }) {
       <Tooltip
         content={
           isAuthenticated
-            ? "Your account and itineraries"
+            ? "Your account and passports"
             : "Log in or open My Passport"
         }
         side="bottom"
@@ -70,7 +70,7 @@ export function ProfileDropdown({ className }: { className?: string }) {
               <p className="truncate text-xs text-muted-foreground">
                 {isAuthenticated
                   ? user?.email
-                  : "Log in to save your itineraries"}
+                  : "Log in to save your passports"}
               </p>
             </div>
           </div>

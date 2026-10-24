@@ -7,7 +7,7 @@ import {
 } from "@/components/local-info/ContentSections";
 import { ExploreMore } from "@/components/local-info/ExploreMore";
 import { QuickTips } from "@/components/local-info/QuickTips";
-import EditorialGuide from "@/components/places/EditorialGuide";
+import EditorialGuide from "@/components/local-info/EditorialGuide";
 import { PageHero } from "@/components/site/PageHero";
 
 // The content sections, then the editorial guide below them.
@@ -47,7 +47,7 @@ export default async function LocalInfoPage() {
       <LocalStats />
 
       {/* Section Navigation */}
-      <section className="sticky top-[72px] z-30 border-y border-border bg-background/90 shadow-sm backdrop-blur-md">
+      <section className="sticky top-(--header-height) z-30 border-y border-border bg-background/90 shadow-soft backdrop-blur-md">
         <div className="site-container">
           <div className="flex items-center justify-center gap-1 overflow-x-auto py-3">
             {navItems.map((section) => (

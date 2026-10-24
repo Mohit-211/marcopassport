@@ -16,7 +16,7 @@ function Field({
       <input
         id={id}
         {...rest}
-        className="mt-1 w-full rounded-xl border border-input bg-background px-4 py-3 outline-none focus:border-primary"
+        className="mt-1 w-full rounded-tile border border-input bg-background px-4 py-3 outline-none focus:border-primary"
       />
     </div>
   );
@@ -63,7 +63,7 @@ export function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-card rounded-3xl border border-border shadow-soft p-8 space-y-5"
+      className="bg-card rounded-card border border-border shadow-soft p-8 space-y-5"
     >
       <div className="grid sm:grid-cols-2 gap-4">
         <Field
@@ -98,7 +98,7 @@ export function ContactForm() {
           maxLength={5000}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="mt-1 w-full rounded-xl border border-input bg-background px-4 py-3 outline-none focus:border-primary"
+          className="mt-1 w-full rounded-tile border border-input bg-background px-4 py-3 outline-none focus:border-primary"
           placeholder="Tell us a little about it…"
         />
       </div>

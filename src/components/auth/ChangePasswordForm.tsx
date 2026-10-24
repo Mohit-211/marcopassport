@@ -67,7 +67,7 @@ export function ChangePasswordForm({ onDone }: { onDone: () => void }) {
 
   return (
     <div className="p-6 sm:p-8">
-      <h2 className="text-[1.65rem] font-semibold text-primary leading-tight">
+      <h2 className="text-2xl font-semibold text-primary leading-tight">
         Change password
       </h2>
       <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
@@ -103,7 +103,7 @@ export function ChangePasswordForm({ onDone }: { onDone: () => void }) {
         />
 
         {formError && (
-          <p role="alert" className="rounded-xl bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
+          <p role="alert" className="rounded-tile bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
             {formError}
           </p>
         )}

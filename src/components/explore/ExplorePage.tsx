@@ -1,60 +1,22 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  AlertTriangle,
-  ChevronLeft,
-  ChevronRight,
-  Compass,
-  RotateCw,
-  Search,
-  SlidersHorizontal,
-} from "lucide-react";
+import { AlertTriangle, Compass, RotateCw, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { InfoTip } from "@/components/ui/tooltip";
 import { HeroMeta, PageHero } from "@/components/site/PageHero";
 import { ExploreCard } from "@/components/explore/ExploreCard";
-import {
-  ExploreFilters,
-  type CategoryOption,
-} from "@/components/explore/ExploreFilters";
-import { ActiveChip, EmptyState } from "@/components/explore/ExploreHelpers";
+import { EmptyState } from "@/components/explore/ExploreHelpers";
 import { fetchExploreItems, type ExploreResult } from "@/api/users/explore.api";
-import {
-  EXPLORE_TYPE_LABELS,
-  PRICE_LEVELS,
-  matchesSearch,
-  type ExploreItem,
-  type ExploreType,
-} from "@/lib/explore";
+import { matchesSearch, type ExploreItem } from "@/lib/explore";
 import { cn } from "@/lib/utils";
-
-type TypeFilter = "all" | ExploreType;
-type SortOption = "featured" | "rating" | "name";
 
 const PAGE_SIZE = 12;
 
 export interface ExploreInitialState {
-  type?: TypeFilter;
   query?: string;
   /** A category slug from a link such as /explore?category=beaches */
   category?: string;
-  featured?: boolean;
 }
 
 type Load =
@@ -62,49 +24,33 @@ type Load =
   | { status: "error" }
   | ({ status: "ready" } & ExploreResult);
 
-const catKey = (type: ExploreType, slug: string) => `${type}:${slug}`;
+interface CategoryChip {
+  slug: string;
+  name: string;
+  count: number;
+}
 
-function sortItems(list: ExploreItem[], sort: SortOption) {
-  const byName = (a: ExploreItem, b: ExploreItem) =>
-    a.name.localeCompare(b.name);
-  if (sort === "name") return [...list].sort(byName);
-  if (sort === "rating")
-    return [...list].sort(
-      (a, b) => (b.rating ?? 0) - (a.rating ?? 0) || byName(a, b),
-    );
-  return [...list].sort(
-    (a, b) =>
-      Number(b.featured) - Number(a.featured) ||
-      Number(b.topPick) - Number(a.topPick) ||
-      (b.rating ?? 0) - (a.rating ?? 0) ||
-      byName(a, b),
+/** Featured first, then the team's top picks, then the best rated, then A–Z. */
+function recommended(a: ExploreItem, b: ExploreItem) {
+  return (
+    Number(b.featured) - Number(a.featured) ||
+    Number(b.topPick) - Number(a.topPick) ||
+    (b.rating ?? 0) - (a.rating ?? 0) ||
+    a.name.localeCompare(b.name)
   );
 }
 
 /**
- * /explore — places to visit and businesses in one list. A type switch
- * (All / Places to visit / Businesses) and category filters do the
- * separating, instead of two near-identical pages.
+ * /explore — every beach, restaurant, stay and shop in one list. Whether a
+ * place is a business doesn't matter here: the search and one row of
+ * category chips do the filtering, and featured places come first.
  */
-export function ExplorePage({
-  initial = {},
-}: {
-  initial?: ExploreInitialState;
-}) {
+export function ExplorePage({ initial = {} }: { initial?: ExploreInitialState }) {
   const [load, setLoad] = useState<Load>({ status: "loading" });
   const [reloadKey, setReloadKey] = useState(0);
-  const [type, setType] = useState<TypeFilter>(initial.type ?? "all");
   const [query, setQuery] = useState(initial.query ?? "");
-  const [pendingCategory, setPendingCategory] = useState(
-    initial.category ?? null,
-  );
-  const [selectedCats, setSelectedCats] = useState<string[]>([]);
-  const [selectedPrices, setSelectedPrices] = useState<string[]>([]);
-  const [minRating, setMinRating] = useState(0);
-  const [featuredOnly, setFeaturedOnly] = useState(initial.featured ?? false);
-  const [sort, setSort] = useState<SortOption>("featured");
-  const [page, setPage] = useState(1);
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [category, setCategory] = useState<string | null>(initial.category ?? null);
+  const [shown, setShown] = useState(PAGE_SIZE);
 
   useEffect(() => {
     let cancelled = false;
@@ -120,187 +66,69 @@ export function ExplorePage({
     };
   }, [reloadKey]);
 
-  const items = useMemo(
-    () => (load.status === "ready" ? load.items : []),
-    [load],
-  );
+  const items = useMemo(() => (load.status === "ready" ? load.items : []), [load]);
 
-  // A ?category=slug link selects every category with that slug once the list is in.
-  if (pendingCategory && load.status === "ready") {
-    setPendingCategory(null);
-    setSelectedCats(
-      Array.from(
-        new Set(
-          items.flatMap((i) =>
-            i.categories
-              .filter((c) => c.slug === pendingCategory)
-              .map((c) => catKey(c.type, c.slug)),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Keep the type and search in the URL so the view can be shared or bookmarked.
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (type === "all") params.delete("type");
-    else params.set("type", type);
-    if (query.trim()) params.set("q", query.trim());
-    else params.delete("q");
-    params.delete("category");
-    const next = params.toString();
-    window.history.replaceState(
-      null,
-      "",
-      `${window.location.pathname}${next ? `?${next}` : ""}`,
-    );
-  }, [type, query]);
-
-  const ofType = useMemo(
-    () => (type === "all" ? items : items.filter((i) => i.type === type)),
-    [items, type],
-  );
-
-  const counts = useMemo(
-    () => ({
-      all: items.length,
-      place: items.filter((i) => i.type === "place").length,
-      business: items.filter((i) => i.type === "business").length,
-    }),
-    [items],
-  );
-
-  const categories = useMemo<CategoryOption[]>(() => {
-    const map = new Map<string, CategoryOption>();
-    for (const item of ofType) {
-      for (const c of item.categories) {
-        const key = catKey(c.type, c.slug);
-        const entry = map.get(key) ?? {
-          key,
-          name: c.name,
-          type: c.type,
-          count: 0,
-        };
-        entry.count += 1;
-        map.set(key, entry);
+  // Every category with how many places are in it. A slug used for both
+  // places to visit and businesses is one chip.
+  const categories = useMemo<CategoryChip[]>(() => {
+    const bySlug = new Map<string, CategoryChip>();
+    for (const item of items) {
+      for (const slug of new Set(item.categories.map((c) => c.slug))) {
+        const name = item.categories.find((c) => c.slug === slug)!.name;
+        const chip = bySlug.get(slug) ?? { slug, name, count: 0 };
+        chip.count += 1;
+        bySlug.set(slug, chip);
       }
     }
-    return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
-  }, [ofType]);
+    return [...bySlug.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  }, [items]);
 
-  const prices = useMemo(
-    () => PRICE_LEVELS.filter((p) => ofType.some((i) => i.price === p)),
-    [ofType],
-  );
-  const hasRatings = useMemo(
-    () => items.some((i) => i.rating !== null),
-    [items],
-  );
+  // A ?category= link to a category that no longer exists shows everything.
+  const selected = categories.some((c) => c.slug === category) ? category : null;
 
-  const filtered = useMemo(() => {
-    const list = ofType.filter((item) => {
-      if (!matchesSearch(item, query)) return false;
-      if (
-        selectedCats.length &&
-        !item.categories.some((c) =>
-          selectedCats.includes(catKey(c.type, c.slug)),
+  // Keep the search and category in the URL so the view can be shared or bookmarked.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    // Links from before the redesign may still carry these; they do nothing now.
+    params.delete("type");
+    params.delete("featured");
+    if (query.trim()) params.set("q", query.trim());
+    else params.delete("q");
+    if (category) params.set("category", category);
+    else params.delete("category");
+    const next = params.toString();
+    window.history.replaceState(null, "", `${window.location.pathname}${next ? `?${next}` : ""}`);
+  }, [query, category]);
+
+  const results = useMemo(
+    () =>
+      items
+        .filter(
+          (item) =>
+            (!selected || item.categories.some((c) => c.slug === selected)) && matchesSearch(item, query),
         )
-      )
-        return false;
-      if (
-        selectedPrices.length &&
-        !(item.price && selectedPrices.includes(item.price))
-      )
-        return false;
-      if (minRating && (item.rating ?? 0) < minRating) return false;
-      if (featuredOnly && !item.featured) return false;
-      return true;
-    });
-    return sortItems(list, sort);
-  }, [
-    ofType,
-    query,
-    selectedCats,
-    selectedPrices,
-    minRating,
-    featuredOnly,
-    sort,
-  ]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const safePage = Math.min(page, totalPages);
-  const pageItems = filtered.slice(
-    (safePage - 1) * PAGE_SIZE,
-    safePage * PAGE_SIZE,
+        .sort(recommended),
+    [items, selected, query],
   );
+  const visible = results.slice(0, shown);
 
-  const activeCount =
-    selectedCats.length +
-    selectedPrices.length +
-    (featuredOnly ? 1 : 0) +
-    (minRating ? 1 : 0);
-
-  const changeType = (next: TypeFilter) => {
-    setType(next);
-    setPage(1);
-    // Drop filters that don't apply to the new type.
-    if (next !== "all") {
-      setSelectedCats((prev) => prev.filter((k) => k.startsWith(`${next}:`)));
-      if (next === "place") setSelectedPrices([]);
-    }
+  const pick = (slug: string | null) => {
+    setCategory(slug);
+    setShown(PAGE_SIZE);
   };
-
   const clearAll = () => {
-    setSelectedCats([]);
-    setSelectedPrices([]);
-    setMinRating(0);
-    setFeaturedOnly(false);
     setQuery("");
-    setPage(1);
+    pick(null);
   };
-
-  const toggle =
-    (setter: React.Dispatch<React.SetStateAction<string[]>>) =>
-    (value: string) => {
-      setPage(1);
-      setter((prev) =>
-        prev.includes(value)
-          ? prev.filter((x) => x !== value)
-          : [...prev, value],
-      );
-    };
-
-  const filters = (
-    <ExploreFilters
-      categories={categories}
-      selectedCats={selectedCats}
-      onToggleCategory={toggle(setSelectedCats)}
-      prices={prices}
-      selectedPrices={selectedPrices}
-      onTogglePrice={toggle(setSelectedPrices)}
-      showRating={hasRatings}
-      minRating={minRating}
-      onMinRating={(v) => {
-        setPage(1);
-        setMinRating(v);
-      }}
-      featuredOnly={featuredOnly}
-      onFeaturedOnly={(v) => {
-        setPage(1);
-        setFeaturedOnly(v);
-      }}
-      activeCount={activeCount}
-      onClear={clearAll}
-    />
-  );
-
-  const categoryName = (key: string) =>
-    categories.find((c) => c.key === key)?.name ?? key.split(":")[1];
+  const retry = () => {
+    setLoad({ status: "loading" });
+    setReloadKey((k) => k + 1);
+  };
 
   return (
     <>
       <PageHero
+        size="compact"
         image="/assets/explore-hero.jpg"
         imageAlt="Marco Island marina at golden hour with yachts and palm trees"
         icon={Compass}
@@ -310,17 +138,15 @@ export function ExplorePage({
             Explore <span className="italic text-gold">Marco Island</span>
           </>
         }
-        description="Beaches, landmarks and nature spots, plus the restaurants, stays and shops locals recommend. Add anything to your itinerary straight from the list."
+        description="Beaches, landmarks and nature spots, plus the restaurants, stays and shops locals recommend. Add anything to your passport straight from the list."
       >
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            setPage(1);
-            document
-              .getElementById("explore-results")
-              ?.scrollIntoView({ behavior: "smooth" });
+            setShown(PAGE_SIZE);
+            document.getElementById("explore-results")?.scrollIntoView({ behavior: "smooth" });
           }}
-          className="flex max-w-2xl flex-col gap-2 rounded-2xl bg-background/95 p-2 shadow-elegant backdrop-blur sm:flex-row"
+          className="flex max-w-2xl flex-col gap-2 rounded-card bg-background/95 p-2 shadow-elegant backdrop-blur sm:flex-row sm:rounded-full"
         >
           <div className="flex flex-1 items-center gap-2 px-3">
             <Search className="h-5 w-5 text-muted-foreground" />
@@ -328,10 +154,10 @@ export function ExplorePage({
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
-                setPage(1);
+                setShown(PAGE_SIZE);
               }}
               type="search"
-              aria-label="Search places and businesses"
+              aria-label="Search places"
               placeholder="Search beaches, restaurants, activities…"
               className="flex-1 bg-transparent py-3 text-foreground outline-none placeholder:text-muted-foreground"
             />
@@ -342,293 +168,154 @@ export function ExplorePage({
         </form>
         {load.status === "ready" && (
           <div className="mt-6" aria-live="polite">
-            {/* The results sit below the fold, so a search confirms its count up here. */}
+            {/* The results start below the hero, so a search confirms its count up here. */}
             <HeroMeta
               items={
                 query.trim()
-                  ? [
-                      `${filtered.length} ${filtered.length === 1 ? "result" : "results"} for “${query.trim()}”`,
-                    ]
-                  : [
-                      `${counts.place} places to visit`,
-                      `${counts.business} businesses`,
-                      "Beaches · Dining · Stays · Activities",
-                    ]
+                  ? [`${results.length} ${results.length === 1 ? "result" : "results"} for “${query.trim()}”`]
+                  : [`${items.length} places to explore`, "Beaches · Dining · Stays · Activities"]
               }
             />
           </div>
         )}
       </PageHero>
 
-      <section
-        id="explore-results"
-        className="site-container scroll-mt-24 py-10 md:py-14"
-      >
-        {/* Type switch */}
-        <div className="mb-8 flex items-center gap-3">
-          <div
-            role="tablist"
-            aria-label="Show"
-            className="flex w-full gap-1 overflow-x-auto rounded-full bg-muted p-1 sm:w-fit"
-          >
-            {(["all", "place", "business"] as const).map((t) => (
-              <button
-                key={t}
-                type="button"
-                role="tab"
-                aria-selected={type === t}
-                onClick={() => changeType(t)}
-                className={cn(
-                  "flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors sm:flex-none sm:px-5",
-                  type === t
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-primary",
-                )}
-              >
-                {t === "all" ? "All" : EXPLORE_TYPE_LABELS[t]}
-                {load.status === "ready" && (
-                  <span
-                    className={cn(
-                      "text-xs",
-                      type === t ? "text-gold" : "text-muted-foreground/70",
-                    )}
-                  >
-                    {counts[t]}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-          <InfoTip
-            label="About places and businesses"
-            side="bottom"
-          >
-            <strong className="font-semibold">Places to visit</strong> are
-            beaches, parks, landmarks and nature spots.{" "}
-            <strong className="font-semibold">Businesses</strong> are
-            restaurants, stays, shops, tours and services. Add either kind to
-            your itinerary.
-          </InfoTip>
-        </div>
-
-        <div className="grid gap-8 lg:grid-cols-[300px_1fr]">
-          <aside className="hidden lg:block">
-            <div className="sticky top-24 rounded-3xl border border-border bg-card p-6 shadow-soft">
-              {filters}
+      <section id="explore-results" className="scroll-mt-(--header-height)">
+        {/* Category chips stay under the navbar while the results scroll. */}
+        <div className="sticky top-(--header-height) z-30 border-b border-border bg-background/95 backdrop-blur">
+          <div className="site-container flex items-center gap-4 py-3">
+            <div
+              role="group"
+              aria-label="Filter by category"
+              className="scrollbar-none -mx-1 flex min-w-0 flex-1 gap-2 overflow-x-auto px-1 py-0.5"
+            >
+              {load.status === "loading" ? (
+                Array.from({ length: 5 }, (_, i) => <Skeleton key={i} className="h-10 w-28 shrink-0 rounded-full" />)
+              ) : (
+                <>
+                  <CategoryButton label="All" count={items.length} active={!selected} onClick={() => pick(null)} />
+                  {categories.map((c) => (
+                    <CategoryButton
+                      key={c.slug}
+                      label={c.name}
+                      count={c.count}
+                      active={selected === c.slug}
+                      onClick={() => pick(selected === c.slug ? null : c.slug)}
+                    />
+                  ))}
+                </>
+              )}
             </div>
-          </aside>
-
-          <div className="min-w-0">
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
-                  <SheetTrigger
-                    render={
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="lg:hidden"
-                      />
-                    }
-                  >
-                    <SlidersHorizontal className="h-4 w-4" />
-                    Filters
-                    {activeCount > 0 && (
-                      <span className="ml-1 inline-grid h-5 min-w-5 place-items-center rounded-full bg-gold px-1.5 text-[11px] font-bold text-gold-foreground">
-                        {activeCount}
-                      </span>
-                    )}
-                  </SheetTrigger>
-                  <SheetContent
-                    side="left"
-                    className="w-[88vw] overflow-y-auto sm:w-[380px]"
-                  >
-                    <SheetHeader>
-                      <SheetTitle className="sr-only">Filters</SheetTitle>
-                    </SheetHeader>
-                    <div className="px-4 pb-6">{filters}</div>
-                  </SheetContent>
-                </Sheet>
-                <p className="text-sm text-muted-foreground">
-                  <span className="font-semibold text-foreground">
-                    {filtered.length}
-                  </span>{" "}
-                  {filtered.length === 1 ? "result" : "results"}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="hidden text-sm text-muted-foreground sm:inline">
-                  Sort by
-                </span>
-                <Select
-                  value={sort}
-                  onValueChange={(v: SortOption | null) => {
-                    if (v) setSort(v);
-                  }}
-                >
-                  <SelectTrigger className="w-[170px] rounded-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="featured">Featured first</SelectItem>
-                    {hasRatings && (
-                      <SelectItem value="rating">Highest rated</SelectItem>
-                    )}
-                    <SelectItem value="name">Name (A–Z)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {activeCount > 0 && (
-              <div className="mb-6 flex flex-wrap items-center gap-2">
-                {selectedCats.map((k) => (
-                  <ActiveChip
-                    key={k}
-                    label={categoryName(k)}
-                    action={() => toggle(setSelectedCats)(k)}
-                  />
-                ))}
-                {selectedPrices.map((p) => (
-                  <ActiveChip
-                    key={p}
-                    label={p}
-                    action={() => toggle(setSelectedPrices)(p)}
-                  />
-                ))}
-                {minRating > 0 && (
-                  <ActiveChip
-                    label={`${minRating}+ stars`}
-                    action={() => setMinRating(0)}
-                  />
-                )}
-                {featuredOnly && (
-                  <ActiveChip
-                    label="Featured only"
-                    action={() => setFeaturedOnly(false)}
-                  />
-                )}
-                <button
-                  onClick={clearAll}
-                  className="ml-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition hover:text-primary"
-                >
-                  Clear all
-                </button>
-              </div>
-            )}
-
-            {load.status === "ready" && load.failed.length > 0 && (
-              <p className="mb-6 flex items-center gap-2 rounded-2xl bg-sand px-4 py-3 text-sm text-primary">
-                <AlertTriangle className="h-4 w-4 shrink-0 text-gold" />
-                {EXPLORE_TYPE_LABELS[load.failed[0]]} couldn&apos;t be loaded
-                right now.
-                <button
-                  type="button"
-                  className="font-medium underline"
-                  onClick={() => setReloadKey((k) => k + 1)}
-                >
-                  Retry
-                </button>
+            {load.status === "ready" && (
+              <p className="hidden shrink-0 text-sm text-muted-foreground md:block">
+                <span className="font-semibold text-foreground">{results.length}</span>{" "}
+                {results.length === 1 ? "place" : "places"}
               </p>
             )}
+          </div>
+        </div>
 
-            {load.status === "loading" ? (
-              <div
-                className="grid gap-6 sm:grid-cols-2 2xl:grid-cols-3"
-                aria-busy="true"
-                aria-label="Loading listings"
+        <div className="site-container py-10 md:py-14">
+          {query.trim() && load.status === "ready" && (
+            <p className="mb-6 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+              {results.length} {results.length === 1 ? "result" : "results"} for
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                aria-label={`Clear the search for ${query.trim()}`}
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary py-1 pr-2 pl-3 text-xs font-medium text-primary-foreground transition hover:bg-primary/90"
               >
-                {Array.from({ length: 6 }, (_, i) => (
-                  <div
-                    key={i}
-                    className="overflow-hidden rounded-3xl border border-border bg-card"
-                  >
-                    <Skeleton className="aspect-[16/10] rounded-none" />
-                    <div className="space-y-3 p-5">
-                      <Skeleton className="h-3 w-24" />
-                      <Skeleton className="h-6 w-3/4" />
-                      <Skeleton className="h-4 w-full" />
-                      <div className="grid grid-cols-2 gap-2 pt-2">
-                        <Skeleton className="h-9 rounded-full" />
-                        <Skeleton className="h-9 rounded-full" />
-                      </div>
+                “{query.trim()}” <X className="h-3 w-3" />
+              </button>
+            </p>
+          )}
+
+          {load.status === "ready" && load.partial && (
+            <p className="mb-6 flex items-center gap-2 rounded-card bg-sand px-4 py-3 text-sm text-primary">
+              <AlertTriangle className="h-4 w-4 shrink-0 text-gold" />
+              Some places couldn&apos;t be loaded right now.
+              <button type="button" className="font-medium underline" onClick={retry}>
+                Retry
+              </button>
+            </p>
+          )}
+
+          {load.status === "loading" ? (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Loading places">
+              {Array.from({ length: 6 }, (_, i) => (
+                <div key={i} className="overflow-hidden rounded-card border border-border bg-card">
+                  <Skeleton className="aspect-[16/10] rounded-none" />
+                  <div className="space-y-3 p-5">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-6 w-3/4" />
+                    <Skeleton className="h-4 w-full" />
+                    <div className="grid grid-cols-2 gap-2 pt-2">
+                      <Skeleton className="h-9 rounded-full" />
+                      <Skeleton className="h-9 rounded-full" />
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : load.status === "error" ? (
-              <div className="rounded-3xl border border-border bg-card p-12 text-center">
-                <AlertTriangle className="mx-auto h-8 w-8 text-gold" />
-                <p className="mt-3 font-semibold text-primary">
-                  We couldn&apos;t load the listings.
-                </p>
-                <Button
-                  variant="outline"
-                  className="mt-5"
-                  onClick={() => {
-                    setLoad({ status: "loading" });
-                    setReloadKey((k) => k + 1);
-                  }}
-                >
-                  <RotateCw className="h-4 w-4" /> Try again
-                </Button>
-              </div>
-            ) : pageItems.length === 0 ? (
-              <EmptyState clearAction={clearAll} />
-            ) : (
-              <div className="grid gap-6 sm:grid-cols-2 2xl:grid-cols-3">
-                {pageItems.map((item) => (
-                  <ExploreCard key={`${item.type}:${item.id}`} item={item} />
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
+          ) : load.status === "error" ? (
+            <div className="rounded-card border border-border bg-card p-12 text-center">
+              <AlertTriangle className="mx-auto h-8 w-8 text-gold" />
+              <p className="mt-3 font-semibold text-primary">We couldn&apos;t load places right now.</p>
+              <Button variant="outline" className="mt-5" onClick={retry}>
+                <RotateCw className="h-4 w-4" /> Try again
+              </Button>
+            </div>
+          ) : results.length === 0 ? (
+            <EmptyState clearAction={clearAll} />
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {visible.map((item) => (
+                <ExploreCard key={`${item.type}:${item.id}`} item={item} />
+              ))}
+            </div>
+          )}
 
-            {totalPages > 1 && (
-              <nav
-                className="mt-12 flex items-center justify-center gap-1"
-                aria-label="Pagination"
-              >
-                <Button
-                  variant="outline"
-                  size="icon"
-                  disabled={safePage === 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  aria-label="Previous page"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (n) => (
-                    <button
-                      key={n}
-                      onClick={() => setPage(n)}
-                      className={cn(
-                        "h-10 min-w-10 rounded-full px-3 text-sm font-semibold transition",
-                        n === safePage
-                          ? "bg-primary text-primary-foreground"
-                          : "text-foreground hover:bg-muted",
-                      )}
-                      aria-current={n === safePage ? "page" : undefined}
-                    >
-                      {n}
-                    </button>
-                  ),
-                )}
-                <Button
-                  variant="outline"
-                  size="icon"
-                  disabled={safePage === totalPages}
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  aria-label="Next page"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </nav>
-            )}
-          </div>
+          {results.length > visible.length && (
+            <div className="mt-12 flex flex-col items-center gap-3">
+              <Button variant="outline" size="lg" onClick={() => setShown((n) => n + PAGE_SIZE)}>
+                Show more places
+              </Button>
+              <p className="text-sm text-muted-foreground">
+                Showing {visible.length} of {results.length}
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </>
+  );
+}
+
+function CategoryButton({
+  label,
+  count,
+  active,
+  onClick,
+}: {
+  label: string;
+  count: number;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={cn(
+        "inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors",
+        active
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-border bg-card text-foreground hover:border-primary/40 hover:text-primary",
+      )}
+    >
+      {label}
+      <span className={cn("text-xs tabular-nums", active ? "text-gold" : "text-muted-foreground")}>{count}</span>
+    </button>
   );
 }

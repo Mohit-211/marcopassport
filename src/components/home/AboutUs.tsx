@@ -24,7 +24,7 @@ export function AboutUs() {
       <div className="site-container max-w-6xl py-16 md:py-24">
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr] md:gap-16">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">About us</p>
+            <p className="eyebrow text-gold">About us</p>
             <h2 className="mt-2 font-display text-3xl font-semibold text-balance text-primary md:text-4xl">
               Welcome to the Marco Passport
             </h2>
@@ -35,7 +35,7 @@ export function AboutUs() {
                 who proudly call this slice of paradise home, we created this
                 magazine to share the exclusive, insider knowledge you
                 won&apos;t find on generic travel websites. Our mission is to
-                bridge the gap between typical vacation itineraries and the
+                bridge the gap between typical vacation passports and the
                 authentic island lifestyle, helping you curate a seamless and
                 unforgettable vacation.
               </p>

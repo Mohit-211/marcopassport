@@ -1,23 +1,25 @@
 import type { Metadata } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/site/Navbar";
-import { PlanTripButton } from "@/features/itineraries/planner/PlanTripButton";
+import { PlanTripButton } from "@/features/passport/planner/PlanTripButton";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CookieBanner } from "@/components/site/CookieBanner";
 import { AuthProvider } from "@/hooks/useAuth";
-import { ItinerariesProvider } from "@/features/itineraries/ItinerariesProvider";
+import { PassportsProvider } from "@/features/passport/PassportsProvider";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
-const fraunces = Fraunces({
+// Display face for headings. Its italic is used for the gold accent words in page titles.
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
 });
 
 export const metadata: Metadata = {
@@ -103,26 +105,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${fraunces.variable} antialiased`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
+      <body className="antialiased">
         <TooltipProvider>
           <AuthProvider>
-            <ItinerariesProvider>
+            <PassportsProvider>
               <Navbar />
               <main>{children}</main>
               <Footer />
               <PlanTripButton />
-            </ItinerariesProvider>
+            </PassportsProvider>
           </AuthProvider>
           <CookieBanner />
         </TooltipProvider>
         <Toaster
-          richColors
           closeButton
           position="top-right"
           visibleToasts={3}
-          offset={{ top: 96, right: 24 }}
-          mobileOffset={{ top: 88, left: 16, right: 16 }}
+          offset={{ top: "var(--header-offset)", right: 24 }}
+          mobileOffset={{ top: "calc(var(--header-height) + 0.5rem)", left: 16, right: 16 }}
         />
       </body>
     </html>

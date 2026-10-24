@@ -63,7 +63,7 @@ export function ForgotPasswordForm({
           <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-gold/15 text-gold">
             <MailCheck className="h-6 w-6" />
           </span>
-          <h2 className="mt-4 text-[1.65rem] font-semibold leading-tight text-primary">Check your inbox</h2>
+          <h2 className="mt-4 text-2xl font-semibold leading-tight text-primary">Check your inbox</h2>
           <p role="status" className="mt-2 text-sm leading-relaxed text-muted-foreground">
             {sentMessage}
           </p>
@@ -80,7 +80,7 @@ export function ForgotPasswordForm({
         </div>
       ) : (
         <>
-          <h2 className="text-[1.65rem] font-semibold text-primary leading-tight">
+          <h2 className="text-2xl font-semibold text-primary leading-tight">
             Forgot password?
           </h2>
           <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
@@ -105,7 +105,7 @@ export function ForgotPasswordForm({
                   onBlur={() => setTouched(true)}
                   placeholder="you@example.com"
                   className={cn(
-                    "h-12 rounded-xl border pl-11 pr-4 text-sm transition-all",
+                    "h-12 rounded-tile border pl-11 pr-4 text-sm transition-all",
                     touched && error
                       ? "border-destructive/60 focus-visible:ring-destructive/30 bg-destructive/5"
                       : "border-input focus-visible:ring-gold/30",
@@ -118,7 +118,7 @@ export function ForgotPasswordForm({
             </div>
 
             {formError && (
-              <p role="alert" className="rounded-xl bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
+              <p role="alert" className="rounded-tile bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
                 {formError}
               </p>
             )}

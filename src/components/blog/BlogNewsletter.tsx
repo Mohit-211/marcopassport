@@ -12,7 +12,7 @@ export default function BlogNewsletter() {
   return (
     <CtaSection
       eyebrow="The Dispatch"
-      title="Island stories, delivered monthly."
+      title="New blogs and island tips, delivered monthly."
       description="Be the first to hear about our best guides, new openings and quiet recommendations, straight from Marco Island."
       aside={
         newsletter.status === "done" ? (

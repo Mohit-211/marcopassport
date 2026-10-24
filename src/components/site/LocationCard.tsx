@@ -5,12 +5,12 @@ import {
   directionsToUrl,
   embedMapSrc,
   placeSearchUrl,
-} from "@/features/itineraries/maps";
+} from "@/features/passport/maps";
 
 /**
- * Where a listing is: a free Google Maps Embed of its name + address, and
- * plain Maps links for directions. Same no-cost approach as the itinerary
- * map (see features/itineraries/maps.ts).
+ * Where a place is: a free Google Maps Embed of its name + address, and
+ * plain Maps links for directions. Same no-cost approach as the passport
+ * map (see features/passport/maps.ts).
  */
 export function LocationCard({
   name,
@@ -23,7 +23,7 @@ export function LocationCard({
   const src = embedMapSrc([stop]);
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
+    <div className="overflow-hidden rounded-card border border-border bg-card shadow-soft">
       {src ? (
         <iframe
           src={src}

@@ -11,7 +11,7 @@ const SUGGESTIONS = 6;
 
 /**
  * The blog's search box. Typing filters the page's grid (through
- * onQueryChange) and drops down matching stories; picking one, by click or
+ * onQueryChange) and drops down matching blogs; picking one, by click or
  * Enter, opens it. The list is portalled, so the hero doesn't clip it.
  */
 export function BlogSearch({
@@ -55,30 +55,30 @@ export function BlogSearch({
           className="pointer-events-none absolute left-4 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary-foreground/60"
         />
         <Autocomplete.Input
-          aria-label="Search stories"
-          placeholder="Search stories, tips and guides..."
+          aria-label="Search blogs"
+          placeholder="Search blogs, tips and guides..."
           className="h-12 w-full min-w-0 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 pr-4 pl-11 text-base text-primary-foreground backdrop-blur-md transition-colors outline-none placeholder:text-primary-foreground/55 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
         />
       </div>
       <Autocomplete.Portal>
         <Autocomplete.Positioner sideOffset={8} className="z-40 outline-none">
-          <Autocomplete.Popup className="max-h-[min(var(--available-height),24rem)] w-(--anchor-width) overflow-y-auto overscroll-contain rounded-2xl border border-border bg-popover p-1.5 text-popover-foreground shadow-elegant">
+          <Autocomplete.Popup className="max-h-[min(var(--available-height),24rem)] w-(--anchor-width) overflow-y-auto overscroll-contain rounded-tile border border-border bg-popover p-1.5 text-popover-foreground shadow-elegant">
             <Autocomplete.Empty className="px-3 py-4 text-center text-sm text-muted-foreground empty:hidden">
-              No stories match your search.
+              No blogs match your search.
             </Autocomplete.Empty>
             <Autocomplete.List>
               {(post: Blog) => (
                 <Autocomplete.Item
                   key={post.id}
                   value={post}
-                  className="flex cursor-pointer items-center gap-3 rounded-xl px-2.5 py-2 outline-none select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground"
+                  className="flex cursor-pointer items-center gap-3 rounded-mark px-2.5 py-2 outline-none select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={blogImage(post.featured_image)}
                     alt=""
                     loading="lazy"
-                    className="h-10 w-14 shrink-0 rounded-lg object-cover"
+                    className="h-10 w-14 shrink-0 rounded-tile object-cover"
                   />
                   <span className="min-w-0">
                     <span className="block truncate text-sm font-medium text-primary">{post.title}</span>

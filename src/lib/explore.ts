@@ -1,19 +1,13 @@
-import { placeImage } from "@/features/itineraries/place";
-import type { ItineraryPlace } from "@/features/itineraries/types";
-import type { ApiBusiness } from "@/types/business";
-import type { ApiPlace } from "@/types/place";
+import { placeImage } from "@/features/passport/place";
+import type { PassportPlace } from "@/features/passport/types";
+import type { ApiExploreItem } from "@/types/explore";
 
 /**
- * Places to visit and businesses are the same kind of listing in the API
+ * Places to visit and businesses are the same kind of thing in the API
  * (one table, `type` tells them apart), so Explore shows them together in
  * this one shape.
  */
 export type ExploreType = "place" | "business";
-
-export const EXPLORE_TYPE_LABELS: Record<ExploreType, string> = {
-  place: "Places to visit",
-  business: "Businesses",
-};
 
 export interface ExploreCategory {
   id: number;
@@ -30,7 +24,7 @@ export interface ExploreItem {
   description: string;
   /** Full image URL for display */
   image: string;
-  /** The API's relative path, kept for itinerary snapshots */
+  /** The API's relative path, kept for passport snapshots */
   imagePath: string | null;
   categories: ExploreCategory[];
   /** First category's name; empty when it has none */
@@ -38,12 +32,12 @@ export interface ExploreItem {
   /** Neighborhood, else address; empty when it has neither */
   location: string;
   address: string | null;
-  /** null when the listing has no map position */
+  /** null when the place has no map position */
   latitude: number | null;
   longitude: number | null;
   /** "$" – "$$$$", businesses only */
   price: string | null;
-  /** null when the listing has no reviews yet */
+  /** null when the place has no reviews yet */
   rating: number | null;
   reviewCount: number;
   featured: boolean;
@@ -51,10 +45,8 @@ export interface ExploreItem {
   href: string;
 }
 
-export const PRICE_LEVELS = ["$", "$$", "$$$", "$$$$"];
-
 /**
- * A listing's average rating, or null when there's nothing to show. The API
+ * A place's average rating, or null when there's nothing to show. The API
  * stores 0/null until the first review, and a 0-star rating shouldn't be
  * displayed anywhere.
  */
@@ -71,7 +63,7 @@ function singular(word: string) {
 }
 
 /**
- * Listing search for Explore and the planner: every word of the query
+ * Search for Explore and the planner: every word of the query
  * appears somewhere in the name, description, area, address or categories,
  * in any order. Plurals match singulars, so "beaches south" finds South Beach.
  */
@@ -91,30 +83,30 @@ export function matchesSearch(item: ExploreItem, query: string): boolean {
 }
 
 /** The API may send coordinates as strings; 0 or blank means "not set". */
-function coordinate(value: unknown): number | null {
+export function toCoordinate(value: unknown): number | null {
   if (value == null || value === "") return null;
   const n = Number(value);
   return Number.isFinite(n) && n !== 0 ? n : null;
 }
 
-function listingHref(type: ExploreType, slug: string) {
-  return type === "business" ? `/listings/${slug}` : `/places/${slug}`;
+/** Every place has its page under /explore, whatever its type. */
+export function exploreHref(slug: string) {
+  return `/explore/${slug}`;
 }
 
-export function toExploreItem(raw: ApiPlace | ApiBusiness, type: ExploreType): ExploreItem {
+export function toExploreItem(raw: ApiExploreItem, type: ExploreType): ExploreItem {
   const categories: ExploreCategory[] = (raw.categories ?? []).map((c) => ({
     id: c.id,
     name: c.name,
     slug: c.slug,
     type,
   }));
-  const tagline = "tagline" in raw ? raw.tagline : undefined;
   return {
     id: Number(raw.id),
     type,
     slug: raw.slug,
     name: raw.name,
-    description: raw.short_description || tagline || "",
+    description: raw.short_description || raw.tagline || "",
     image: placeImage(raw.featured_image),
     imagePath: raw.featured_image ?? null,
     categories,
@@ -122,19 +114,19 @@ export function toExploreItem(raw: ApiPlace | ApiBusiness, type: ExploreType): E
     category: categories[0]?.name ?? "",
     location: raw.neighborhood || raw.address || "",
     address: raw.address ?? null,
-    latitude: coordinate(raw.latitude),
-    longitude: coordinate(raw.longitude),
+    latitude: toCoordinate(raw.latitude),
+    longitude: toCoordinate(raw.longitude),
     price: raw.price_level ?? null,
     rating: visibleRating(raw.rating),
     reviewCount: Number(raw.review_count) || 0,
     featured: Boolean(raw.is_featured),
     topPick: Boolean(raw.is_top_pick),
-    href: listingHref(type, raw.slug),
+    href: exploreHref(raw.slug),
   };
 }
 
-/** The snapshot an itinerary keeps for display (see features/itineraries). */
-export function toItineraryPlace(item: ExploreItem): ItineraryPlace {
+/** The snapshot a passport keeps for display (see features/passport). */
+export function toPassportPlace(item: ExploreItem): PassportPlace {
   return {
     id: item.id,
     type: item.type,

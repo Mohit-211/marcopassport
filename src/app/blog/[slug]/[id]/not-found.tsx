@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-/** Shown with a 404 when the story doesn't exist. */
-export default function StoryNotFound() {
+/** Shown with a 404 when the blog doesn't exist. */
+export default function BlogNotFound() {
   return (
     <div className="site-container py-32 text-center">
       <h1 className="font-display text-4xl text-primary">
-        Story not found
+        Blog not found
       </h1>
       <p className="text-muted-foreground mt-3">
         The article you&apos;re looking for may have been moved.
