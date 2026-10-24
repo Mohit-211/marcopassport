@@ -1,8 +1,7 @@
 "use client";
 import { useState, useCallback } from "react";
-import { ShieldCheck, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AuthCard } from "@/components/auth/AuthShell";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { AuthFields, type FieldErrors } from "@/components/auth/AuthFields";
 import { CheckInbox } from "@/components/auth/CheckInbox";
@@ -10,7 +9,6 @@ import { loginApi, registerApi, type AuthSession } from "@/api/auth/auth.api";
 import { getApiErrorMessage } from "@/errors/apiError";
 import { setAuthToken } from "@/lib/auth";
 import { passwordProblem } from "@/lib/password";
-import { cn } from "@/lib/utils";
 
 type Mode = "login" | "signup";
 
@@ -22,19 +20,21 @@ function statusOf(error: unknown) {
 }
 
 interface AuthFormProps {
-  /** "page" renders its own card (/auth); "popup" sits inside the login dialog */
-  variant?: "page" | "popup";
+  initialMode?: Mode;
+  /** Prefilled, e.g. when coming back from forgot-password */
+  initialEmail?: string | null;
   /** Shown above the form, e.g. "Your session has expired" */
   message?: string | null;
   /** Called once the token is stored */
   onLoggedIn: () => void | Promise<void>;
-  /** The popup closes itself when the user leaves for the forgot-password page */
-  onLeave?: () => void;
+  /** Switches the dialog to forgot-password, carrying the email typed so far */
+  onForgotPassword?: (email: string) => void;
 }
 
-export function AuthForm({ variant = "page", message, onLoggedIn, onLeave }: AuthFormProps) {
-  const [mode, setMode] = useState<Mode>("login");
-  const [email, setEmail] = useState("");
+/** Login and sign-up, inside the account dialog (see AuthDialog). */
+export function AuthForm({ initialMode = "login", initialEmail, message, onLoggedIn, onForgotPassword }: AuthFormProps) {
+  const [mode, setMode] = useState<Mode>(initialMode);
+  const [email, setEmail] = useState(initialEmail ?? "");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
@@ -136,11 +136,10 @@ export function AuthForm({ variant = "page", message, onLoggedIn, onLeave }: Aut
     }
   };
   const isLogin = mode === "login";
-  const Shell = variant === "page" ? PageCard : PopupBody;
 
   if (inboxEmail) {
     return (
-      <Shell padded>
+      <div className="p-6 sm:p-8">
         <CheckInbox
           email={inboxEmail}
           onBack={() => {
@@ -150,17 +149,17 @@ export function AuthForm({ variant = "page", message, onLoggedIn, onLeave }: Aut
             setConfirmPassword("");
           }}
         />
-      </Shell>
+      </div>
     );
   }
 
   return (
-    <Shell>
+    <div>
       <AuthTabs mode={mode} onSwitch={switchMode} />
-      <div className={cn("px-6 pb-6 pt-1 sm:px-8", variant === "page" && "sm:pb-8")}>
-        <h1 className="text-[1.65rem] font-semibold leading-tight text-primary sm:text-3xl">
+      <div className="px-6 pb-6 pt-1 sm:px-8">
+        <h2 className="text-[1.65rem] font-semibold leading-tight text-primary sm:text-3xl">
           {isLogin ? "Welcome back" : "Create your Passport"}
-        </h1>
+        </h2>
         <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
           {isLogin
             ? "Log in to save your itineraries and see them on any device."
@@ -216,7 +215,7 @@ export function AuthForm({ variant = "page", message, onLoggedIn, onLeave }: Aut
             }
             onToggleShowPassword={() => setShowPassword((s) => !s)}
             onToggleShowConfirm={() => setShowConfirm((s) => !s)}
-            onForgotPassword={onLeave}
+            onForgotPassword={onForgotPassword && (() => onForgotPassword(email.trim()))}
           />
           {formError && (
             <p role="alert" className="rounded-xl bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
@@ -243,15 +242,6 @@ export function AuthForm({ variant = "page", message, onLoggedIn, onLeave }: Aut
             )}
           </Button>
         </form>
-        {variant === "page" && (
-          <div className="mt-5 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground/80">
-            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-            <span>
-              Your data is private and secure. We never share your information
-              with third parties.
-            </span>
-          </div>
-        )}
       </div>
       <div className="border-t border-border/70 px-6 py-4 text-center text-sm text-muted-foreground sm:px-8">
         {isLogin ? "New to The Marco Passport?" : "Already have an account?"}{" "}
@@ -263,14 +253,6 @@ export function AuthForm({ variant = "page", message, onLoggedIn, onLeave }: Aut
           {isLogin ? "Create account" : "Log in"}
         </button>
       </div>
-    </Shell>
+    </div>
   );
-}
-
-function PageCard({ padded, children }: { padded?: boolean; children: React.ReactNode }) {
-  return <AuthCard className={padded ? undefined : "p-0 sm:p-0"}>{children}</AuthCard>;
-}
-
-function PopupBody({ padded, children }: { padded?: boolean; children: React.ReactNode }) {
-  return <div className={padded ? "p-6 sm:p-8" : undefined}>{children}</div>;
 }

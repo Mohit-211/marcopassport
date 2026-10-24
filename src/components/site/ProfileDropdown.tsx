@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
-import { requestLogin } from "@/lib/login-popup";
+import { openAuthDialog, requestLogin } from "@/lib/login-popup";
 import { Tooltip } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
@@ -80,9 +80,9 @@ export function ProfileDropdown({ className }: { className?: string }) {
           <MapIcon className="h-4 w-4" /> My Passport
         </DropdownMenuLinkItem>
         {isAuthenticated && (
-          <DropdownMenuLinkItem render={<Link href="/change-password" />}>
+          <DropdownMenuItem onClick={() => openAuthDialog("change-password")}>
             <KeyRound className="h-4 w-4" /> Change Password
-          </DropdownMenuLinkItem>
+          </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
         {isAuthenticated ? (

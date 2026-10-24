@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ProfileDropdown } from "@/components/site/ProfileDropdown";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
-import { requestLogin } from "@/lib/login-popup";
+import { openAuthDialog, requestLogin } from "@/lib/login-popup";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -182,12 +182,16 @@ export function Navbar() {
           {ready &&
             (isAuthenticated ? (
               <>
-                <Link
-                  href="/change-password"
-                  className="mt-3 flex items-center gap-2 rounded-xl px-4 py-3 text-[15px] font-medium text-primary/80 transition-colors duration-200 hover:bg-primary/10 hover:text-primary"
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    openAuthDialog("change-password");
+                  }}
+                  className="mt-3 flex items-center gap-2 rounded-xl px-4 py-3 text-left text-[15px] font-medium text-primary/80 transition-colors duration-200 hover:bg-primary/10 hover:text-primary"
                 >
                   <KeyRound className="h-4 w-4" /> Change Password
-                </Link>
+                </button>
                 <Button
                   variant="outline"
                   onClick={() => logout()}

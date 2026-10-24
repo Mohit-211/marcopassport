@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Lock, Mail, User, Eye, EyeOff, type LucideIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,7 +30,7 @@ interface AuthFieldsProps {
   onBlurField: (field: keyof FieldErrors) => void;
   onToggleShowPassword: () => void;
   onToggleShowConfirm: () => void;
-  /** Lets the login popup close itself before going to the forgot-password page */
+  /** Switches the account dialog to the forgot-password step */
   onForgotPassword?: () => void;
 }
 
@@ -89,10 +88,6 @@ export function AuthFields({
         {errors[fieldName]}
       </p>
     );
-
-  const forgotHref = `/auth/forgot-password${
-    email ? `?email=${encodeURIComponent(email)}` : ""
-  }`;
 
   const iconInput = (Icon: LucideIcon, input: React.ReactNode) => (
     <div className="relative">
@@ -157,14 +152,14 @@ export function AuthFields({
             Password
           </Label>
           {/* Forgot password — login only */}
-          {mode === "login" && (
-            <Link
-              href={forgotHref}
+          {mode === "login" && onForgotPassword && (
+            <button
+              type="button"
               onClick={onForgotPassword}
               className="text-xs font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-primary hover:underline"
             >
               Forgot password?
-            </Link>
+            </button>
           )}
         </div>
         {iconInput(

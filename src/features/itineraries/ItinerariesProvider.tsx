@@ -17,7 +17,7 @@ import {
   createItineraryApi,
   listItinerariesApi,
 } from "@/api/users/itineraries.api";
-import { LoginDialog } from "@/components/auth/LoginDialog";
+import { AuthDialog } from "@/components/auth/AuthDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { readDraft, subscribeDraft, writeDraft } from "./draft-store";
 import { emptyDraft, hasPlace, withPlaceAdded } from "./logic";
@@ -216,7 +216,7 @@ export function ItinerariesProvider({ children }: { children: React.ReactNode })
   return (
     <ItinerariesContext.Provider value={value}>
       {children}
-      <LoginDialog
+      <AuthDialog
         onLoggedIn={async () => {
           const saved = await completeLogin();
           if (saved) router.push(`/passport/${saved.id}`);

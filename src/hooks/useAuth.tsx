@@ -10,7 +10,6 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { logoutApi } from "@/api/auth/auth.api";
 import { UserProfileApi } from "@/api/users/users.api";
@@ -50,7 +49,6 @@ const AuthContext = createContext<AuthState | null>(null);
  * sign-in rather than by every component that needs to know who's signed in.
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const router = useRouter();
   // The token lives in browser storage, so the server snapshot is always "signed out"
   const token = useSyncExternalStore(subscribeToAuth, getAuthToken, () => null);
   const isAuthenticated = !!token;
@@ -93,13 +91,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // Token may already be invalid/expired server-side — clear locally regardless.
     } finally {
+      // Stay on the page: it all works signed out, and My Passport asks to log in.
       clearAuthToken();
       setProfile(null);
       setLoggingOut(false);
       toast.success("Signed out");
-      router.push("/auth");
     }
-  }, [router, loggingOut]);
+  }, [loggingOut]);
 
   const value = useMemo(
     () => ({ isAuthenticated, user, ready, logout, loggingOut }),

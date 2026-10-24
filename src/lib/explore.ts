@@ -63,6 +63,33 @@ export function visibleRating(value: unknown): number | null {
   return Number.isFinite(n) && n > 0 ? n : null;
 }
 
+/** "beaches" → "beach", "boats" → "boat"; short words stay as they are. */
+function singular(word: string) {
+  if (word.length > 4 && word.endsWith("es")) return word.slice(0, -2);
+  if (word.length > 3 && word.endsWith("s")) return word.slice(0, -1);
+  return word;
+}
+
+/**
+ * Listing search for Explore and the planner: every word of the query
+ * appears somewhere in the name, description, area, address or categories,
+ * in any order. Plurals match singulars, so "beaches south" finds South Beach.
+ */
+export function matchesSearch(item: ExploreItem, query: string): boolean {
+  const words = query.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+  if (words.length === 0) return true;
+  const text = [
+    item.name,
+    item.description,
+    item.location,
+    item.address ?? "",
+    ...item.categories.map((c) => c.name),
+  ]
+    .join(" ")
+    .toLowerCase();
+  return words.every((word) => text.includes(word) || text.includes(singular(word)));
+}
+
 /** The API may send coordinates as strings; 0 or blank means "not set". */
 function coordinate(value: unknown): number | null {
   if (value == null || value === "") return null;

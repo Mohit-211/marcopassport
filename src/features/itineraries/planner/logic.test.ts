@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { ExploreItem } from "@/lib/explore";
-import { emptyDraft, toPayload } from "../logic";
+import { emptyDraft } from "../logic";
 import {
   decodeSharedTrip,
-  PLANNER_CHIPS,
   DEFAULT_FILTERS,
   distanceMiles,
   encodeSharedTrip,

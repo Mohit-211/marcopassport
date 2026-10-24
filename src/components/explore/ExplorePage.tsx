@@ -38,6 +38,7 @@ import { fetchExploreItems, type ExploreResult } from "@/api/users/explore.api";
 import {
   EXPLORE_TYPE_LABELS,
   PRICE_LEVELS,
+  matchesSearch,
   type ExploreItem,
   type ExploreType,
 } from "@/lib/explore";
@@ -198,15 +199,8 @@ export function ExplorePage({
   );
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
     const list = ofType.filter((item) => {
-      if (
-        q &&
-        !`${item.name} ${item.description} ${item.location} ${item.categories.map((c) => c.name).join(" ")}`
-          .toLowerCase()
-          .includes(q)
-      )
-        return false;
+      if (!matchesSearch(item, query)) return false;
       if (
         selectedCats.length &&
         !item.categories.some((c) =>
@@ -347,13 +341,20 @@ export function ExplorePage({
           </Button>
         </form>
         {load.status === "ready" && (
-          <div className="mt-6">
+          <div className="mt-6" aria-live="polite">
+            {/* The results sit below the fold, so a search confirms its count up here. */}
             <HeroMeta
-              items={[
-                `${counts.place} places to visit`,
-                `${counts.business} businesses`,
-                "Beaches · Dining · Stays · Activities",
-              ]}
+              items={
+                query.trim()
+                  ? [
+                      `${filtered.length} ${filtered.length === 1 ? "result" : "results"} for “${query.trim()}”`,
+                    ]
+                  : [
+                      `${counts.place} places to visit`,
+                      `${counts.business} businesses`,
+                      "Beaches · Dining · Stays · Activities",
+                    ]
+              }
             />
           </div>
         )}

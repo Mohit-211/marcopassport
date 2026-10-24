@@ -368,17 +368,6 @@
 }
 
 /* --------------------------------
-   Auth pages
-   Set by the inline script on /auth when a token already exists, so the
-   sign-in form never flashes before the redirect.
-   -------------------------------- */
-@layer components {
-  html[data-auth-redirect] .auth-shell {
-    visibility: hidden;
-  }
-}
-
-/* --------------------------------
    Blog article content
    Styles rich-text HTML from the CMS editor. Everything is scoped to
    `.blog-content`, so the generated tags need no classes of their own.

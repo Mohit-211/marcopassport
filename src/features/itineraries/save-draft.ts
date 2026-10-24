@@ -4,7 +4,7 @@ import { toPayload } from "./logic";
 import type { Itinerary } from "./types";
 
 /**
- * Runs right after every login (popup, /auth page or /verify-email): saves the
+ * Runs right after every login (login or verify-email dialog): saves the
  * guest's draft to the account in one request. Resolves to the new passport,
  * or null when there was nothing to save. If the backend rejects the draft
  * (e.g. a place was unlisted meanwhile) the error is thrown, its message is

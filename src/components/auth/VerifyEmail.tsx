@@ -1,24 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useEffectEvent, useState } from "react";
 import { AlertTriangle, Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AuthCard } from "@/components/auth/AuthShell";
 import { resendVerificationApi, verifyEmailApi, type AuthSession } from "@/api/auth/auth.api";
 import { getApiErrorMessage } from "@/errors/apiError";
-import { useItineraries } from "@/features/itineraries/ItinerariesProvider";
-import type { Itinerary } from "@/features/itineraries/types";
 import { setAuthToken } from "@/lib/auth";
-import { requestLogin } from "@/lib/login-popup";
 
-// The token is single use and saving the draft must happen once, so React's
-// dev double-run of effects (or a re-render) reuses the first attempt.
-const verifications = new Map<string, Promise<Itinerary | null>>();
+// The token is single use, so React's dev double-run of effects (or a
+// re-render) reuses the first attempt.
+const verifications = new Map<string, Promise<void>>();
 
-function verifyAndLogIn(token: string, completeLogin: () => Promise<Itinerary | null>) {
+function verifyOnce(token: string) {
   let pending = verifications.get(token);
   if (!pending) {
     pending = verifyEmailApi(token).then((res) => {
@@ -26,7 +21,6 @@ function verifyAndLogIn(token: string, completeLogin: () => Promise<Itinerary | 
       const accessToken = session?.tokens?.access?.token;
       if (!accessToken) throw new Error("This verification link is invalid or has expired.");
       setAuthToken(accessToken);
-      return completeLogin();
     });
     verifications.set(token, pending);
   }
@@ -34,25 +28,35 @@ function verifyAndLogIn(token: string, completeLogin: () => Promise<Itinerary | 
 }
 
 /**
- * /verify-email?token=… — opened from the sign-up email. Verifying is a POST
- * made here (not a plain GET link) so email link scanners can't verify
- * accounts on their own. Success logs the user in and saves any itinerary
- * draft they built as a guest in this browser.
+ * Inside the account dialog, opened from the sign-up email
+ * (`?auth=verify-email&token=…`). Verifying is a POST made here (not a plain
+ * GET link) so email link scanners can't verify accounts on their own.
+ * Success logs the user in; `onVerified` then saves any guest itinerary draft.
  */
-export function VerifyEmail() {
-  const router = useRouter();
-  const token = useSearchParams().get("token") ?? "";
-  const { completeLogin } = useItineraries();
+export function VerifyEmail({
+  token,
+  onVerified,
+  onLogIn,
+}: {
+  token: string;
+  onVerified: () => void | Promise<void>;
+  /** Switches the dialog to the login step */
+  onLogIn: () => void;
+}) {
   const [error, setError] = useState<string | null>(
     token ? null : "This verification link is missing its token.",
   );
+  // Not an effect dependency: a re-render with a new callback mustn't log in twice.
+  const handleVerified = useEffectEvent(() => {
+    void onVerified();
+  });
 
   useEffect(() => {
     if (!token) return;
     let cancelled = false;
-    verifyAndLogIn(token, completeLogin)
-      .then((saved) => {
-        if (!cancelled) router.replace(saved ? `/passport/${saved.id}` : "/");
+    verifyOnce(token)
+      .then(() => {
+        if (!cancelled) handleVerified();
       })
       .catch((err) => {
         if (!cancelled) setError(getApiErrorMessage(err));
@@ -60,46 +64,37 @@ export function VerifyEmail() {
     return () => {
       cancelled = true;
     };
-  }, [token, completeLogin, router]);
+  }, [token]);
 
   if (!error) {
     return (
-      <AuthCard>
-        <div role="status" className="flex flex-col items-center py-6 text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-gold" />
-          <h1 className="mt-4 text-xl font-semibold text-primary">Verifying your email…</h1>
-          <p className="mt-1.5 text-sm text-muted-foreground">This only takes a moment.</p>
-        </div>
-      </AuthCard>
+      <div role="status" className="flex flex-col items-center p-6 py-12 text-center sm:p-8 sm:py-14">
+        <Loader2 className="h-8 w-8 animate-spin text-gold" />
+        <h2 className="mt-4 text-xl font-semibold text-primary">Verifying your email…</h2>
+        <p className="mt-1.5 text-sm text-muted-foreground">This only takes a moment.</p>
+      </div>
     );
   }
 
   return (
-    <AuthCard>
+    <div className="p-6 sm:p-8">
       <div className="text-center">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-destructive/10 text-destructive">
           <AlertTriangle className="h-6 w-6" />
         </span>
-        <h1 className="mt-4 text-[1.5rem] font-semibold leading-tight text-primary">We couldn&apos;t verify your email</h1>
+        <h2 className="mt-4 text-[1.5rem] font-semibold leading-tight text-primary">We couldn&apos;t verify your email</h2>
         <p role="alert" className="mt-2 text-sm leading-relaxed text-muted-foreground">
           {error}
         </p>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           If you already verified, just log in. Otherwise, send yourself a new link.
         </p>
-        <Button
-          variant="gold"
-          size="lg"
-          className="mt-6 w-full"
-          onClick={async () => {
-            if (await requestLogin()) router.push("/passport");
-          }}
-        >
+        <Button variant="gold" size="lg" className="mt-6 w-full" onClick={onLogIn}>
           Log in
         </Button>
       </div>
       <ResendForm />
-    </AuthCard>
+    </div>
   );
 }
 

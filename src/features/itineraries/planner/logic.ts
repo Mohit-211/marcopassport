@@ -1,4 +1,4 @@
-import type { ExploreItem } from "@/lib/explore";
+import { matchesSearch, type ExploreItem } from "@/lib/explore";
 import type { ItineraryDraft } from "../types";
 
 /**
@@ -99,7 +99,6 @@ export function milesFromCentre(item: ExploreItem) {
 
 export function filterListings(items: ExploreItem[], f: PlannerFilters): ExploreItem[] {
   const chip = PLANNER_CHIPS.find((c) => c.id === f.chip) ?? PLANNER_CHIPS[0];
-  const q = f.query.trim().toLowerCase();
   return items.filter(
     (item) =>
       matchesChip(item, chip) &&
@@ -107,11 +106,7 @@ export function filterListings(items: ExploreItem[], f: PlannerFilters): Explore
       (f.categories.length === 0 || item.categories.some((c) => f.categories.includes(`${item.type}:${c.slug}`))) &&
       (item.rating ?? 0) >= f.minRating &&
       (!f.featuredOnly || item.featured) &&
-      (!q ||
-        [item.name, item.description, item.address ?? "", ...item.categories.map((c) => c.name)]
-          .join(" ")
-          .toLowerCase()
-          .includes(q)),
+      matchesSearch(item, f.query),
   );
 }
 

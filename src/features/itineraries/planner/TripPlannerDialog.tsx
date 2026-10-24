@@ -30,7 +30,6 @@ import {
   categoryOptions,
   filterListings,
   milesFromCentre,
-  PLANNER_CHIPS,
   type PlannerFilters,
 } from "./logic";
 import { useActivePlan } from "./use-active-plan";
@@ -205,9 +204,6 @@ function Planner() {
           <X className="h-5 w-5" aria-hidden />
         </DialogClose>
       </header>
-
-      {/* Category chips */}
-      {/* <Chips value={filters.chip} onChange={(chip) => update({ chip })} /> */}
 
       <div
         className={cn(
@@ -416,48 +412,6 @@ function CategoryMenu({
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-}
-
-function Chips({ value, onChange }: { value: PlannerFilters["chip"]; onChange: (chip: PlannerFilters["chip"]) => void }) {
-  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
-    const buttons = [...e.currentTarget.querySelectorAll<HTMLButtonElement>("button")];
-    const index = buttons.indexOf(document.activeElement as HTMLButtonElement);
-    const next =
-      e.key === "Home" ? 0 : e.key === "End" ? buttons.length - 1 : (index + (e.key === "ArrowRight" ? 1 : -1) + buttons.length) % buttons.length;
-    e.preventDefault();
-    buttons[next]?.focus();
-  };
-
-  return (
-    <div
-      role="toolbar"
-      aria-label="Categories"
-      onKeyDown={onKeyDown}
-      className="flex gap-2 overflow-x-auto border-b border-border px-4 py-2.5 sm:px-6"
-    >
-      {PLANNER_CHIPS.map((chip) => {
-        const active = chip.id === value;
-        return (
-          <button
-            key={chip.id}
-            type="button"
-            aria-pressed={active}
-            tabIndex={active ? 0 : -1}
-            onClick={() => onChange(chip.id)}
-            className={cn(
-              "shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
-              active
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border bg-background text-primary hover:border-primary/50",
-            )}
-          >
-            {chip.label}
-          </button>
-        );
-      })}
-    </div>
   );
 }
 
