@@ -1,6 +1,7 @@
 import { ExternalLink, MapPin, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
+import { EmbedMap } from "@/components/site/EmbedMap";
 import {
   directionsToUrl,
   embedMapSrc,
@@ -30,14 +31,7 @@ export function LocationCard({
   return (
     <div className="overflow-hidden rounded-card border border-border bg-card shadow-soft">
       {src ? (
-        <iframe
-          src={src}
-          title={`Map showing ${name}`}
-          loading="lazy"
-          allowFullScreen
-          referrerPolicy="strict-origin-when-cross-origin"
-          className="aspect-[16/9] w-full border-0 bg-muted"
-        />
+        <EmbedMap src={src} title={`Map showing ${name}`} className="aspect-[16/9] w-full" />
       ) : (
         <div className="grid aspect-[16/7] place-items-center bg-cream">
           <MapPin className="h-8 w-8 text-gold" />

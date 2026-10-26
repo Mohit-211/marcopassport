@@ -1,11 +1,14 @@
 "use client";
 
 import { MapPin } from "lucide-react";
+import { EmbedMap } from "@/components/site/EmbedMap";
 import type { ExploreItem } from "@/lib/explore";
 import { useSettled } from "../components/PassportMap";
 import { embedMapSrc } from "../maps";
 
-const MAP_DEBOUNCE_MS = 800;
+// Short, so a picked place shows quickly; EmbedMap keeps the current map in
+// view while the next one loads.
+const MAP_DEBOUNCE_MS = 300;
 const MARCO_ISLAND_STOP = { name: "Marco Island", address: "Florida" };
 
 /**
@@ -34,15 +37,7 @@ export function PlannerMap({
   return (
     <div className="relative h-full min-h-60 w-full bg-muted">
       {src ? (
-        <iframe
-          key={src}
-          src={src}
-          title="Map of places"
-          loading="lazy"
-          allowFullScreen
-          referrerPolicy="strict-origin-when-cross-origin"
-          className="absolute inset-0 h-full w-full border-0"
-        />
+        <EmbedMap src={src} title="Map of places" className="absolute inset-0" />
       ) : (
         <div className="absolute inset-0 grid place-items-center p-6 text-center">
           <div>

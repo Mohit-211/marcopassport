@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ExternalLink, Map as MapIcon, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
+import { EmbedMap } from "@/components/site/EmbedMap";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { embedMapSrc, routeUrl, type TravelMode } from "../maps";
@@ -110,14 +111,10 @@ export function PassportMap({
         <Placeholder text="The map isn't available right now. Use the directions links instead." />
       ) : (
         visible && (
-          <iframe
-            key={src}
+          <EmbedMap
             src={src}
             title="Map of your passport"
-            loading="lazy"
-            allowFullScreen
-            referrerPolicy="strict-origin-when-cross-origin"
-            className="aspect-[4/3] w-full rounded-tile border-0 bg-muted lg:aspect-auto lg:h-[min(70vh,640px)]"
+            className="aspect-[4/3] w-full rounded-tile lg:aspect-auto lg:h-[min(70vh,640px)]"
           />
         )
       )}
