@@ -1,0 +1,67 @@
+/*
+ * The magazine reader (MagazineReader.tsx). page-flip sizes, places and curls
+ * the sheets; these rules give them paper, a spine and a stage to sit on.
+ */
+
+.magazine-reader {
+  /* Height the book leaves for the navbar, toolbar and padding, so a whole
+     spread fits on screen. */
+  --reader-chrome: 13rem;
+  background: radial-gradient(ellipse at 50% 30%, var(--primary-soft), var(--primary) 70%);
+}
+
+.magazine-reader:fullscreen {
+  --reader-chrome: 7rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* The widest the book can be while a spread still fits the screen's height. */
+.magazine-book {
+  width: min(100%, calc((100dvh - var(--reader-chrome)) * var(--mag-ratio) * 2));
+  margin-inline: auto;
+  transition: transform 600ms ease;
+}
+
+.magazine-poster {
+  width: min(100%, calc((100dvh - var(--reader-chrome)) * var(--mag-ratio)));
+  margin-inline: auto;
+}
+
+.magazine-sheet {
+  background: var(--card);
+  overflow: hidden;
+  box-shadow: 0 0.75rem 2rem -0.75rem color-mix(in oklab, var(--foreground) 70%, transparent);
+}
+
+.magazine-sheet > .mag-page {
+  width: 100%;
+  height: 100%;
+}
+
+/* A soft shade along the bound edge, where the paper curves into the spine. */
+.magazine-sheet.--soft::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  z-index: 1;
+  width: 7%;
+  pointer-events: none;
+}
+
+.magazine-sheet.--soft.--left::after {
+  right: 0;
+  background: linear-gradient(to left, color-mix(in oklab, var(--primary) 24%, transparent), transparent);
+}
+
+.magazine-sheet.--soft.--right::after {
+  left: 0;
+  background: linear-gradient(to right, color-mix(in oklab, var(--primary) 24%, transparent), transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magazine-book {
+    transition: none;
+  }
+}

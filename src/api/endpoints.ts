@@ -38,6 +38,10 @@ export const Contact = {
 export const Newsletter = {
   SUBSCRIBE: "/newsletter",
 }
+export const Magazines = {
+  LIST: "/magazine",
+  DETAIL: (slug: string) => `/magazine/${slug}`,
+}
 export const Place = {
   GET_ALL_PLACES: "/explore/places",
   GET_PLACE_DETAILS: (slug: string) => `/explore/places/${slug}`

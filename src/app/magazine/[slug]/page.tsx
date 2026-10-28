@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { magazines, magazinesBySlug } from "@/data/magazines";
-import MagazineExperience from "@/components/magazine/MagazineExperience";
+import { notFound } from "next/navigation";
+import { IssueGrid } from "@/features/magazine/components/IssueCard";
+import { IssueExperience } from "@/features/magazine/components/IssueExperience";
+import { issueLine, magazineImage } from "@/features/magazine/model";
+import { img } from "@/features/magazine/renderer/content";
+import { getMagazineIssue, getMagazineShelf } from "@/features/magazine/shelf";
+
+export const revalidate = 600;
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -10,43 +14,43 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const magazine = magazinesBySlug[slug];
+  const issue = await getMagazineIssue(slug);
+  if (!issue) return {};
 
-  if (!magazine) return {};
+  const title = `${[issue.title, issueLine(issue)].filter(Boolean).join(" · ")} — Marco Magazine`;
+  const description = issue.description || issue.tagline || undefined;
+  const cover = issue.pages[0] ? img(issue.pages[0].content, "image") : null;
+  const images = cover ? [magazineImage(cover.src)] : undefined;
 
   return {
-    title: `${magazine.title} · ${magazine.issue} — Marco Magazine`,
-    description: magazine.description,
-    openGraph: {
-      title: `${magazine.title} · ${magazine.issue}`,
-      description: magazine.description,
-      images: [magazine.cover],
-    },
-    twitter: {
-      images: [magazine.cover],
-    },
+    title,
+    description,
+    openGraph: { title, description, images },
+    twitter: { card: "summary_large_image", title, description, images },
+    alternates: { canonical: `/magazine/${issue.slug}` },
   };
 }
 
-export default async function MagazineDetailPage({ params }: Props) {
+export default async function MagazineIssuePage({ params }: Props) {
   const { slug } = await params;
-  const magazine = magazinesBySlug[slug];
+  const issue = await getMagazineIssue(slug);
+  if (!issue) notFound();
 
-  if (!magazine) {
-    return (
-      <div className="site-container py-32 text-center">
-        <h1 className="font-display text-4xl font-semibold">
-          Edition not found
-        </h1>
-        <p className="text-muted-foreground mt-3">It may have been archived.</p>
-        <Link href="/magazine" className="inline-block mt-6">
-          <Button variant="gold">Back to magazine</Button>
-        </Link>
-      </div>
-    );
-  }
+  const { issues } = await getMagazineShelf();
+  const more = issues.filter((other) => other.slug !== issue.slug).slice(0, 3);
 
-  const others = magazines.filter((m) => m.slug !== magazine.slug).slice(0, 4);
-
-  return <MagazineExperience magazine={magazine} others={others} />;
+  return (
+    <>
+      <IssueExperience issue={issue} />
+      {more.length > 0 && (
+        <section className="border-t border-border bg-cream py-16 md:py-24">
+          <div className="site-container">
+            <p className="eyebrow text-gold">Keep reading</p>
+            <h2 className="mt-2 mb-12 text-3xl font-semibold text-primary md:text-4xl">More issues</h2>
+            <IssueGrid issues={more} />
+          </div>
+        </section>
+      )}
+    </>
+  );
 }
